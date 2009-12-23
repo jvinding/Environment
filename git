@@ -1,0 +1,115 @@
+git_get_branch() {
+    git branch | grep '^\*' | awk '{print $2}'
+}
+git_change_list() {
+    git ls-files -m --exclude-standard
+}
+git_get_svn_branch() {
+    local branch=`git svn info | grep URL | cut -c6-` || return
+    if [[ "$branch" =~ '/trunk' ]]; then
+        echo "trunk"
+    elif [[ "$branch" =~ '/branches/' ]]; then
+        echo ${branch##*branches/}
+    elif [[ "$branch" =~ '/tags/' ]]; then
+        echo ${branch##*tags/}
+    fi
+}
+git_get_master_branch() {
+    local branch=`git_get_svn_branch`
+    [[ -z "$branch" ]] && return 1
+
+    if [[ "$branch" == "trunk" ]]; then
+        echo master
+    else
+        echo master-${branch}
+    fi
+}
+git_switch_to_master() {
+    local master=`git_get_master_branch`
+    [[ -z "$master" ]] && return 1
+
+    if git b | grep $master; then
+        git checkout $master || { echo "could not change to $master branch"; return 1; }
+    else
+        local branch=`git_get_svn_branch`
+        git checkout -b $master $branch || { echo "could not create to $master branch"; return 1; }
+    fi
+}
+git_svn_dcommit() {
+    local branch=`git_get_branch`
+    echo commiting $branch
+    git svn rebase || { echo "failed to rebase"; return; }
+    git svn dcommit || { echo "dcommit failed"; return; }
+
+    if ! [[ "$branch" =~ "master" ]]; then
+        git_switch_to_master || return
+        git svn rebase
+        read -p "Do you want to delete the branch ${branch}? y/N " -n1 delete
+        echo
+
+        if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
+            git branch -d $branch
+        else
+            git checkout $branch
+        fi
+    fi
+}
+alias dcommit=git_svn_dcommit
+
+git_update_from_subversion() {
+    local branch=`git_get_branch`
+    local changes=`git_change_list`
+    if ! [ -z "$changes" ]; then
+        git stash
+    fi
+    if ! [[ "$branch" =~ "master" ]]; then
+        git_switch_to_master || return
+    fi
+
+    git svn rebase || { echo "failed to rebase"; return; }
+
+    if ! [[ "$branch" =~ "master" ]]; then
+        local master=`git_get_master_branch`
+        git checkout $branch || { echo "could not change to branch: $branch"; return; }
+        git rebase $master
+    fi
+    if ! [ -z "$changes" ]; then
+        git stash pop
+    fi
+}
+alias gup=git_update_from_subversion
+
+git_diff_single_revision() {
+    local revision=$(git svn find-rev r${1#r})
+    [ -z "$revision" ] && { echo "no such revision found"; return; }
+    git diff ${revision}^!
+}
+alias gdiff=git_diff_single_revision
+
+gco() {
+    git svn clone --stdlayout https://build.corp.localmatters.com/subversion/DestinationSearch/$1 $2
+}
+
+gitgcall() {
+    pushd ~/projects
+    for s in $(find . -type d -maxdepth 1 | grep -v '^\.\.\?$' | grep -v TextMate); do
+        cd "$s"
+        if [ -d .git ]; then
+            git gc
+        fi
+        cd ..
+    done
+    popd
+}
+gupall() {
+    pushd ~/projects
+    for s in $(find . -type d -maxdepth 1 | grep -v '^\.\.\?$'); do
+        cd "$s"
+        if [ -d .git/svn ]; then
+            echo $s
+            git svn fetch
+        fi
+        cd ..
+    done
+    popd
+}

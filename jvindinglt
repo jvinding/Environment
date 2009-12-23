@@ -1,0 +1,218 @@
+export LC_CTYPE=en_US.UTF-8
+## alias start='$CATALINA_HOME/bin/startup.sh'
+## alias stop='$CATALINE_HOME/bin/shutdown.sh'
+## alias tailcat='tail -f $CATALINA_HOME/logs/catalina.out'
+
+#
+#
+#
+export CVSROOT=:ext:jvinding@chow:/cvs_eng
+
+export TZ="US/Mountain"
+
+
+export CATALINA_HOME=/usr/local/tomcat
+export JAVA_OPTS="-Xms256m -Xmx512m"
+export CATALINA_OPTS="-XX:MaxPermSize=160m -Djava.awt.headless=true -ea:com.localmatters... -ea:com.aptas... -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true -Dorg.apache.catalina.connector.CoyoteAdapter.ALLOW_BACKSLASH=true"
+
+#
+#
+#
+tcstop() {
+    $CATALINA_HOME/bin/shutdown.sh
+
+    echo -n Waiting for tomcat to shutdown...
+    i=0
+    ## while pgrep -f org.apache.catalina.startup.Bootstrap > /dev/null && [ $i -lt 10 ]
+    while ps -aux | grep Bootstrap | fgrep -v grep > /dev/null && [ $i -lt 10 ]
+    do
+        i=$(($i + 1))
+        sleep 1;
+        echo -n ...
+    done
+    echo
+
+    if ps -aux | grep Bootstrap | fgrep -v grep
+    then
+        echo Killing...
+        kill -9 `ps -aux | grep Bootstrap | fgrep -v grep | head -1 | awk '{print $2}'`
+    fi
+}
+alias tcstart='$CATALINA_HOME/bin/catalina.sh jpda start'
+tcrun() {
+    if [[ "$1" == "-w" ]]
+    then
+        rm -rf $CATALINA_HOME/work/* $CATALINA_HOME/temp/* 
+    fi
+    $CATALINA_HOME/bin/catalina.sh jpda run
+}
+tcwipe() {
+    ## echo deleting $CATALINA_HOME/work/* $CATALINA_HOME/webapps/* $CATALINA_HOME/conf/Catalina/
+    ## rm -rf $CATALINA_HOME/work/* $CATALINA_HOME/webapps/* $CATALINA_HOME/conf/Catalina/
+    ## echo deleting $CATALINA_HOME/work/* $CATALINA_HOME/webapps/* 
+    for s in $CATALINA_HOME/webapps/*.war; do
+        rm -rf $s ${s%%.war}
+    done
+    rm -rf $CATALINA_HOME/work/* $CATALINA_HOME/temp/* 
+    if [[ "$1" == "-l" ]]
+    then 
+        echo deleting $CATALINA_HOME/logs/* 
+        rm $CATALINA_HOME/logs/* 
+    fi
+}
+tcclean() {
+    tcstop
+    tcwipe "$*"
+    tcstart
+}
+tcswitch() {
+    tcstop
+    pushd $CATALINA_HOME > /dev/null
+    rm webapps
+    ln -s webapps-$1 webapps
+    popd > /dev/null
+}
+
+SERVERPATH="/opt/local/bin /opt/local/lib/postgresql82/bin /Users/jvinding/projects/lm-scripts"
+
+export JAVA_HOME=/Library/Java/Home
+
+export WORKSPACE=/Users/jvinding/projects
+
+setcli() {
+    export CLIENT=$1;
+    echo "CLIENT=$CLIENT";
+    goc
+}
+alias lm='setcli lm'
+alias cl='setcli ds-core-lib'
+alias cw='setcli ds-core-web'
+alias lw='setcli lm-core-web'
+alias cws='setcli ds-core-web-sandbox'
+alias dex='setcli dex'
+alias ssw='setcli self-serve-web'
+alias tnz='setcli tnz'
+core() {
+    projects="lm-core-web ds-core-web"
+    if [ "$1" == "-f" ]; then
+        projects="lm-util lm-mvc lm-taglib self-serve-lib reviews ds-core-lib ${projects}"
+    elif [ "$1" == "-l" ]; then
+        projects="ds-core-lib ${projects}"
+    fi
+    for p in $projects; do
+        setcli $p && sup && mvn clean install || return 1;
+    done
+
+    lm && sup && mvncp
+}
+#
+#
+#
+alias ss='svn status'
+alias ssu='svn status -u'
+alias sup='[ -d .git ] && gup || svn up'
+
+#
+# maven/svn dirs
+#
+cpwar() { cp $WORKSPACE/$CLIENT/target/*.war $CATALINA_HOME/webapps; }
+goc() {
+    if [ -d $WORKSPACE/$CLIENT/$1 ]
+    then
+        cd $WORKSPACE/$CLIENT/$1
+    elif [ -d $WORKSPACE/DestinationSearch_$CLIENT/client/$CLIENT ]
+    then
+        cd $WORKSPACE/DestinationSearch_$CLIENT/client/$CLIENT/$1
+    else
+        cd $WORKSPACE
+    fi
+}
+gods() { cd $WORKSPACE/DestinationSearch_$CLIENT/$1; }
+gow() { goc src/main/webapp/$1; }
+alias gowjsp='gow WEB-INF/jsp'
+alias gojs='gow js'
+alias gocss='gow css'
+alias gojsp='gow WEB-INF/jsp'
+
+alias gologs='cd $CATALINA_HOME/logs'
+alias goweb='cd $CATALINA_HOME/webapps'
+alias lt='tail -100f $CATALINA_HOME/logs/catalina.out'
+alias lmt='tail -f $CATALINA_HOME/logs/mosaic*.log'
+
+## twx() { touch $CATALINA_HOME/webapps/${CLIENT}DS/WEB-INF/web.xml; }
+
+ldt() {
+    if [ -f $CATALINA_HOME/logs/$CLIENT.log ]
+    then
+        echo ====== $CATALINA_HOME/logs/$CLIENT.log ======
+        tail -100f $CATALINA_HOME/logs/$CLIENT.log
+    else
+        echo ====== $CATALINA_HOME/logs/ds.log ======
+        tail -100f $CATALINA_HOME/logs/ds.log
+    fi
+}
+alias lc='while ! ldt; do sleep 1; done;'
+
+alias lat='tail -100f `ls -1 $CATALINA_HOME/logs/localhost_access* | tail -1`'
+## alias ws='cd $CATALINA_HOME/bin && rm -f ../logs/catalina.out && ./catalina.sh jpda start'
+## alias stopws='cd $CATALINA_HOME/bin && ./shutdown.sh'
+
+alias homev='vncviewer -geometry=1024x768 -FullColor -PreferredEncoding=ZRLE -ZlibLevel=9 -via 24.8.98.73 localhost:0'
+
+alias ie5='/usr/bin/vncviewer --ZlibLevel=9 --Shared 10.4.0.59:0'
+alias mac='/usr/bin/vncviewer --ZlibLevel=9 --Shared 10.4.1.169'
+
+clientmvn(){
+    if [[ "$CLIENT" == "mosaic" ]]; then
+        echo use the '"mosaic"' command for mosaic clients
+        /bin/false
+    else
+        pushd $WORKSPACE/$CLIENT
+        mvn $*
+        popd
+    fi
+}
+alias mcp='clientmvn clean package'
+alias mcpnt='clientmvn -Dmaven.test.skip=true clean package'
+alias mvncp='clientmvn clean package && cpwar'
+alias mvncpnt='clientmvn -Dmaven.test.skip=true clean package && cpwar'
+alias mvnci='clientmvn clean install'
+alias mvncint='clientmvn -Dmaven.test.skip=true clean install'
+#alias mvnecl='cp .project .project.bob && mvn eclipse:eclipse && mv .project.bob .project'
+alias mvnecl='mvn -DoutputDirectory=.eclipsebuild -DdownloadSources=true eclipse:eclipse'
+
+
+## alias mvncp='pushd $WORKSPACE/$CLIENT; clientmvn clean package && cpwar; popd'
+## alias mvncpnt='clientmvn -Dmaven.test.skip=true clean package && cpwar'
+## alias mvnci='pushd $WORKSPACE/$CLIENT; clientmvn clean install; popd'
+## alias mvncint='pushd $WORKSPACE/$CLIENT; clientmvn -Dmaven.test.skip=true clean install; popd'
+## alias mvnecl='cp .project .project.bob && clientmvn eclipse:eclipse && mv .project.bob .project'
+
+
+alias rsreload='java -jar ~/bin/jmx.jar - localhost:1099 DestinationSearch:Context=${CLIENT}ds,name=ResourceSet reloadConfiguration'
+alias rsnofilter='java -jar ~/bin/jmx.jar - localhost:1099 DestinationSearch:Context=${CLIENT}ds,Class=ConcatenatingFilterSet,name=javascriptFilterSet setFilteringEnabledString=false'
+
+# . ~/.bashscripts/mosaic
+
+alias mpu='cd ~/projects/mosaic/mosaic-portlets; svn up'
+alias mwu='cd ~/projects/mosaic/mosaic-portal/mosaic-portal-webapp; svn up'
+alias mfu='cd ~/projects/mosaic/mosaic-forums; svn up'
+alias mau='cd ~/projects/mosaic/mosaic-assets; svn up'
+
+svn_checkout() {
+    dir=$2
+    if [ -z "$file" ]; then
+        dir=${1%%/trunk}
+        dir=${dir##*/}
+    fi
+    svn co https://build.corp.localmatters.com/subversion/DestinationSearch/$1 $dir
+}
+
+. ~/.bashscripts/git
+. ~/.bashscripts/git-completion.bash
+
+alias lldbup='pushd ~/projects/landing-pages-lib && sup && psql -U postgres ss < src/main/sql/postgres/upgrade/upgrade-lp-schema-102.04.sql && popd'
+alias ssdbup='pushd ~/projects/self-serve-web && sup && psql -U postgres ss < src/main/sql/postgres/upgrade/upgrade-ss-schema-111.02.sql && popd'
+alias dbup='lldbup && ssdbup'
+
+# sudo launchctl load /Library/LaunchDaemons/org.postgresql.dbms.plist

@@ -1,0 +1,94 @@
+if [[ $- != *i* ]] ; then
+        # Shell is non-interactive.  Be done now!
+        return
+fi
+
+########################## source global definitions ##########################
+#
+#
+
+if [ ! -z "$BASH" ] && [ -f /etc/bashrc ]
+then
+	. /etc/bashrc
+fi
+#
+#
+########################## source global definitions ##########################
+
+############################### bash completion ###############################
+#
+#
+if [ ! -z "$BASH" ]
+then
+    export BASH_COMPLETION_DIR=~jvinding/.bash_completion
+    export BASH_COMPLETION=~jvinding/.bashscripts/bash_completion
+    bash=${BASH_VERSION%.*}; bmaj=${bash%.*}; bmin=${bash#*.}
+    if [ ! -z "$PS1" ] && [ $bmaj -ge 2 ] && [ -f $BASH_COMPLETION ]
+    then # interactive shell
+        . $BASH_COMPLETION
+    fi
+    unset bash bmajor bminor
+
+    #
+    # ignore CVS dirs
+    #
+    export FIGNORE=CVS
+fi
+#
+#
+############################# end bash completion #############################
+
+################################### aliases ###################################
+#
+#
+
+#
+# apps should behave correctly
+#
+if [ `uname -s` = Linux ]
+then
+    alias ls='ls --color=auto'
+    alias l='ls -lhF'
+    alias tailf='tail -n 100 -f'
+else
+    alias l='ls -lF'
+    alias tailf='tail -100f'
+fi
+
+alias la='ls -al'
+alias lsd='ls -al | grep ^d'
+## alias lsd='ls -ald */'
+alias ci='ci -u'
+alias co='co -l'
+if ! expr match "$(which vim 2>&1)" "no vim in" > /dev/null
+then
+    alias vi='vim -X'
+    expr match "$(which gvim 2>&1)" "no gvim in" > /dev/null && alias gvim='vim -g'
+fi
+
+#
+# tyop aliases
+#
+alias learn_to_type="echo learn to type dude; echo try"
+alias givm="learn_to_type gvim"
+alias gvi="learn_to_type gvim"
+alias gvmi="learn_to_type gvim"
+alias grpe="learn_to_type grep"
+
+alias arst="setxkbmap us; xset -r 66"
+alias asdf="setxkbmap us; xmodmap ~/colemak/xmodmap/xmodmap.colemak && xset r 66"
+
+#
+# find aliases
+#
+ff() { find . -name '*'$1'*' ; }
+fe() { find . -name '*'$1'*' -exec $2 {} \; ; }
+fg() { find . -type f -name "$1" -exec grep "$2" {} /dev/null \; ; }
+
+#
+# other aliases
+#
+alias sdiff='svn diff | sed -e"s/\(todo\)/\x1b[0;32m\1\x1b[0;0m/ig" -e"s/\(xxx\)/\x1b[0;31m\1\x1b[0;0m/ig" -e"s/\(<<<<\|>>>>\)/\x1b[1;31m\1\x1b[0;0m/"'
+#
+#
+################################# end aliases #################################
