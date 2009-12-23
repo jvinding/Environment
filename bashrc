@@ -60,11 +60,11 @@ alias lsd='ls -al | grep ^d'
 ## alias lsd='ls -ald */'
 alias ci='ci -u'
 alias co='co -l'
-if ! expr match "$(which vim 2>&1)" "no vim in" > /dev/null
-then
-    alias vi='vim -X'
-    expr match "$(which gvim 2>&1)" "no gvim in" > /dev/null && alias gvim='vim -g'
-fi
+# if ! expr match "$(which vim 2>&1)" "no vim in" > /dev/null
+# then
+#     alias vi='vim -X'
+#     expr match "$(which gvim 2>&1)" "no gvim in" > /dev/null && alias gvim='vim -g'
+# fi
 
 #
 # tyop aliases
