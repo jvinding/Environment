@@ -24,6 +24,7 @@ export HISTCONTROL=ignoredups
 #
 HOSTNAME=`uname -n`
 HOSTNAME=${HOSTNAME%%.*}
+[ -f ~/Environment/$HOSTNAME ]          && . ~/Environment/$HOSTNAME
 [ -f ~/.bashscripts/$HOSTNAME ]         && . ~/.bashscripts/$HOSTNAME
 [ -f ~jvinding/.bashscripts/$HOSTNAME ] && . ~jvinding/.bashscripts/$HOSTNAME
 #
