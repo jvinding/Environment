@@ -85,6 +85,7 @@ setcli() {
     goc
 }
 alias lm='setcli lm'
+alias lmre='setcli lmre'
 alias cl='setcli ds-core-lib'
 alias cw='setcli ds-core-web'
 alias lw='setcli lm-core-web'
@@ -92,19 +93,40 @@ alias cws='setcli ds-core-web-sandbox'
 alias dex='setcli dex'
 alias ssw='setcli self-serve-web'
 alias tnz='setcli tnz'
-core() {
-    projects="lm-core-web ds-core-web"
-    if [ "$1" == "-f" ]; then
-        projects="lm-util lm-mvc lm-taglib self-serve-lib reviews ds-core-lib ${projects}"
-    elif [ "$1" == "-l" ]; then
-        projects="ds-core-lib ${projects}"
-    fi
-    for p in $projects; do
-        setcli $p && sup && mvn clean install || return 1;
+build() {
+    local lib=false
+    local all=false
+    local runtests=false
+    local mvnargs=-DskipTests=true
+    local pro=lm
+    while [ "$1" ]; do
+        case $1 in
+            -a ) all=true;;
+            -l ) lib=true;;
+            -t ) runtests=true; mvnargs=;;
+            * ) pro=$1;;
+        esac
+        shift
     done
 
-    lm && sup && mvncp
+    local projects="lm-core-web ds-core-web"
+    if [ "$all" == "true" ]; then
+        projects="lm-util lm-mvc lm-taglib self-serve-lib reviews ds-core-lib ${projects}"
+    elif [ "$lib" == "true" ]; then
+        projects="ds-core-lib ${projects}"
+    fi
+
+    for p in $projects; do
+        setcli $p && sup && mvn $mvnargs clean install || return 1;
+    done
+
+    if [ "$runtests" == "true" ]; then
+        setcli $pro && sup && mvncp
+    else
+        setcli $pro && sup && mvncpnt
+    fi
 }
+alias buildre='build lmre'
 #
 #
 #
