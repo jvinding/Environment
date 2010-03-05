@@ -15,6 +15,9 @@ export CATALINA_HOME=/usr/local/tomcat
 export JAVA_OPTS="-Xms256m -Xmx512m"
 export CATALINA_OPTS="-XX:MaxPermSize=160m -Djava.awt.headless=true -ea:com.localmatters... -ea:com.aptas... -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true -Dorg.apache.catalina.connector.CoyoteAdapter.ALLOW_BACKSLASH=true"
 
+. ~/Environment/git
+. ~/Environment/git-completion.bash
+
 #
 #
 #
@@ -93,12 +96,42 @@ alias cws='setcli ds-core-web-sandbox'
 alias dex='setcli dex'
 alias ssw='setcli self-serve-web'
 alias tnz='setcli tnz'
+
+#
+#
+#
+alias ss='svn status'
+alias ssu='svn status -u'
+alias sup='[ -d .git ] && gup || svn up'
+
+clientmvn(){
+    if [[ "$CLIENT" == "mosaic" ]]; then
+        echo use the '"mosaic"' command for mosaic clients
+        /bin/false
+    else
+        pushd $WORKSPACE/$CLIENT
+        mvn $*
+        popd
+    fi
+}
+alias mcp='clientmvn clean package'
+alias mcpnt='clientmvn -Dmaven.test.skip=true clean package'
+alias mvncp='clientmvn clean package && cpwar'
+alias mvncpnt='clientmvn -Dmaven.test.skip=true clean package && cpwar'
+alias mvnci='clientmvn clean install'
+alias mvncint='clientmvn -Dmaven.test.skip=true clean install'
+#alias mvnecl='cp .project .project.bob && mvn eclipse:eclipse && mv .project.bob .project'
+alias mvnecl='mvn -DoutputDirectory=.eclipsebuild -DdownloadSources=true eclipse:eclipse'
+
+#
+#
+#
 build() {
     local lib=false
     local all=false
     local runtests=false
     local mvnargs=-DskipTests=true
-    local pro=lm
+    local pro=${CLIENT:=lm}
     while [ "$1" ]; do
         case $1 in
             -a ) all=true;;
@@ -126,13 +159,6 @@ build() {
         setcli $pro && sup && mvncpnt
     fi
 }
-alias buildre='build lmre'
-#
-#
-#
-alias ss='svn status'
-alias ssu='svn status -u'
-alias sup='[ -d .git ] && gup || svn up'
 
 #
 # maven/svn dirs
@@ -184,26 +210,6 @@ alias homev='vncviewer -geometry=1024x768 -FullColor -PreferredEncoding=ZRLE -Zl
 alias ie5='/usr/bin/vncviewer --ZlibLevel=9 --Shared 10.4.0.59:0'
 alias mac='/usr/bin/vncviewer --ZlibLevel=9 --Shared 10.4.1.169'
 
-clientmvn(){
-    if [[ "$CLIENT" == "mosaic" ]]; then
-        echo use the '"mosaic"' command for mosaic clients
-        /bin/false
-    else
-        pushd $WORKSPACE/$CLIENT
-        mvn $*
-        popd
-    fi
-}
-alias mcp='clientmvn clean package'
-alias mcpnt='clientmvn -Dmaven.test.skip=true clean package'
-alias mvncp='clientmvn clean package && cpwar'
-alias mvncpnt='clientmvn -Dmaven.test.skip=true clean package && cpwar'
-alias mvnci='clientmvn clean install'
-alias mvncint='clientmvn -Dmaven.test.skip=true clean install'
-#alias mvnecl='cp .project .project.bob && mvn eclipse:eclipse && mv .project.bob .project'
-alias mvnecl='mvn -DoutputDirectory=.eclipsebuild -DdownloadSources=true eclipse:eclipse'
-
-
 ## alias mvncp='pushd $WORKSPACE/$CLIENT; clientmvn clean package && cpwar; popd'
 ## alias mvncpnt='clientmvn -Dmaven.test.skip=true clean package && cpwar'
 ## alias mvnci='pushd $WORKSPACE/$CLIENT; clientmvn clean install; popd'
@@ -229,9 +235,6 @@ svn_checkout() {
     fi
     svn co https://build.corp.localmatters.com/subversion/DestinationSearch/$1 $dir
 }
-
-. ~/.bashscripts/git
-. ~/.bashscripts/git-completion.bash
 
 alias lldbup='pushd ~/projects/landing-pages-lib && sup && psql -U postgres ss < src/main/sql/postgres/upgrade/upgrade-lp-schema-102.04.sql && popd'
 alias ssdbup='pushd ~/projects/self-serve-web && sup && psql -U postgres ss < src/main/sql/postgres/upgrade/upgrade-ss-schema-111.02.sql && popd'
