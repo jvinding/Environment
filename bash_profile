@@ -179,7 +179,7 @@ then
         fi
     }
     export PROMPT_COMMAND=prompt_command
-    PROMPT_SCM="$BLUE-=($RED\$_TMP_SCM$BLUE)=-"
+    PROMPT_SCM="$BLUE-=($GREEN\$_TMP_SCM$BLUE)=-"
     PROMPT_PWD="$BLUE-=($RED\$_TMP_PWD$BLUE)=-"
     PROMPT_RETURN="$BLUE-=($RED\$?$BLUE)=-"
     PROMPT_HISTORY="$BLUE-=($RED\!$BLUE)=-"
