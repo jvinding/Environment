@@ -129,35 +129,34 @@ alias mvnecl='mvn -DoutputDirectory=.eclipsebuild -DdownloadSources=true eclipse
 build() {
     local lib=false
     local all=false
-    local runtests=false
+    local quick=false
     local mvnargs=-DskipTests=true
     local pro=${CLIENT:=lm}
     while [ "$1" ]; do
         case $1 in
             -a ) all=true;;
             -l ) lib=true;;
-            -t ) runtests=true; mvnargs=;;
+            -q ) quick=true;;
+            -t ) mvnargs=;;
             * ) pro=$1;;
         esac
         shift
     done
 
-    local projects="lm-core-web ds-core-web"
-    if [ "$all" == "true" ]; then
-        projects="lm-util lm-mvc lm-taglib self-serve-lib reviews ds-core-lib ${projects}"
-    elif [ "$lib" == "true" ]; then
-        projects="ds-core-lib ${projects}"
+    if [ "$quick" != "true" ]; then
+        local projects="lm-core-web ds-core-web"
+        if [ "$all" == "true" ]; then
+            projects="lm-util lm-mvc lm-taglib self-serve-lib reviews ds-core-lib ${projects}"
+        elif [ "$lib" == "true" ]; then
+            projects="ds-core-lib ${projects}"
+        fi
+
+        for p in $projects; do
+            setcli $p && sup && mvn $mvnargs clean install || { echo; echo -e "\033[1;31mfailed in $p\033[0;0m"; setcli $pro; return 1; }
+        done
     fi
 
-    for p in $projects; do
-        setcli $p && sup && mvn $mvnargs clean install || return 1;
-    done
-
-    if [ "$runtests" == "true" ]; then
-        setcli $pro && sup && mvncp
-    else
-        setcli $pro && sup && mvncpnt
-    fi
+    setcli $pro && sup && mvn $mvnargs clean package && cpwar || { echo; echo -e "\033[1;31mfailed in $pro\033[0;0m"; setcli $pro; return 1; }
 }
 
 #
