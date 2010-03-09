@@ -45,22 +45,22 @@ alias tcstart='$CATALINA_HOME/bin/catalina.sh jpda start'
 tcrun() {
     if [[ "$1" == "-w" ]]
     then
-        rm -rf $CATALINA_HOME/work/* $CATALINA_HOME/temp/* 
+        rm -rf $CATALINA_HOME/work/* $CATALINA_HOME/temp/*
     fi
     $CATALINA_HOME/bin/catalina.sh jpda run
 }
 tcwipe() {
     ## echo deleting $CATALINA_HOME/work/* $CATALINA_HOME/webapps/* $CATALINA_HOME/conf/Catalina/
     ## rm -rf $CATALINA_HOME/work/* $CATALINA_HOME/webapps/* $CATALINA_HOME/conf/Catalina/
-    ## echo deleting $CATALINA_HOME/work/* $CATALINA_HOME/webapps/* 
+    ## echo deleting $CATALINA_HOME/work/* $CATALINA_HOME/webapps/*
     for s in $CATALINA_HOME/webapps/*.war; do
         rm -rf $s ${s%%.war}
     done
-    rm -rf $CATALINA_HOME/work/* $CATALINA_HOME/temp/* 
+    rm -rf $CATALINA_HOME/work/* $CATALINA_HOME/temp/*
     if [[ "$1" == "-l" ]]
-    then 
-        echo deleting $CATALINA_HOME/logs/* 
-        rm $CATALINA_HOME/logs/* 
+    then
+        echo deleting $CATALINA_HOME/logs/*
+        rm $CATALINA_HOME/logs/*
     fi
 }
 tcclean() {
