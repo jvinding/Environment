@@ -157,6 +157,8 @@ build() {
     fi
 
     setcli $pro && sup && mvn $mvnargs clean package && cpwar || { echo; echo -e "\033[1;31mfailed in $pro\033[0;0m"; setcli $pro; return 1; }
+
+    echo -e "\033[1;32mBuilt $pro successfully\033[0;0m"
 }
 
 #
