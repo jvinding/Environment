@@ -150,18 +150,16 @@ then
     function chop_front_dirs_to_fit {
         local pwd_length=50
         _TMP_PWD=${PWD/$HOME/~}
-        if [ ${#_TMP_PWD} -gt $pwd_length ]
-        then
         _TMP_PWD=$(echo -n "${_TMP_PWD#/} $pwd_length" | perl -e'
-            ($dir, $len) = split " ", <>;
+            my $arg = <>;
+            ($dir, $len) = $arg =~ /(\S*(?:\s\S*)*)\s(\S+)/;
             @d = split m!/!, $dir;
-            $p = "";
+            $p = "/\033[0;32m" . pop @d;
             while (length $p < $len && @d) {
                 $p = "/" . pop (@d) . "$p" if ((length $p + length $d[-1]) < $len);
             }
             $p = "..." . scalar @d . "...$p" if @d;
             print $p;')
-        fi
     }
     function prompt_command {
         chop_front_dirs_to_fit
