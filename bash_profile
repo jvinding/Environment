@@ -149,14 +149,16 @@ then
     }
     function chop_front_dirs_to_fit {
         local pwd_length=50
-        _TMP_PWD=${PWD/$HOME/~}
+        _TMP_PWD="${PWD/$HOME/~}"
         _TMP_PWD=$(echo -n "${_TMP_PWD#/} $pwd_length" | perl -e'
             my $arg = <>;
-            ($dir, $len) = $arg =~ /(\S*(?:\s\S*)*)\s(\S+)/;
-            @d = split m!/!, $dir;
-            $p = "/\033[0;32m" . pop @d;
+            my ($dir, $len) = $arg =~ /(\S*(?:\s\S*)*)\s(\S+)/;
+            my @d = split m!/!, $dir;
+            my $p = "";
             while (length $p < $len && @d) {
-                $p = "/" . pop (@d) . "$p" if ((length $p + length $d[-1]) < $len);
+                my $part = pop @d;
+                $part = "/" . $part if $part ne "~";
+                $p = $part . "$p" if ((length $p + length $part) < $len);
             }
             $p = "..." . scalar @d . "...$p" if @d;
             print $p;')
@@ -167,6 +169,15 @@ then
         then
             echo -e "\033]0;${USER}@${HOSTNAME}:$_TMP_PWD\007"
         fi
+
+        if [ "$_TMP_PWD" == "~" ]; then
+            _LAST_DIR="~"
+            _TMP_PWD=
+        else
+            _LAST_DIR=${_TMP_PWD##*/}
+            _TMP_PWD=${_TMP_PWD%/*}/
+        fi
+
         if [ -d .git ]
         then
             _TMP_SCM=$(git branch | grep ^\* | cut -c3-)
@@ -179,7 +190,7 @@ then
     }
     export PROMPT_COMMAND=prompt_command
     PROMPT_SCM="$BLUE-=($GREEN\$_TMP_SCM$BLUE)=-"
-    PROMPT_PWD="$BLUE-=($RED\$_TMP_PWD$BLUE)=-"
+    PROMPT_PWD="$BLUE-=($RED\${_TMP_PWD}$GREEN\${_LAST_DIR}$BLUE)=-"
     PROMPT_RETURN="$BLUE-=($RED\$?$BLUE)=-"
     PROMPT_HISTORY="$BLUE-=($RED\!$BLUE)=-"
     PROMPT_JOBS="$BLUE-=($RED\j$BLUE)=-"
