@@ -10,71 +10,11 @@ export CVSROOT=:ext:jvinding@chow:/cvs_eng
 
 export TZ="US/Mountain"
 
-
-export CATALINA_HOME=/usr/local/tomcat
 export JAVA_OPTS="-Xms256m -Xmx512m"
-export CATALINA_OPTS="-XX:MaxPermSize=160m -Djava.awt.headless=true -ea:com.localmatters... -ea:com.aptas... -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true -Dorg.apache.catalina.connector.CoyoteAdapter.ALLOW_BACKSLASH=true"
 
 . ~/Environment/git
 . ~/Environment/git-completion.bash
-
-#
-#
-#
-tcstop() {
-    $CATALINA_HOME/bin/shutdown.sh
-
-    echo -n Waiting for tomcat to shutdown...
-    i=0
-    ## while pgrep -f org.apache.catalina.startup.Bootstrap > /dev/null && [ $i -lt 10 ]
-    while ps -aux | grep Bootstrap | fgrep -v grep > /dev/null && [ $i -lt 10 ]
-    do
-        i=$(($i + 1))
-        sleep 1;
-        echo -n ...
-    done
-    echo
-
-    if ps -aux | grep Bootstrap | fgrep -v grep
-    then
-        echo Killing...
-        kill -9 `ps -aux | grep Bootstrap | fgrep -v grep | head -1 | awk '{print $2}'`
-    fi
-}
-alias tcstart='$CATALINA_HOME/bin/catalina.sh jpda start'
-tcrun() {
-    if [[ "$1" == "-w" ]]
-    then
-        rm -rf $CATALINA_HOME/work/* $CATALINA_HOME/temp/*
-    fi
-    $CATALINA_HOME/bin/catalina.sh jpda run
-}
-tcwipe() {
-    ## echo deleting $CATALINA_HOME/work/* $CATALINA_HOME/webapps/* $CATALINA_HOME/conf/Catalina/
-    ## rm -rf $CATALINA_HOME/work/* $CATALINA_HOME/webapps/* $CATALINA_HOME/conf/Catalina/
-    ## echo deleting $CATALINA_HOME/work/* $CATALINA_HOME/webapps/*
-    for s in $CATALINA_HOME/webapps/*.war; do
-        rm -rf $s ${s%%.war}
-    done
-    rm -rf $CATALINA_HOME/work/* $CATALINA_HOME/temp/*
-    if [[ "$1" == "-l" ]]
-    then
-        echo deleting $CATALINA_HOME/logs/*
-        rm $CATALINA_HOME/logs/*
-    fi
-}
-tcclean() {
-    tcstop
-    tcwipe "$*"
-    tcstart
-}
-tcswitch() {
-    tcstop
-    pushd $CATALINA_HOME > /dev/null
-    rm webapps
-    ln -s webapps-$1 webapps
-    popd > /dev/null
-}
+. ~/Environment/tomcat
 
 SERVERPATH="/opt/local/bin /opt/local/lib/postgresql82/bin /Users/jvinding/projects/lm-scripts"
 
