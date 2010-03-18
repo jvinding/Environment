@@ -32,10 +32,12 @@ alias lmre='setcli lmre'
 alias cl='setcli ds-core-lib'
 alias cw='setcli ds-core-web'
 alias lw='setcli lm-core-web'
+alias ew='setcli ed-core-web'
 alias cws='setcli ds-core-web-sandbox'
 alias dex='setcli dex'
 alias ssw='setcli self-serve-web'
 alias tnz='setcli tnz'
+alias edfi='setcli edfi'
 
 #
 #
@@ -70,11 +72,13 @@ build() {
     local lib=false
     local all=false
     local quick=false
+    local edsa=false
     local mvnargs=-DskipTests=true
     local pro=${CLIENT:=lm}
     while [ "$1" ]; do
         case $1 in
             -a ) all=true;;
+            -e) edsa=true;;
             -l ) lib=true;;
             -q ) quick=true;;
             -t ) mvnargs=;;
@@ -85,6 +89,11 @@ build() {
 
     if [ "$quick" != "true" ]; then
         local projects="lm-core-web ds-core-web"
+
+        if [ "$edsa" == "true" ]; then
+            local projects="${projects} ed-core-web"
+        fi
+
         if [ "$all" == "true" ]; then
             projects="lm-util lm-mvc lm-taglib self-serve-lib reviews ds-core-lib ${projects}"
         elif [ "$lib" == "true" ]; then
@@ -182,3 +191,5 @@ alias ssdbup='pushd ~/projects/self-serve-web && sup && psql -U postgres ss < sr
 alias dbup='lldbup && ssdbup'
 
 # sudo launchctl load /Library/LaunchDaemons/org.postgresql.dbms.plist
+
+alias mysql=mysql5
