@@ -45,7 +45,7 @@ alias edfi='setcli edfi'
 #
 alias ss='svn status'
 alias ssu='svn status -u'
-alias sup='[ -d .git ] && gup || svn up'
+alias sup='[ -d .svn ] && svn up || gup'
 
 clientmvn(){
     if [[ "$CLIENT" == "mosaic" ]]; then
