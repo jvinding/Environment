@@ -4,24 +4,31 @@ export CATALINA_OPTS="-XX:MaxPermSize=160m -Djava.awt.headless=true -ea:com.loca
 #
 #
 #
+tcpid() {
+    local pid=`ps -aux | grep Bootstrap | fgrep -v grep`
+    if ! [ -z "$pid" ]; then
+        echo $pid | awk '{print $2}'
+        return 0
+    fi
+    return 1
+}
 tcstop() {
     $CATALINA_HOME/bin/shutdown.sh
 
-    echo -n Waiting for tomcat to shutdown...
+    echo -n "Waiting for tomcat to shutdown... "
     i=0
-    ## while pgrep -f org.apache.catalina.startup.Bootstrap > /dev/null && [ $i -lt 10 ]
-    while ps -aux | grep Bootstrap | fgrep -v grep > /dev/null && [ $i -lt 10 ]
+    while tcpid > /dev/null && [ $i -lt 10 ]
     do
         i=$(($i + 1))
         sleep 1;
-        echo -n ...
+        echo -n "... "
     done
     echo
 
-    if ps -aux | grep Bootstrap | fgrep -v grep
+    if tcpid > /dev/null
     then
         echo Killing...
-        kill -9 `ps -aux | grep Bootstrap | fgrep -v grep | head -1 | awk '{print $2}'`
+        kill -9 `tcpid`
     fi
 }
 alias tcstart='$CATALINA_HOME/bin/catalina.sh jpda start'
