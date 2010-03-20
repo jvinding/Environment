@@ -36,6 +36,10 @@ git_switch_to_master() {
     fi
 }
 git_svn_dcommit() {
+    if ! [ -d .git/svn ]; then
+        echo not a git svn repository
+        return 1
+    fi
     local branch=`git_get_branch`
     echo commiting $branch
     git svn rebase || { echo "failed to rebase"; return; }
@@ -57,6 +61,11 @@ git_svn_dcommit() {
 alias dcommit=git_svn_dcommit
 
 git_update_from_subversion() {
+    if ! [ -d .git/svn ]; then
+        echo not a git svn repository
+        return 1
+    fi
+
     local branch=`git_get_branch`
     local changes=`git_change_list`
     if ! [ -z "$changes" ]; then
@@ -111,7 +120,11 @@ gupall() {
         dir=${dir#*/}
         echo "** $(( i + 1 ))/${#dirs[@]}: $dir **"
         cd "$dir"
-        git svn fetch
+        if [ -d .git/svn ]; then
+            git svn fetch
+        else
+            git fetch
+        fi
         cd ..
     done
     popd > /dev/null
