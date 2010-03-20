@@ -92,6 +92,9 @@ build() {
 
         if [ "$edsa" == "true" ]; then
             local projects="${projects} ed-core-web"
+            if [ "$all" == "true" ] || [ "$lib" == "true" ]; then
+                local projects="ed-core ${projects}"
+            fi
         fi
 
         if [ "$all" == "true" ]; then
