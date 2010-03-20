@@ -63,7 +63,6 @@ alias mvncp='clientmvn clean package && cpwar'
 alias mvncpnt='clientmvn -Dmaven.test.skip=true clean package && cpwar'
 alias mvnci='clientmvn clean install'
 alias mvncint='clientmvn -Dmaven.test.skip=true clean install'
-#alias mvnecl='cp .project .project.bob && mvn eclipse:eclipse && mv .project.bob .project'
 alias mvnecl='mvn -DoutputDirectory=.eclipsebuild -DdownloadSources=true eclipse:eclipse'
 
 #
@@ -162,13 +161,6 @@ alias homev='vncviewer -geometry=1024x768 -FullColor -PreferredEncoding=ZRLE -Zl
 
 alias ie5='/usr/bin/vncviewer --ZlibLevel=9 --Shared 10.4.0.59:0'
 alias mac='/usr/bin/vncviewer --ZlibLevel=9 --Shared 10.4.1.169'
-
-## alias mvncp='pushd $WORKSPACE/$CLIENT; clientmvn clean package && cpwar; popd'
-## alias mvncpnt='clientmvn -Dmaven.test.skip=true clean package && cpwar'
-## alias mvnci='pushd $WORKSPACE/$CLIENT; clientmvn clean install; popd'
-## alias mvncint='pushd $WORKSPACE/$CLIENT; clientmvn -Dmaven.test.skip=true clean install; popd'
-## alias mvnecl='cp .project .project.bob && clientmvn eclipse:eclipse && mv .project.bob .project'
-
 
 alias rsreload='java -jar ~/bin/jmx.jar - localhost:1099 DestinationSearch:Context=${CLIENT}ds,name=ResourceSet reloadConfiguration'
 alias rsnofilter='java -jar ~/bin/jmx.jar - localhost:1099 DestinationSearch:Context=${CLIENT}ds,Class=ConcatenatingFilterSet,name=javascriptFilterSet setFilteringEnabledString=false'
