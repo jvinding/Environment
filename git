@@ -91,25 +91,28 @@ gco() {
 }
 
 gitgcall() {
-    pushd ~/projects
-    for s in $(find . -type d -maxdepth 1 | grep -v '^\.\.\?$' | grep -v TextMate); do
-        cd "$s"
-        if [ -d .git ]; then
-            git gc
-        fi
+    pushd ~/projects > /dev/null
+    local dirs=($(find . -type d -maxdepth 2 -name .git))
+    for (( i = 0 ; i < ${#dirs[@]} ; i++ )); do
+        local dir=${dirs[$i]%/*}
+        dir=${dir#*/}
+        echo "** $(( i + 1 ))/${#dirs[@]}: $dir **"
+        cd "$dir"
+        git gc
         cd ..
     done
-    popd
+    popd > /dev/null
 }
 gupall() {
-    pushd ~/projects
-    for s in $(find . -type d -maxdepth 1 | grep -v '^\.\.\?$'); do
-        cd "$s"
-        if [ -d .git/svn ]; then
-            echo $s
-            git svn fetch
-        fi
+    pushd ~/projects > /dev/null
+    local dirs=($(find . -type d -maxdepth 2 -name .git))
+    for (( i = 0 ; i < ${#dirs[@]} ; i++ )); do
+        local dir=${dirs[$i]%/*}
+        dir=${dir#*/}
+        echo "** $(( i + 1 ))/${#dirs[@]}: $dir **"
+        cd "$dir"
+        git svn fetch
         cd ..
     done
-    popd
+    popd > /dev/null
 }
