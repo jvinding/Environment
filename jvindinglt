@@ -139,7 +139,6 @@ alias gojsp='gow WEB-INF/jsp'
 alias gologs='cd $CATALINA_HOME/logs'
 alias goweb='cd $CATALINA_HOME/webapps'
 alias lt='tail -100f $CATALINA_HOME/logs/catalina.out'
-alias lmt='tail -f $CATALINA_HOME/logs/mosaic*.log'
 
 ## twx() { touch $CATALINA_HOME/webapps/${CLIENT}DS/WEB-INF/web.xml; }
 
@@ -173,13 +172,6 @@ alias mac='/usr/bin/vncviewer --ZlibLevel=9 --Shared 10.4.1.169'
 
 alias rsreload='java -jar ~/bin/jmx.jar - localhost:1099 DestinationSearch:Context=${CLIENT}ds,name=ResourceSet reloadConfiguration'
 alias rsnofilter='java -jar ~/bin/jmx.jar - localhost:1099 DestinationSearch:Context=${CLIENT}ds,Class=ConcatenatingFilterSet,name=javascriptFilterSet setFilteringEnabledString=false'
-
-# . ~/.bashscripts/mosaic
-
-alias mpu='cd ~/projects/mosaic/mosaic-portlets; svn up'
-alias mwu='cd ~/projects/mosaic/mosaic-portal/mosaic-portal-webapp; svn up'
-alias mfu='cd ~/projects/mosaic/mosaic-forums; svn up'
-alias mau='cd ~/projects/mosaic/mosaic-assets; svn up'
 
 svn_checkout() {
     dir=$2

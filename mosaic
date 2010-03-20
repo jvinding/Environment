@@ -98,4 +98,5 @@ alias mfu='mosaic forum up'
 alias mb='mosaic build'
 alias mpsync='mosaic_syncer mosaic-portlets /localtmp/mosaic/mosaic-portlets web.xml'
 alias mwsync='mosaic_syncer mosaic-portal-webapp /localtmp/mosaic/mosaic-portal/mosaic-portal-webapp web.xml'
+alias lmt='tail -f $CATALINA_HOME/logs/mosaic*.log'
 
