@@ -1,23 +1,17 @@
 export LC_CTYPE=en_US.UTF-8
-
-#
-#
-#
-export CVSROOT=:ext:jvinding@chow:/cvs_eng
-
 export TZ="US/Mountain"
 
 export JAVA_OPTS="-Xms256m -Xmx512m"
+export JAVA_HOME=/Library/Java/Home
+
+SERVERPATH="/opt/local/bin /opt/local/lib/postgresql82/bin /Users/jvinding/projects/lm-scripts"
+
+export WORKSPACE=/Users/jvinding/projects
 
 . ~/Environment/git
 . ~/Environment/git-completion.bash
 . ~/Environment/tomcat
 
-SERVERPATH="/opt/local/bin /opt/local/lib/postgresql82/bin /Users/jvinding/projects/lm-scripts"
-
-export JAVA_HOME=/Library/Java/Home
-
-export WORKSPACE=/Users/jvinding/projects
 
 setcli() {
     export CLIENT=$1;
@@ -36,6 +30,7 @@ alias dex='setcli dex'
 alias ssw='setcli self-serve-web'
 alias tnz='setcli tnz'
 alias edfi='setcli edfi'
+alias tas='setcli ed-tas-ds'
 
 #
 #
@@ -44,23 +39,15 @@ alias ss='svn status'
 alias ssu='svn status -u'
 alias sup='[ -d .svn ] && svn up || gup'
 
-clientmvn(){
-    if [[ "$CLIENT" == "mosaic" ]]; then
-        echo use the '"mosaic"' command for mosaic clients
-        /bin/false
-    else
-        pushd $WORKSPACE/$CLIENT
-        mvn $*
-        popd
-    fi
+clientmvn() {
+    pushd $WORKSPACE/$CLIENT
+    mvn $*
+    popd
 }
-alias mcp='clientmvn clean package'
-alias mcpnt='clientmvn -Dmaven.test.skip=true clean package'
 alias mvncp='clientmvn clean package && cpwar'
 alias mvncpnt='clientmvn -Dmaven.test.skip=true clean package && cpwar'
 alias mvnci='clientmvn clean install'
 alias mvncint='clientmvn -Dmaven.test.skip=true clean install'
-alias mvnecl='mvn -DoutputDirectory=.eclipsebuild -DdownloadSources=true eclipse:eclipse'
 
 #
 #
@@ -115,17 +102,12 @@ build() {
 #
 cpwar() { cp $WORKSPACE/$CLIENT/target/*.war $CATALINA_HOME/webapps; }
 goc() {
-    if [ -d $WORKSPACE/$CLIENT/$1 ]
-    then
+    if [ -d $WORKSPACE/$CLIENT/$1 ]; then
         cd $WORKSPACE/$CLIENT/$1
-    elif [ -d $WORKSPACE/DestinationSearch_$CLIENT/client/$CLIENT ]
-    then
-        cd $WORKSPACE/DestinationSearch_$CLIENT/client/$CLIENT/$1
     else
         cd $WORKSPACE
     fi
 }
-gods() { cd $WORKSPACE/DestinationSearch_$CLIENT/$1; }
 gow() { goc src/main/webapp/$1; }
 alias gowjsp='gow WEB-INF/jsp'
 alias gojs='gow js'
@@ -138,16 +120,6 @@ alias lt='tail -100f $CATALINA_HOME/logs/catalina.out'
 
 ## twx() { touch $CATALINA_HOME/webapps/${CLIENT}DS/WEB-INF/web.xml; }
 
-ldt() {
-    if [ -f $CATALINA_HOME/logs/$CLIENT.log ]
-    then
-        echo ====== $CATALINA_HOME/logs/$CLIENT.log ======
-        tail -100f $CATALINA_HOME/logs/$CLIENT.log
-    else
-        echo ====== $CATALINA_HOME/logs/ds.log ======
-        tail -100f $CATALINA_HOME/logs/ds.log
-    fi
-}
 alias lc='while ! ldt; do sleep 1; done;'
 
 alias lat='tail -100f `ls -1 $CATALINA_HOME/logs/localhost_access* | tail -1`'
@@ -168,10 +140,6 @@ svn_checkout() {
     fi
     svn co https://build.corp.localmatters.com/subversion/DestinationSearch/$1 $dir
 }
-
-alias lldbup='pushd ~/projects/landing-pages-lib && sup && psql -U postgres ss < src/main/sql/postgres/upgrade/upgrade-lp-schema-102.04.sql && popd'
-alias ssdbup='pushd ~/projects/self-serve-web && sup && psql -U postgres ss < src/main/sql/postgres/upgrade/upgrade-ss-schema-111.02.sql && popd'
-alias dbup='lldbup && ssdbup'
 
 # sudo launchctl load /Library/LaunchDaemons/org.postgresql.dbms.plist
 
