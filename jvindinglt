@@ -114,10 +114,6 @@ alias gojs='gow js'
 alias gocss='gow css'
 alias gojsp='gow WEB-INF/jsp'
 
-alias gologs='cd $CATALINA_HOME/logs'
-alias goweb='cd $CATALINA_HOME/webapps'
-alias lt='tail -100f $CATALINA_HOME/logs/catalina.out'
-
 ## twx() { touch $CATALINA_HOME/webapps/${CLIENT}DS/WEB-INF/web.xml; }
 
 alias lc='while ! ldt; do sleep 1; done;'
