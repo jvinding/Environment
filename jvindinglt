@@ -97,9 +97,18 @@ switch_deps() {
     for p in $deps; do
         setcli $p > /dev/null
         local branch=$(git b | grep $proj)
-        if [ $? != 0 ] || ! ( [ "$branch" == "* $proj" ] || git co $proj > /dev/null ); then
-             echo "could not switch to branch $proj for $p"
-             return 1
+        if ! [ -z "$branch" ]; then
+            if [ "$branch" == "* $proj" ]; then
+                echo "$p is already on $proj"
+            elif git co $proj > /dev/null; then
+                echo "$p switched to $proj"
+            else
+                echo -e "\033[1;31m$p could not switch to $proj\033[0;0m"
+                return 1
+            fi
+        else
+            echo -e "\033[1;31m$p does not have a branch called $proj\033[0;0m"
+            return 1
         fi
     done
 }
@@ -109,6 +118,8 @@ switch_deps() {
 build() {
     local deps=$(proj_list "$@")
     local proj=${deps##* }
+    deps=${deps% *}
+
     local switchdeps=false
     local mvnargs=-DskipTests=true
 
@@ -121,7 +132,7 @@ build() {
     done
 
     if [ "$switchdeps" == "true" ]; then
-        switch_deps "$@"
+        switch_deps "$@" || return 1
     fi
 
     for p in $deps; do
