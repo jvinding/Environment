@@ -74,9 +74,9 @@ proj_list() {
         local projects="lm-core-web ds-core-web"
 
         if [ "$edsa" == "true" ]; then
-            local projects="${projects} ed-core-web"
+            projects="${projects} ed-core-web"
             if [ "$all" == "true" ] || [ "$lib" == "true" ]; then
-                local projects="ed-core ${projects}"
+                projects="ed-core ${projects}"
             fi
         fi
 
