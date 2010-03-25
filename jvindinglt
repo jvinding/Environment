@@ -52,6 +52,60 @@ alias mvncint='clientmvn -Dmaven.test.skip=true clean install'
 #
 #
 #
+proj_list() {
+    local lib=false
+    local all=false
+    local quick=false
+    local edsa=false
+    local pro=${CLIENT:=lm}
+    while [ "$1" ]; do
+        case $1 in
+            -a ) all=true;;
+            -e) edsa=true;;
+            -l ) lib=true;;
+            -q ) quick=true;;
+            * ) pro=$1;;
+        esac
+        shift
+    done
+
+    if [ "$quick" != "true" ]; then
+        local projects="lm-core-web ds-core-web"
+
+        if [ "$edsa" == "true" ]; then
+            local projects="${projects} ed-core-web"
+            if [ "$all" == "true" ] || [ "$lib" == "true" ]; then
+                local projects="ed-core ${projects}"
+            fi
+        fi
+
+        if [ "$all" == "true" ]; then
+            projects="lm-util lm-mvc lm-taglib self-serve-lib reviews ds-core-lib ${projects}"
+        elif [ "$lib" == "true" ]; then
+            projects="ds-core-lib ${projects}"
+        fi
+    fi
+    if ! [ -z "$projects" ]; then
+        echo -n "$projects "
+    fi
+    echo -n $pro
+}
+switch_deps() {
+    local deps=$(proj_list "$@")
+    local proj=${deps##* }
+    deps=${deps% *}
+    for p in $deps; do
+        setcli $p > /dev/null
+        local branch=$(git b | grep $proj)
+        if [ $? != 0 ] || ! ( [ "$branch" == "* $proj" ] || git co $proj > /dev/null ); then
+             echo "could not switch to branch $proj for $p"
+             return 1
+        fi
+    done
+}
+#
+#
+#
 build() {
     local lib=false
     local all=false
