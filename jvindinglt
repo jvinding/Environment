@@ -107,48 +107,30 @@ switch_deps() {
 #
 #
 build() {
-    local lib=false
-    local all=false
-    local quick=false
-    local edsa=false
+    local deps=$(proj_list "$@")
+    local proj=${deps##* }
+    local switchdeps=false
     local mvnargs=-DskipTests=true
-    local pro=${CLIENT:=lm}
-    while [ "$1" ]; do
-        case $1 in
-            -a ) all=true;;
-            -e) edsa=true;;
-            -l ) lib=true;;
-            -q ) quick=true;;
-            -t ) mvnargs=;;
-            * ) pro=$1;;
+
+    while getopts ":td" opt
+    do
+        case $opt in
+            d ) switchdeps=true;;
+            t ) mvnargs=;;
         esac
-        shift
     done
 
-    if [ "$quick" != "true" ]; then
-        local projects="lm-core-web ds-core-web"
-
-        if [ "$edsa" == "true" ]; then
-            local projects="${projects} ed-core-web"
-            if [ "$all" == "true" ] || [ "$lib" == "true" ]; then
-                local projects="ed-core ${projects}"
-            fi
-        fi
-
-        if [ "$all" == "true" ]; then
-            projects="lm-util lm-mvc lm-taglib self-serve-lib reviews ds-core-lib ${projects}"
-        elif [ "$lib" == "true" ]; then
-            projects="ds-core-lib ${projects}"
-        fi
-
-        for p in $projects; do
-            setcli $p && sup && mvn $mvnargs clean install || { echo; echo -e "\033[1;31mfailed in $p\033[0;0m"; setcli $pro; return 1; }
-        done
+    if [ "$switchdeps" == "true" ]; then
+        switch_deps "$@"
     fi
 
-    setcli $pro && sup && mvn $mvnargs clean package && cpwar || { echo; echo -e "\033[1;31mfailed in $pro\033[0;0m"; setcli $pro; return 1; }
+    for p in $deps; do
+        setcli $p && sup && mvn $mvnargs clean install || { echo; echo -e "\033[1;31mfailed in $p\033[0;0m"; setcli $proj; return 1; }
+    done
 
-    echo -e "\033[1;32mBuilt $pro successfully\033[0;0m"
+    setcli $proj && sup && mvn $mvnargs clean package && cpwar || { echo; echo -e "\033[1;31mfailed in $proj\033[0;0m"; setcli $proj; return 1; }
+
+    echo -e "\033[1;32mBuilt $proj successfully\033[0;0m"
 }
 
 #
