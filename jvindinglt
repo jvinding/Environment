@@ -64,6 +64,7 @@ proj_list() {
             -e) edsa=true;;
             -l ) lib=true;;
             -q ) quick=true;;
+            -* ) ;;
             * ) pro=$1;;
         esac
         shift
@@ -94,6 +95,7 @@ switch_deps() {
     local deps=$(proj_list "$@")
     local proj=${deps##* }
     deps=${deps% *}
+
     for p in $deps; do
         setcli $p > /dev/null
         local branch=$(git b | grep $proj)
