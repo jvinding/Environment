@@ -25,8 +25,6 @@ alias cw='setcli ds-core-web'
 alias lw='setcli lm-core-web'
 alias ew='setcli ed-core-web'
 alias ec='setcli ed-core'
-alias cws='setcli ds-core-web-sandbox'
-alias dex='setcli dex'
 alias ssw='setcli self-serve-web'
 alias tnz='setcli tnz'
 alias edfi='setcli edfi'
@@ -125,8 +123,7 @@ build() {
     local switchdeps=false
     local mvnargs=-DskipTests=true
 
-    while getopts ":td" opt
-    do
+    while getopts ":td" opt; do
         case $opt in
             d ) switchdeps=true;;
             t ) mvnargs=;;
