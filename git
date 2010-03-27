@@ -105,7 +105,7 @@ gitgcall() {
     for (( i = 0 ; i < ${#dirs[@]} ; i++ )); do
         local dir=${dirs[$i]%/*}
         dir=${dir#*/}
-        echo "** $(( i + 1 ))/${#dirs[@]}: $dir **"
+        printf "** %02d/%02d: %20s **\n" $(( i + 1 )) ${#dirs[@]} $dir
         cd "$dir"
         git gc
         cd ..
@@ -118,7 +118,7 @@ gupall() {
     for (( i = 0 ; i < ${#dirs[@]} ; i++ )); do
         local dir=${dirs[$i]%/*}
         dir=${dir#*/}
-        echo "** $(( i + 1 ))/${#dirs[@]}: $dir **"
+        printf "** %02d/%02d: %20s **\n" $(( i + 1 )) ${#dirs[@]} $dir
         cd "$dir"
         if [ -d .git/svn ]; then
             git svn fetch
