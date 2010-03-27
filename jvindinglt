@@ -102,7 +102,7 @@ switch_deps() {
         if ! [ -z "$branch" ]; then
             if [ "$branch" == "* $proj" ]; then
                 echo "$p is already on $proj"
-            elif git co $proj > /dev/null; then
+            elif git co -q $proj > /dev/null; then
                 echo "$p switched to $proj"
             else
                 echo -e "\033[1;31m$p could not switch to $proj\033[0;0m"
