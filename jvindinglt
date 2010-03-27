@@ -94,7 +94,7 @@ proj_list() {
 switch_deps() {
     local deps=$(proj_list "$@")
     local proj=${deps##* }
-    deps=${deps% *}
+    deps=${deps%$proj}
 
     for p in $deps; do
         setcli $p > /dev/null
@@ -120,7 +120,7 @@ switch_deps() {
 build() {
     local deps=$(proj_list "$@")
     local proj=${deps##* }
-    deps=${deps% *}
+    deps=${deps%$proj}
 
     local switchdeps=false
     local mvnargs=-DskipTests=true
