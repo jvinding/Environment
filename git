@@ -28,7 +28,7 @@ git_switch_to_master() {
     local master=`git_get_master_branch`
     [[ -z "$master" ]] && return 1
 
-    if git b | grep $master; then
+    if git b | grep $master > /dev/null; then
         git checkout $master || { echo "could not change to $master branch"; return 1; }
     else
         local branch=`git_get_svn_branch`
