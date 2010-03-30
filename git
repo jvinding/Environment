@@ -1,6 +1,12 @@
 git_get_branch() {
     git branch | grep '^\*' | awk '{print $2}'
 }
+git_has_branch() {
+    git b | grep "\<${1}\$" > /dev/null
+}
+git_is_on_branch() {
+    [ "$(git_get_branch)" == "$1" ]
+}
 git_change_list() {
     git ls-files -m --exclude-standard
 }
