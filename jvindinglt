@@ -50,99 +50,147 @@ alias mvncint='clientmvn -Dmaven.test.skip=true clean install'
 #
 #
 #
-proj_list() {
+switch_dep_branch() {
+    local proj=$1
+    local branch=$2
+    local projbranch=
+    if git_has_branch "$1$2"; then
+        projbranch="$1$2"
+    elif git_has_branch $1; then
+        projbranch=$1
+    fi
+
+    if [ -z "$projbranch" ]; then
+        echo -e "\033[1;31m$CLIENT does not have a branch called $proj$branch or $proj\033[0;0m"
+        return 1
+    elif git_is_on_branch $projbranch; then
+        echo "$CLIENT is already on $projbranch"
+    elif git co -q $projbranch > /dev/null; then
+        echo "$CLIENT switched to $projbranch"
+    else
+        echo -e "\033[1;31m$CLIENT could not switch to $projbranch\033[0;0m"
+        return 1
+    fi
+}
+dep_list() {
+    local all=$1
+    local lib=$2
+    local edsa=$3
+
+    if [ "$all" == "true" ]; then
+        echo -n "lm-util lm-mvc lm-taglib self-serve-lib reviews "
+    fi
+
+    if [ "$lib" == "true" ] || [ "$all" == "true" ]; then
+        echo -n "ds-core-lib "
+        if [ "$edsa" == "true" ]; then
+            echo -n "ed-core "
+        fi
+    fi
+
+    echo -n "lm-core-web ds-core-web"
+
+    if [ "$edsa" == "true" ]; then
+        echo -n " ed-core-web"
+    fi
+}
+switch_deps() {
+    local lib=false
+    local all=false
+    local edsa=false
+
+    local OPTIND=0
+    while getopts "ael" opt; do
+        case $opt in
+            a ) all=true;;
+            e ) edsa=true;;
+            l ) lib=true;;
+        esac
+    done
+    shift $(( $OPTIND - 1 ));
+
+    local proj=$1
+    if [ -z "$proj" ]; then
+        proj=${CLIENT:=lm}
+    fi
+
+    setcli $proj > /dev/null
+
+    local branch=$2
+    if [ -z "$branch" ]; then
+        branch=$(git_get_branch)
+    fi
+
+    local deps=$(dep_list $all $lib $edsa)
+    for p in $deps; do
+        setcli $p > /dev/null && switch_dep_branch $proj $branch || { setcli $client; return 1; }
+    done
+    setcli $proj
+}
+build() {
+    local deps=
+
     local lib=false
     local all=false
     local quick=false
     local edsa=false
-    local pro=${CLIENT:=lm}
-    while [ "$1" ]; do
-        case $1 in
-            -a ) all=true;;
-            -e) edsa=true;;
-            -l ) lib=true;;
-            -q ) quick=true;;
-            -* ) ;;
-            * ) pro=$1;;
-        esac
-        shift
-    done
-
-    if [ "$quick" != "true" ]; then
-        local projects="lm-core-web ds-core-web"
-
-        if [ "$edsa" == "true" ]; then
-            projects="${projects} ed-core-web"
-            if [ "$all" == "true" ] || [ "$lib" == "true" ]; then
-                projects="ed-core ${projects}"
-            fi
-        fi
-
-        if [ "$all" == "true" ]; then
-            projects="lm-util lm-mvc lm-taglib self-serve-lib reviews ds-core-lib ${projects}"
-        elif [ "$lib" == "true" ]; then
-            projects="ds-core-lib ${projects}"
-        fi
-    fi
-    if ! [ -z "$projects" ]; then
-        echo -n "$projects "
-    fi
-    echo -n $pro
-}
-switch_deps() {
-    local deps=$(proj_list "$@")
-    local proj=${deps##* }
-    deps=${deps%$proj}
-
-    for p in $deps; do
-        setcli $p > /dev/null
-        local branch=$(git b | grep $proj)
-        if ! [ -z "$branch" ]; then
-            if [ "$branch" == "* $proj" ]; then
-                echo "$p is already on $proj"
-            elif git co -q $proj > /dev/null; then
-                echo "$p switched to $proj"
-            else
-                echo -e "\033[1;31m$p could not switch to $proj\033[0;0m"
-                return 1
-            fi
-        else
-            echo -e "\033[1;31m$p does not have a branch called $proj\033[0;0m"
-            return 1
-        fi
-    done
-}
-#
-#
-#
-build() {
-    local deps=$(proj_list "$@")
-    local proj=${deps##* }
-    deps=${deps%$proj}
-
     local switchdeps=false
-    local mvnargs=-DskipTests=true
+#    local mvnargs=-DskipTests=true
+    local mvnargs=-Dmaven.test.skip=true
 
-    while getopts ":td" opt; do
+    local OPTIND=0
+    while getopts "tdaelq" opt; do
         case $opt in
             d ) switchdeps=true;;
             t ) mvnargs=;;
+            a ) all=true;;
+            e ) edsa=true;;
+            l ) lib=true;;
+            q ) quick=true;;
         esac
     done
+    shift $(( $OPTIND - 1 ));
 
-    if [ "$switchdeps" == "true" ]; then
-        switch_deps "$@" || return 1
+    local proj=$1
+    if [ -z "$proj" ]; then
+        proj=${CLIENT:=lm}
     fi
 
-    for p in $deps; do
-        setcli $p && sup && mvn $mvnargs clean install || { echo; echo -e "\033[1;31mfailed in $p\033[0;0m"; setcli $proj; return 1; }
-    done
+    setcli $proj > /dev/null
 
-    setcli $proj && sup && mvn $mvnargs clean package && cpwar || { echo; echo -e "\033[1;31mfailed in $proj\033[0;0m"; setcli $proj; return 1; }
+    local branch=$2
+    if [ -z "$branch" ]; then
+        branch=$(git_get_branch)
+    fi
+
+    if [ "$quick" != "true" ]; then
+        deps=$(dep_list $all $lib $edsa)
+        if [ "$switchdeps" == "true" ]; then
+            for p in $deps; do
+                setcli $p > /dev/null && switch_dep_branch $proj $branch || return 1
+            done
+        fi
+
+        for p in $deps; do
+            setcli $p && sup && mvn $mvnargs clean install || { echo; echo -e "\033[1;31mfailed in $p\033[0;0m"; setcli $proj; return 1; }
+        done
+    fi
+
+    setcli $proj
+
+    if ! [ -z "$branch" ]; then
+        if ! git_has_branch $branch; then
+            echo -e "\033[1;31m$CLIENT does not have branch $branch\033[0;0m"
+            return 1
+        elif ! git_is_on_branch $branch; then
+            git co $branch || { echo -e "\033[1;31m$proj could not switch to $branch\033[0;0m"; return 1; }
+        fi
+    fi
+
+    mvn $mvnargs clean package && cpwar || { echo; echo -e "\033[1;31mfailed in $proj\033[0;0m"; return 1; }
 
     echo -e "\033[1;32mBuilt $proj successfully\033[0;0m"
 }
-
 #
 # maven/svn dirs
 #
