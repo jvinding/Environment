@@ -133,8 +133,6 @@ switch_deps() {
     setcli $proj
 }
 build() {
-    local deps=
-
     local lib=false
     local all=false
     local quick=false
@@ -169,7 +167,7 @@ build() {
     fi
 
     if [ "$quick" != "true" ]; then
-        deps=$(dep_list $all $lib $edsa)
+        local deps=$(dep_list $all $lib $edsa)
         if [ "$switchdeps" == "true" ]; then
             for p in $deps; do
                 setcli $p > /dev/null && switch_dep_branch $proj $branch || return 1
