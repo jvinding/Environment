@@ -102,7 +102,11 @@ git_diff_single_revision() {
 alias gdiff=git_diff_single_revision
 
 gco() {
-    git svn clone --stdlayout https://build.corp.localmatters.com/subversion/DestinationSearch/$1 $2
+    if [ -z "$SVN_ROOT" ]; then
+        echo "SVN_ROOT must be defined"
+        return 1;
+    fi
+    git svn clone --stdlayout $SVN_ROOT/$1 $2
 }
 
 gitgcall() {

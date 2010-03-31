@@ -1,6 +1,3 @@
-export CATALINA_HOME=/usr/local/tomcat
-export CATALINA_OPTS="-XX:MaxPermSize=160m -Djava.awt.headless=true -ea:com.localmatters... -ea:com.aptas... -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true -Dorg.apache.catalina.connector.CoyoteAdapter.ALLOW_BACKSLASH=true"
-
 alias gologs='cd $CATALINA_HOME/logs'
 alias goweb='cd $CATALINA_HOME/webapps'
 alias lt='tail -100f $CATALINA_HOME/logs/catalina.out'
