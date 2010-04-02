@@ -41,6 +41,7 @@ alias tas='setcli ed-tas-ds'
 alias ss='svn status'
 alias ssu='svn status -u'
 alias sup='[ -d .svn ] && svn up || gup'
+slist() { svn list $SVN_ROOT/$1; }
 
 clientmvn() {
     pushd $WORKSPACE/$CLIENT
@@ -211,10 +212,6 @@ alias gojs='gow js'
 alias gocss='gow css'
 alias gojsp='gow WEB-INF/jsp'
 
-## twx() { touch $CATALINA_HOME/webapps/${CLIENT}DS/WEB-INF/web.xml; }
-
-alias lc='while ! ldt; do sleep 1; done;'
-
 alias lat='tail -100f `ls -1 $CATALINA_HOME/logs/localhost_access* | tail -1`'
 
 alias homev='vncviewer -geometry=1024x768 -FullColor -PreferredEncoding=ZRLE -ZlibLevel=9 -via 24.8.98.73 localhost:0'
@@ -224,15 +221,6 @@ alias mac='/usr/bin/vncviewer --ZlibLevel=9 --Shared 10.4.1.169'
 
 alias rsreload='java -jar ~/bin/jmx.jar - localhost:1099 DestinationSearch:Context=${CLIENT}ds,name=ResourceSet reloadConfiguration'
 alias rsnofilter='java -jar ~/bin/jmx.jar - localhost:1099 DestinationSearch:Context=${CLIENT}ds,Class=ConcatenatingFilterSet,name=javascriptFilterSet setFilteringEnabledString=false'
-
-svn_checkout() {
-    dir=$2
-    if [ -z "$file" ]; then
-        dir=${1%%/trunk}
-        dir=${dir##*/}
-    fi
-    svn co https://build.corp.localmatters.com/subversion/DestinationSearch/$1 $dir
-}
 
 # sudo launchctl load /Library/LaunchDaemons/org.postgresql.dbms.plist
 
