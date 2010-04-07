@@ -191,7 +191,7 @@ build() {
         fi
     fi
 
-    mvn $mvnargs clean package && cpwar || { echo; echo -e "\033[1;31mfailed in $proj\033[0;0m"; return 1; }
+    sup && mvn $mvnargs clean package && cpwar || { echo; echo -e "\033[1;31mfailed in $proj\033[0;0m"; return 1; }
 
     echo -e "\033[1;32mBuilt $proj successfully\033[0;0m"
 }
