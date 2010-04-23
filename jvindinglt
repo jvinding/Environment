@@ -141,9 +141,10 @@ build() {
     local switchdeps=false
 #    local mvnargs=-DskipTests=true
     local mvnargs=-Dmaven.test.skip=true
+    local deployer=cpwar
 
     local OPTIND=0
-    while getopts "tdaelq" opt; do
+    while getopts "tdaelqr" opt; do
         case $opt in
             d ) switchdeps=true;;
             t ) mvnargs=;;
@@ -151,8 +152,10 @@ build() {
             e ) edsa=true;;
             l ) lib=true;;
             q ) quick=true;;
+            r ) deployer="cpwar -r";;
         esac
     done
+
     shift $(( $OPTIND - 1 ));
 
     local proj=$1
@@ -191,14 +194,25 @@ build() {
         fi
     fi
 
-    sup && mvn $mvnargs clean package && cpwar || { echo; echo -e "\033[1;31mfailed in $proj\033[0;0m"; return 1; }
+    sup && mvn $mvnargs clean package && `$deployer` || { echo; echo -e "\033[1;31mfailed in $proj\033[0;0m"; return 1; }
 
     echo -e "\033[1;32mBuilt $proj successfully\033[0;0m"
 }
 #
 # maven/svn dirs
 #
-cpwar() { cp $WORKSPACE/$CLIENT/target/*.war $CATALINA_HOME/webapps; }
+cpwar() {
+    local war=`ls $WORKSPACE/$CLIENT/target/*.war | head -1`
+    local target=$CATALINA_HOME/webapps
+    if [ -z "$war" ]; then
+        echo -e "\033[1;31mno war file found\033[0;0m"
+        return 1
+    fi
+    if [ "$1" == "-r" ]; then
+        target=${target}/ROOT.war
+    fi
+    cp $war $target
+}
 goc() {
     if [ -d $WORKSPACE/$CLIENT/$1 ]; then
         cd $WORKSPACE/$CLIENT/$1
