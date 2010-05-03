@@ -236,6 +236,6 @@ alias mac='/usr/bin/vncviewer --ZlibLevel=9 --Shared 10.4.1.169'
 alias rsreload='java -jar ~/bin/jmx.jar - localhost:1099 DestinationSearch:Context=${CLIENT}ds,name=ResourceSet reloadConfiguration'
 alias rsnofilter='java -jar ~/bin/jmx.jar - localhost:1099 DestinationSearch:Context=${CLIENT}ds,Class=ConcatenatingFilterSet,name=javascriptFilterSet setFilteringEnabledString=false'
 
-# sudo launchctl load /Library/LaunchDaemons/org.postgresql.dbms.plist
+# sudo launchctl load -w /Library/LaunchDaemons/org.postgresql.dbms.plist
 
 alias mysql='echo the password is \"password\"; mysql5 -u root -p'
