@@ -33,6 +33,8 @@ alias ec='setcli ed-core'
 alias ssw='setcli self-serve-web'
 alias tnz='setcli tnz'
 alias edfi='setcli edfi'
+alias eddk='setcli eddk'
+alias edcz='setcli edcz'
 alias tas='setcli ed-tas-ds'
 
 #
