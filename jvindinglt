@@ -240,4 +240,5 @@ alias rsnofilter='java -jar ~/bin/jmx.jar - localhost:1099 DestinationSearch:Con
 
 # sudo launchctl load -w /Library/LaunchDaemons/org.postgresql.dbms.plist
 
-alias mysql='echo the password is \"password\"; mysql5 -u root -p'
+alias mysql='mysql5 -u root --password=password'
+alias mysqlv='mysql5 -u visitor --password=visitor_'
