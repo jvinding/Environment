@@ -165,6 +165,11 @@ build() {
         proj=${CLIENT:=lm}
     fi
 
+    if [[ $proj =~ -core ]]; then
+        echo -e "\033[1;31mDon't use this script to build core project \"$proj\"\033[0;0m"
+        return 1
+    fi
+
     setcli $proj > /dev/null
 
     local branch=$2
