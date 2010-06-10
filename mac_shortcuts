@@ -1,0 +1,8 @@
+finder_show_hiddens() {
+    defaults write com.apple.Finder AppleShowAllFiles YES
+    killall Finder
+}
+finder_hide_hiddens() {
+    defaults write com.apple.Finder AppleShowAllFiles NO
+    killall Finder
+}
