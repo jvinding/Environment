@@ -122,7 +122,7 @@ switch_deps() {
         proj=${CLIENT:=lm}
     fi
 
-    setcli $proj > /dev/null
+    setcli $proj > /dev/null || { echo -e "\033[1;31mCould not switch to \"$proj\"\033[0;0m"; return 1; }
 
     local branch=$2
     if [ -z "$branch" ]; then
@@ -225,6 +225,7 @@ goc() {
         cd $WORKSPACE/$CLIENT/$1
     else
         cd $WORKSPACE
+        return 1
     fi
 }
 gow() { goc src/main/webapp/$1; }
