@@ -14,6 +14,9 @@ dir=${dir##${HOME}/}
 
 cd ~
 for s in $dir/dot_files/*; do
-    target=${s##*/}
-    ln -s $s .$target
+    target=.${s##*/}
+    if [ -L $target ]; then
+        rm $target
+    fi
+    ln -s $s $target
 done
