@@ -1,0 +1,14 @@
+syntax on
+color bob
+"source ~/.vim/plugins/*
+" source ~/.vim/plugins/feraltogglecommentify.vim
+" source ~/.vim/plugins/matchit.vim
+
+"set guifont=-schumacher-clean-medium-r-normal-*-*-120-*-*-c-*-iso646.1991-irv
+"set guifont=-misc-fixed-medium-r-semicondensed-*-*-120-*-*-c-*-koi8-r
+set guifont=Andale\ Mono\ 8
+winsize 105 50
+
+match error /\s\+$/
+
+" map <C-s> :winsize 105 50<CR>

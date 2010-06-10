@@ -1,0 +1,19 @@
+[user]
+	name = Jeremy Vinding
+	email = jvinding@localmatters.com
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+[alias]
+    co = checkout
+    s = status
+    b = branch
+    d = diff
+[core]
+	excludesfile = /Users/jvinding/.gitignore
+	autocrlf = input
+	ignorecase = false
+[github]
+	user = jvinding
+	token = 2476987b427f698f17a2b55850456da2

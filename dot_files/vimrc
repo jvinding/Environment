@@ -1,0 +1,69 @@
+"
+" set indentation options
+"
+set ts=4
+set shiftwidth=4
+set expandtab autoindent smartindent
+set ruler showcmd wildmenu nohlsearch
+
+set vb t_vb=
+
+set nocompatible        " Use Vim defaults (much better!)
+set bs=2                " backspace over newlines and all
+
+map <C-l> :syn sync fromstart<CR>
+map <A-n> :set number!<CR> " show line numbers
+
+map! <C-s> <ESC>:w<CR> " save
+nmap <C-s> :w<CR>
+
+let g:FTCOperateOnFirstColumnOnly = 0
+let g:FTCOperateOnlyOnNonComments = 1
+let g:FTCOperateOnBlankLines = 0
+
+
+"
+" set up some insert mode mappings
+"
+"imap ,setmark <ESC>maa
+"imap ,gotomark <ESC>`aa
+"
+"imap ,shebang #!/home/jvinding/bin/perl<CR>use warnings;<CR>use strict;<CR><CR>
+"
+"imap ,perlif if (,setmark)<CR>{<CR>}
+"imap ,ifo ,perlif,gotomark
+"imap ,ife ,perlif<CR>else<CR>{<CR>},gotomark
+"imap ,for for (,setmark;;)<CR>{<CR>},gotomark
+"
+"imap _tclif if {,setmark} {<CR>}
+"imap _ifo _tclif,gotomark
+"imap _ife _tclif else {<CR>},gotomark
+"imap _for for {,setmark} {} {} {<CR>},gotomark
+
+"source ~/.vim/plugins/feraltogglecommentify.vim
+"source ~/.vim/plugins/matchit.vim
+" source ~/.vim/plugin/AnsiEsc.vba
+
+"
+"
+"
+:map! <S-space><S-space> <esc>
+
+nmap <unique>	<C-/>	<Plug>FtcTc
+vmap <unique>	<C-/>	<Plug>FtcTc
+imap <unique>	<C-/>	<esc><Plug>FtcTc
+
+"
+" remove toolbar and tearoff menus in gui mode
+"
+"" let &guioptions = substitute(&guioptions, "[Tt]", "", "g")
+
+"" :if &term =~ "xterm"
+""     :if has("terminfo")
+""     :  set t_Co=16
+""     :  set t_AB=[%?%p1%{8}%<%t%p1%{40}%+%e%p1%{92}%+%;%dm
+""     :  set t_AF=[%?%p1%{8}%<%t%p1%{30}%+%e%p1%{82}%+%;%dm
+""     :endif
+"" :endif
+"map ,d :source ~/.vim/dvorak<CR>
+"map ,q :source ~/.vim/qwerty<CR>
