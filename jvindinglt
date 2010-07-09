@@ -63,7 +63,9 @@ alias mvncint='clientmvn -Dmaven.test.skip=true clean install'
 switch_dep_branch() {
     local proj=$1
     local branch=$2
+    local branchFromMaster=$3
     local projbranch=
+
     if git_has_branch "$1$2"; then
         projbranch="$1$2"
     elif git_has_branch $1; then
@@ -71,8 +73,13 @@ switch_dep_branch() {
     fi
 
     if [ -z "$projbranch" ]; then
-        echo -e "\033[1;31m$CLIENT does not have a branch called $proj$branch or $proj\033[0;0m"
-        return 1
+        if [ "$branchFromMaster" == "true" ]; then
+            git co -b $proj master || {  echo -e "\033[1;31mCould not create branch $proj for $CLIENT\033[0;0m"; return 1; }
+            echo "$CLIENT has new branch $proj"
+        else
+            echo -e "\033[1;31m$CLIENT does not have a branch called $proj$branch or $proj\033[0;0m"
+            return 1
+        fi
     elif git_is_on_branch $projbranch; then
         echo "$CLIENT is already on $projbranch"
     elif git co -q $projbranch > /dev/null; then
@@ -143,12 +150,13 @@ build() {
     local quick=false
     local edsa=false
     local switchdeps=false
+    local branchFromMaster=true
 #    local mvnargs=-DskipTests=true
     local mvnargs=-Dmaven.test.skip=true
     local deployer=cpwar
 
     local OPTIND=0
-    while getopts "tdaelqr" opt; do
+    while getopts "tdaelqmr" opt; do
         case $opt in
             d ) switchdeps=true;;
             t ) mvnargs=;;
@@ -156,6 +164,7 @@ build() {
             e ) edsa=true;;
             l ) lib=true;;
             q ) quick=true;;
+            m ) branchFromMaster=true;;
             r ) deployer="cpwar -r";;
         esac
     done
@@ -183,7 +192,7 @@ build() {
         local deps=$(dep_list $all $lib $edsa)
         if [ "$switchdeps" == "true" ]; then
             for p in $deps; do
-                setcli $p > /dev/null && switch_dep_branch $proj $branch || return 1
+                setcli $p > /dev/null && switch_dep_branch $proj $branch $branchFromMaster || return 1
             done
         fi
 
