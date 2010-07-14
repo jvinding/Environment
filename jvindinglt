@@ -259,3 +259,6 @@ alias rsnofilter='java -jar ~/bin/jmx.jar - localhost:1099 DestinationSearch:Con
 
 alias mysql='mysql5 -u root --password=password'
 alias mysqlv='mysql5 -u visitor --password=visitor_'
+
+alias pgstart='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
+alias pgstop='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
