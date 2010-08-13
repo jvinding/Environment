@@ -10,10 +10,11 @@
     s = status
     b = branch
     d = diff
+    dc = diff --cached
 [core]
 	excludesfile = /Users/jvinding/.gitignore
 	autocrlf = input
 	ignorecase = false
 [github]
 	user = jvinding
-	token = 2476987b427f698f17a2b55850456da2
+	token = XXX
