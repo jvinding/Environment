@@ -1,0 +1,12 @@
+war_up() {
+    pushd "/Applications/Warhammer Online.app/Contents/Resources/transgaming/c_drive/Program Files/Warhammer Online/Interface/Addons" > /dev/null
+    for s in *; do
+        if [ -d $s ] && [ -d $s/.git ]; then
+            echo "*** updating $s ***"
+            cd $s
+            git pull
+            cd ..
+        fi
+    done
+    popd > /dev/null
+}
