@@ -164,6 +164,17 @@ build() {
         branch=$(git_get_branch)
     fi
 
+    if ! [ -z "$branch" ]; then
+        if ! git_has_branch $branch; then
+            echo -e "\033[1;31m$CLIENT does not have branch $branch\033[0;0m"
+            return 1
+        elif ! git_is_on_branch $branch; then
+            git co $branch || { echo -e "\033[1;31m$proj could not switch to $branch\033[0;0m"; return 1; }
+        fi
+    fi
+
+    sup
+
     if [ "$snapshots" == "true" ]; then
         local deps=$(dep_list $proj)
         if [ "$switchdeps" == "true" ]; then
@@ -178,17 +189,7 @@ build() {
     fi
 
     setcli $proj
-
-    if ! [ -z "$branch" ]; then
-        if ! git_has_branch $branch; then
-            echo -e "\033[1;31m$CLIENT does not have branch $branch\033[0;0m"
-            return 1
-        elif ! git_is_on_branch $branch; then
-            git co $branch || { echo -e "\033[1;31m$proj could not switch to $branch\033[0;0m"; return 1; }
-        fi
-    fi
-
-    sup && mvn $mvnargs clean package && `$deployer` || { echo; echo -e "\033[1;31mfailed in $proj\033[0;0m"; return 1; }
+    mvn $mvnargs clean package && `$deployer` || { echo; echo -e "\033[1;31mfailed in $proj\033[0;0m"; return 1; }
 
     echo -e "\033[1;32mBuilt $proj successfully\033[0;0m"
 }
