@@ -90,38 +90,20 @@ switch_dep_branch() {
     fi
 }
 dep_list() {
-    local all=$1
-    local lib=$2
-    local edsa=$3
-
-    if [ "$all" == "true" ]; then
-        echo -n "lm-util lm-mvc lm-taglib self-serve-lib reviews "
-    fi
-
-    if [ "$lib" == "true" ] || [ "$all" == "true" ]; then
-        echo -n "ds-core-lib "
-        if [ "$edsa" == "true" ]; then
-            echo -n "ed-core "
-        fi
-    fi
-
-    echo -n "lm-core-web ds-core-web"
-
-    if [ "$edsa" == "true" ]; then
-        echo -n " ed-core-web"
-    fi
+    ## uses xmlstarlet: "brew install xmlstarlet" or http://xmlstar.sourceforge.net/
+    local proj=$1
+    xml sel -N pom=http://maven.apache.org/POM/4.0.0 \
+        -t -m "/pom:project/pom:dependencies/pom:dependency[contains(pom:version, 'SNAPSHOT')]" \
+        -v "concat(pom:artifactId, ' ')" \
+        $WORKSPACE/$proj/pom.xml
 }
 switch_deps() {
-    local lib=false
-    local all=false
-    local edsa=false
+    local snapshots=false
 
     local OPTIND=0
-    while getopts "ael" opt; do
+    while getopts "s" opt; do
         case $opt in
-            a ) all=true;;
-            e ) edsa=true;;
-            l ) lib=true;;
+            s ) snapshots=true;;
         esac
     done
     shift $(( $OPTIND - 1 ));
@@ -138,32 +120,26 @@ switch_deps() {
         branch=$(git_get_branch)
     fi
 
-    local deps=$(dep_list $all $lib $edsa)
+    local deps=$(dep_list $proj)
     for p in $deps; do
         setcli $p > /dev/null && switch_dep_branch $proj $branch || { setcli $client; return 1; }
     done
     setcli $proj
 }
 build() {
-    local lib=false
-    local all=false
-    local quick=false
-    local edsa=false
     local switchdeps=false
     local branchFromMaster=true
 #    local mvnargs=-DskipTests=true
     local mvnargs=-Dmaven.test.skip=true
     local deployer=cpwar
+    local snapshots=false
 
     local OPTIND=0
-    while getopts "tdaelqmr" opt; do
+    while getopts "tdsmr" opt; do
         case $opt in
             d ) switchdeps=true;;
             t ) mvnargs=;;
-            a ) all=true;;
-            e ) edsa=true;;
-            l ) lib=true;;
-            q ) quick=true;;
+            s ) snapshots=true;;
             m ) branchFromMaster=true;;
             r ) deployer="cpwar -r";;
         esac
@@ -188,8 +164,8 @@ build() {
         branch=$(git_get_branch)
     fi
 
-    if [ "$quick" != "true" ]; then
-        local deps=$(dep_list $all $lib $edsa)
+    if [ "$snapshots" == "true" ]; then
+        local deps=$(dep_list $proj)
         if [ "$switchdeps" == "true" ]; then
             for p in $deps; do
                 setcli $p > /dev/null && switch_dep_branch $proj $branch $branchFromMaster || return 1
