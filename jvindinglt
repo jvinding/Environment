@@ -56,6 +56,8 @@ alias mvncp='clientmvn clean package && cpwar'
 alias mvncpnt='clientmvn -Dmaven.test.skip=true clean package && cpwar'
 alias mvnci='clientmvn clean install'
 alias mvncint='clientmvn -Dmaven.test.skip=true clean install'
+alias mvncob='mvn cobertura:cobertura'
+alias mvnccob='mvn clean cobertura:cobertura'
 
 #
 #
