@@ -175,7 +175,7 @@ build() {
         fi
     fi
 
-    sup
+    sup || { echo; echo -e "\033[1;31mfailed to update $proj from source control\033[0;0m"; return 1; }
 
     if [ "$snapshots" == "true" ]; then
         local deps=$(dep_list $proj)
