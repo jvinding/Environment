@@ -1,3 +1,5 @@
+alias gowar='cd "/Applications/Warhammer Online.app/Contents/Resources/transgaming/c_drive/Program Files/Warhammer Online/Interface/Addons"'
+
 war_up() {
     pushd "/Applications/Warhammer Online.app/Contents/Resources/transgaming/c_drive/Program Files/Warhammer Online/Interface/Addons" > /dev/null
     for s in *; do
