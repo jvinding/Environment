@@ -13,9 +13,11 @@ export SVN_ROOT=https://build.corp.localmatters.com/subversion/DestinationSearch
 export CATALINA_HOME=/usr/local/tomcat
 export CATALINA_OPTS="-XX:MaxPermSize=160m -Djava.awt.headless=true -ea:com.localmatters... -ea:com.aptas... -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true -Dorg.apache.catalina.connector.CoyoteAdapter.ALLOW_BACKSLASH=true"
 
+
 . ~/Environment/git
 . ~/Environment/git-completion.bash
 . ~/Environment/tomcat
+. ~/Environment/mac_shortcuts
 
 
 setcli() {
@@ -33,6 +35,8 @@ alias ec='setcli ed-core'
 alias ssw='setcli self-serve-web'
 alias tnz='setcli tnz'
 alias edfi='setcli edfi'
+alias eddk='setcli eddk'
+alias edcz='setcli edcz'
 alias tas='setcli ed-tas-ds'
 
 #
@@ -41,6 +45,7 @@ alias tas='setcli ed-tas-ds'
 alias ss='svn status'
 alias ssu='svn status -u'
 alias sup='[ -d .svn ] && svn up || gup'
+slist() { svn list $SVN_ROOT/$1; }
 
 clientmvn() {
     pushd $WORKSPACE/$CLIENT
@@ -51,6 +56,8 @@ alias mvncp='clientmvn clean package && cpwar'
 alias mvncpnt='clientmvn -Dmaven.test.skip=true clean package && cpwar'
 alias mvnci='clientmvn clean install'
 alias mvncint='clientmvn -Dmaven.test.skip=true clean install'
+alias mvncob='mvn cobertura:cobertura'
+alias mvnccob='mvn clean cobertura:cobertura'
 
 #
 #
@@ -58,7 +65,9 @@ alias mvncint='clientmvn -Dmaven.test.skip=true clean install'
 switch_dep_branch() {
     local proj=$1
     local branch=$2
+    local branchFromMaster=$3
     local projbranch=
+
     if git_has_branch "$1$2"; then
         projbranch="$1$2"
     elif git_has_branch $1; then
@@ -66,8 +75,13 @@ switch_dep_branch() {
     fi
 
     if [ -z "$projbranch" ]; then
-        echo -e "\033[1;31m$CLIENT does not have a branch called $proj$branch or $proj\033[0;0m"
-        return 1
+        if [ "$branchFromMaster" == "true" ]; then
+            git co -b $proj master || {  echo -e "\033[1;31mCould not create branch $proj for $CLIENT\033[0;0m"; return 1; }
+            echo "$CLIENT has new branch $proj"
+        else
+            echo -e "\033[1;31m$CLIENT does not have a branch called $proj$branch or $proj\033[0;0m"
+            return 1
+        fi
     elif git_is_on_branch $projbranch; then
         echo "$CLIENT is already on $projbranch"
     elif git co -q $projbranch > /dev/null; then
@@ -78,38 +92,20 @@ switch_dep_branch() {
     fi
 }
 dep_list() {
-    local all=$1
-    local lib=$2
-    local edsa=$3
-
-    if [ "$all" == "true" ]; then
-        echo -n "lm-util lm-mvc lm-taglib self-serve-lib reviews "
-    fi
-
-    if [ "$lib" == "true" ] || [ "$all" == "true" ]; then
-        echo -n "ds-core-lib "
-        if [ "$edsa" == "true" ]; then
-            echo -n "ed-core "
-        fi
-    fi
-
-    echo -n "lm-core-web ds-core-web"
-
-    if [ "$edsa" == "true" ]; then
-        echo -n " ed-core-web"
-    fi
+    ## uses xmlstarlet: "brew install xmlstarlet" or http://xmlstar.sourceforge.net/
+    local proj=$1
+    xml sel -N pom=http://maven.apache.org/POM/4.0.0 \
+        -t -m "/pom:project/pom:dependencies/pom:dependency[contains(pom:version, 'SNAPSHOT')]" \
+        -v "concat(pom:artifactId, ' ')" \
+        $WORKSPACE/$proj/pom.xml
 }
 switch_deps() {
-    local lib=false
-    local all=false
-    local edsa=false
+    local snapshots=false
 
     local OPTIND=0
-    while getopts "ael" opt; do
+    while getopts "s" opt; do
         case $opt in
-            a ) all=true;;
-            e ) edsa=true;;
-            l ) lib=true;;
+            s ) snapshots=true;;
         esac
     done
     shift $(( $OPTIND - 1 ));
@@ -119,46 +115,48 @@ switch_deps() {
         proj=${CLIENT:=lm}
     fi
 
-    setcli $proj > /dev/null
+    setcli $proj > /dev/null || { echo -e "\033[1;31mCould not switch to \"$proj\"\033[0;0m"; return 1; }
 
     local branch=$2
     if [ -z "$branch" ]; then
         branch=$(git_get_branch)
     fi
 
-    local deps=$(dep_list $all $lib $edsa)
+    local deps=$(dep_list $proj)
     for p in $deps; do
         setcli $p > /dev/null && switch_dep_branch $proj $branch || { setcli $client; return 1; }
     done
     setcli $proj
 }
 build() {
-    local deps=
-
-    local lib=false
-    local all=false
-    local quick=false
-    local edsa=false
     local switchdeps=false
+    local branchFromMaster=true
 #    local mvnargs=-DskipTests=true
     local mvnargs=-Dmaven.test.skip=true
+    local deployer=cpwar
+    local snapshots=false
 
     local OPTIND=0
-    while getopts "tdaelq" opt; do
+    while getopts "tdsmr" opt; do
         case $opt in
             d ) switchdeps=true;;
             t ) mvnargs=;;
-            a ) all=true;;
-            e ) edsa=true;;
-            l ) lib=true;;
-            q ) quick=true;;
+            s ) snapshots=true;;
+            m ) branchFromMaster=true;;
+            r ) deployer="cpwar -r";;
         esac
     done
+
     shift $(( $OPTIND - 1 ));
 
     local proj=$1
     if [ -z "$proj" ]; then
         proj=${CLIENT:=lm}
+    fi
+
+    if [[ $proj =~ -core ]]; then
+        echo -e "\033[1;31mDon't use this script to build core project \"$proj\"\033[0;0m"
+        return 1
     fi
 
     setcli $proj > /dev/null
@@ -167,21 +165,6 @@ build() {
     if [ -z "$branch" ]; then
         branch=$(git_get_branch)
     fi
-
-    if [ "$quick" != "true" ]; then
-        deps=$(dep_list $all $lib $edsa)
-        if [ "$switchdeps" == "true" ]; then
-            for p in $deps; do
-                setcli $p > /dev/null && switch_dep_branch $proj $branch || return 1
-            done
-        fi
-
-        for p in $deps; do
-            setcli $p && sup && mvn $mvnargs clean install || { echo; echo -e "\033[1;31mfailed in $p\033[0;0m"; setcli $proj; return 1; }
-        done
-    fi
-
-    setcli $proj
 
     if ! [ -z "$branch" ]; then
         if ! git_has_branch $branch; then
@@ -192,19 +175,47 @@ build() {
         fi
     fi
 
-    mvn $mvnargs clean package && cpwar || { echo; echo -e "\033[1;31mfailed in $proj\033[0;0m"; return 1; }
+    sup || { echo; echo -e "\033[1;31mfailed to update $proj from source control\033[0;0m"; return 1; }
+
+    if [ "$snapshots" == "true" ]; then
+        local deps=$(dep_list $proj)
+        if [ "$switchdeps" == "true" ]; then
+            for p in $deps; do
+                setcli $p > /dev/null && switch_dep_branch $proj $branch $branchFromMaster || return 1
+            done
+        fi
+
+        for p in $deps; do
+            setcli $p && sup && mvn $mvnargs clean install || { echo; echo -e "\033[1;31mfailed in $p\033[0;0m"; setcli $proj; return 1; }
+        done
+    fi
+
+    setcli $proj
+    mvn $mvnargs clean package && `$deployer` || { echo; echo -e "\033[1;31mfailed in $proj\033[0;0m"; return 1; }
 
     echo -e "\033[1;32mBuilt $proj successfully\033[0;0m"
 }
 #
 # maven/svn dirs
 #
-cpwar() { cp $WORKSPACE/$CLIENT/target/*.war $CATALINA_HOME/webapps; }
+cpwar() {
+    local war=`ls $WORKSPACE/$CLIENT/target/*.war | head -1`
+    local target=$CATALINA_HOME/webapps
+    if [ -z "$war" ]; then
+        echo -e "\033[1;31mno war file found\033[0;0m"
+        return 1
+    fi
+    if [ "$1" == "-r" ]; then
+        target=${target}/ROOT.war
+    fi
+    cp $war $target
+}
 goc() {
     if [ -d $WORKSPACE/$CLIENT/$1 ]; then
         cd $WORKSPACE/$CLIENT/$1
     else
         cd $WORKSPACE
+        return 1
     fi
 }
 gow() { goc src/main/webapp/$1; }
@@ -212,10 +223,6 @@ alias gowjsp='gow WEB-INF/jsp'
 alias gojs='gow js'
 alias gocss='gow css'
 alias gojsp='gow WEB-INF/jsp'
-
-## twx() { touch $CATALINA_HOME/webapps/${CLIENT}DS/WEB-INF/web.xml; }
-
-alias lc='while ! ldt; do sleep 1; done;'
 
 alias lat='tail -100f `ls -1 $CATALINA_HOME/logs/localhost_access* | tail -1`'
 
@@ -227,15 +234,10 @@ alias mac='/usr/bin/vncviewer --ZlibLevel=9 --Shared 10.4.1.169'
 alias rsreload='java -jar ~/bin/jmx.jar - localhost:1099 DestinationSearch:Context=${CLIENT}ds,name=ResourceSet reloadConfiguration'
 alias rsnofilter='java -jar ~/bin/jmx.jar - localhost:1099 DestinationSearch:Context=${CLIENT}ds,Class=ConcatenatingFilterSet,name=javascriptFilterSet setFilteringEnabledString=false'
 
-svn_checkout() {
-    dir=$2
-    if [ -z "$file" ]; then
-        dir=${1%%/trunk}
-        dir=${dir##*/}
-    fi
-    svn co https://build.corp.localmatters.com/subversion/DestinationSearch/$1 $dir
-}
+# sudo launchctl load -w /Library/LaunchDaemons/org.postgresql.dbms.plist
 
-# sudo launchctl load /Library/LaunchDaemons/org.postgresql.dbms.plist
+alias mysql='mysql5 -u root --password=password'
+alias mysqlv='mysql5 -u visitor --password=visitor_'
 
-alias mysql=mysql5
+alias pgstart='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
+alias pgstop='pg_ctl -D /usr/local/var/postgres stop -s -m fast'

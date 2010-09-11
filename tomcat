@@ -38,7 +38,11 @@ tcrun() {
     then
         rm -rf $CATALINA_HOME/work/* $CATALINA_HOME/temp/*
     fi
-    $CATALINA_HOME/bin/catalina.sh jpda run
+    if which ack > /dev/null; then
+        $CATALINA_HOME/bin/catalina.sh jpda run | ack --passthru --color-match='white on_red' '.*(?:ERROR|SEVERE|FATAL).*'
+    else
+        $CATALINA_HOME/bin/catalina.sh jpda run
+    fi
 }
 tcwipe() {
     ## echo deleting $CATALINA_HOME/work/* $CATALINA_HOME/webapps/* $CATALINA_HOME/conf/Catalina/

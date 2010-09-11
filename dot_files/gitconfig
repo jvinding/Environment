@@ -1,0 +1,22 @@
+[user]
+	name = Jeremy Vinding
+	email = jvinding@localmatters.com
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+[alias]
+    co = checkout
+    s = status
+    b = branch
+    d = diff
+    dc = diff --cached
+    sl = stash list
+    ss = stash show -u
+[core]
+	excludesfile = /Users/jvinding/.gitignore
+	autocrlf = input
+	ignorecase = false
+[github]
+	user = jvinding
+	token = XXX
