@@ -44,7 +44,7 @@ alias tas='setcli ed-tas-ds'
 #
 alias ss='svn status'
 alias ssu='svn status -u'
-alias sup='[ -d .svn ] && svn up || gup'
+alias sup='[ -d .svn ] && svn up || git_update_from_subversion'
 slist() { svn list $SVN_ROOT/$1; }
 
 clientmvn() {

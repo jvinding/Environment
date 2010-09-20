@@ -101,7 +101,6 @@ git_update_from_subversion() {
         git stash pop
     fi
 }
-alias gup=git_update_from_subversion
 
 git_diff_single_revision() {
     local revision=$(git svn find-rev r${1#r})
