@@ -46,6 +46,12 @@ git_svn_dcommit() {
         echo not a git svn repository
         return 1
     fi
+
+    local changes=`git_change_list`
+    if ! [ -z "$changes" ]; then
+        git stash save "dcommit stash"
+    fi
+
     local branch=`git_get_branch`
     echo commiting $branch
     git svn rebase || { echo "failed to rebase"; return 1; }
@@ -63,6 +69,9 @@ git_svn_dcommit() {
             git checkout $branch
         fi
     fi
+    if ! [ -z "$changes" ]; then
+        git stash pop
+    fi
 }
 alias dcommit=git_svn_dcommit
 
@@ -75,7 +84,7 @@ git_update_from_subversion() {
     local branch=`git_get_branch`
     local changes=`git_change_list`
     if ! [ -z "$changes" ]; then
-        git stash
+        git stash save "git update stash"
     fi
     if ! [[ "$branch" =~ "master" ]]; then
         git_switch_to_master || return 1
