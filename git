@@ -57,7 +57,7 @@ git_svn_dcommit() {
     git svn rebase || { echo "failed to rebase"; return 1; }
     git svn dcommit || { echo "dcommit failed"; return 1; }
 
-    if ! [[ "$branch" =~ "master" ]]; then
+    if ! [[ "$branch" =~ "master" ]] && [ -z "$changes" ]; then
         git_switch_to_master || return 1
         git svn rebase || return 1
         read -p "Do you want to delete the branch ${branch}? y/N " -n1 delete
