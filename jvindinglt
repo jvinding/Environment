@@ -4,7 +4,7 @@ export TZ="US/Mountain"
 export JAVA_OPTS="-Xms256m -Xmx512m"
 export JAVA_HOME=/Library/Java/Home
 
-SERVERPATH="/opt/local/bin /opt/local/lib/postgresql82/bin /Users/jvinding/projects/lm-scripts"
+SERVERPATH="/opt/local/bin /opt/local/lib/postgresql82/bin /Users/jvinding/projects/lm-scripts /usr/local/play /usr/local/android/tools"
 
 export WORKSPACE=/Users/jvinding/projects
 
@@ -19,6 +19,7 @@ export CATALINA_OPTS="-XX:MaxPermSize=160m -Djava.awt.headless=true -ea:com.loca
 . ~/Environment/tomcat
 . ~/Environment/mac_shortcuts
 
+env_set_var SCALA_HOME /usr/local/Cellar/scala/2.8.0/
 
 setcli() {
     export CLIENT=$1;
