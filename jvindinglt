@@ -8,7 +8,7 @@ SERVERPATH="/opt/local/bin /opt/local/lib/postgresql82/bin /Users/jvinding/proje
 
 export WORKSPACE=/Users/jvinding/projects
 
-export SVN_ROOT=https://build.corp.localmatters.com/subversion/DestinationSearch
+export SVN_ROOT=https://subversion.corp.localmatters.com/subversion/DestinationSearch
 
 export CATALINA_HOME=/usr/local/tomcat
 export CATALINA_OPTS="-XX:MaxPermSize=160m -Djava.awt.headless=true -ea:com.localmatters... -ea:com.aptas... -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dorg.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH=true -Dorg.apache.catalina.connector.CoyoteAdapter.ALLOW_BACKSLASH=true"
@@ -45,7 +45,8 @@ alias tas='setcli ed-tas-ds'
 #
 alias ss='svn status'
 alias ssu='svn status -u'
-alias sup='[ -d .svn ] && svn up || git_update_from_subversion'
+alias sup='[ -d .svn ] && svn up || git_update'
+alias pull='sup'
 slist() { svn list $SVN_ROOT/$1; }
 
 clientmvn() {
