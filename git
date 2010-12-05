@@ -102,6 +102,60 @@ git_update_from_subversion() {
     fi
 }
 
+git_update() {
+    if [ -d .git/svn ]; then
+        git_update_from_subversion
+    else
+        local branch=`git_get_branch`
+        local changes=`git_change_list`
+
+        if ! [ -z "$changes" ]; then
+            git stash save "git update stash"
+        fi
+
+        if [ "$branch" == "master" ]; then
+            git pull || return 1
+        else
+            git co master || return 1
+            git pull || return 1
+            git co $branch || return 1
+            git rebase master || return 1
+        fi
+
+        if ! [ -z "$changes" ]; then
+            git stash pop
+        fi
+    fi
+}
+
+git_push() {
+    if [ -d .git/svn ]; then
+        git_svn_dcommit
+    else
+        git_update
+        local branch=`git_get_branch`
+        local changes=`git_change_list`
+
+        if ! [ -z "$changes" ]; then
+            git stash save "git update stash"
+        fi
+        if [ "$branch" != "master" ]; then
+            git co master || return 1
+            git merge $branch || return 1
+        fi
+        git push || return 1
+
+        if [ "$branch" != "master" ]; then
+            git co $branch || return 1
+        fi
+
+        if ! [ -z "$changes" ]; then
+            git stash pop
+        fi
+    fi
+}
+alias push=git_push
+
 git_diff_single_revision() {
     local revision=$(git svn find-rev r${1#r})
     [ -z "$revision" ] && { echo "no such revision found"; return 1; }
@@ -109,12 +163,17 @@ git_diff_single_revision() {
 }
 alias gdiff=git_diff_single_revision
 
-gco() {
+gsco() {
     if [ -z "$SVN_ROOT" ]; then
         echo "SVN_ROOT must be defined"
         return 1;
     fi
     git svn clone --stdlayout $SVN_ROOT/$1 $2
+}
+gco() {
+    GIT_SSL_NO_VERIFY=1 git clone https://subversion01.corp.localmatters.com/git/$1
+    cd $1
+    git config http.sslverify false
 }
 
 gitgcall() {
