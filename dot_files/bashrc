@@ -21,7 +21,11 @@ fi
 if [ ! -z "$BASH" ]
 then
     export BASH_COMPLETION_DIR=~jvinding/.bash_completion
-    export BASH_COMPLETION=~jvinding/.bashscripts/bash_completion
+    if [ -f /usr/local/etc/bash_completion ]; then
+        export BASH_COMPLETION=/usr/local/etc/bash_completion
+    else
+        export BASH_COMPLETION=~jvinding/.bashscripts/bash_completion
+    fi
     bash=${BASH_VERSION%.*}; bmaj=${bash%.*}; bmin=${bash#*.}
     if [ ! -z "$PS1" ] && [ $bmaj -ge 2 ] && [ -f $BASH_COMPLETION ]
     then # interactive shell
