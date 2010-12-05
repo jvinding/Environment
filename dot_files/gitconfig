@@ -13,6 +13,8 @@
     dc = diff --cached
     sl = stash list
     ss = stash show -u
+    lol = log --graph --decorate --pretty=oneline --abbrev-commit
+    lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
 [core]
 	excludesfile = /Users/jvinding/.gitignore
 	autocrlf = input
@@ -20,3 +22,5 @@
 [github]
 	user = jvinding
 	token = XXX
+[branch]
+	autosetupmerge = true
