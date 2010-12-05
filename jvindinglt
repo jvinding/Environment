@@ -4,7 +4,7 @@ export TZ="US/Mountain"
 export JAVA_OPTS="-Xms256m -Xmx512m"
 export JAVA_HOME=/Library/Java/Home
 
-SERVERPATH="/opt/local/bin /opt/local/lib/postgresql82/bin /Users/jvinding/projects/lm-scripts /usr/local/play /usr/local/android/tools"
+SERVERPATH="/opt/local/bin /opt/local/lib/postgresql82/bin /Users/jvinding/projects/lm-scripts /usr/local/play /usr/local/android/tools /usr/local/mongodb/bin"
 
 export WORKSPACE=/Users/jvinding/projects
 
@@ -242,3 +242,6 @@ alias mysqlv='mysql5 -u visitor --password=visitor_'
 
 alias pgstart='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
 alias pgstop='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
+
+alias pr='play run'
+alias pcr='play clean; play run'
