@@ -143,7 +143,24 @@ build() {
 
     local proj=$1
     if [ -z "$proj" ]; then
-        proj=${CLIENT:=lm}
+        proj=${CLIENT}
+    fi
+    if [ -z "$proj" ]; then
+        local project_path=`pwd`
+        if ! [ -z "${project_path}" ]; then
+            while ! [ -z "$project_path" ] && ! [ -d "${project_path}/src" ]; do
+                project_path=${project_path%/*}
+                if [ "$project_path" == "/" ]; then
+                    project_path=
+                fi
+            done
+            proj=${project_path##*/}
+        fi
+    fi
+
+    if [ -z "$proj" ]; then
+        echo -e "\033[1;31mCan't figure out which project you want to build\033[0;0m"
+        return 1
     fi
 
     if [[ $proj =~ -core ]]; then
