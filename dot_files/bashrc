@@ -24,7 +24,7 @@ then
     if [ -f /usr/local/etc/bash_completion ]; then
         export BASH_COMPLETION=/usr/local/etc/bash_completion
     else
-        export BASH_COMPLETION=~jvinding/.bashscripts/bash_completion
+        export BASH_COMPLETION=~jvinding/Environment/bash_completion
     fi
     bash=${BASH_VERSION%.*}; bmaj=${bash%.*}; bmin=${bash#*.}
     if [ ! -z "$PS1" ] && [ $bmaj -ge 2 ] && [ -f $BASH_COMPLETION ]
