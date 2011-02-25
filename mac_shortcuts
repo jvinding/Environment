@@ -1,3 +1,11 @@
+dock_translucent_hiddens() {
+    defaults write com.apple.Dock showhidden -bool YES
+    killall Dock
+}
+dock_notranslucent_hiddens() {
+    defaults write com.apple.Dock showhidden -bool NO
+    killall Dock
+}
 finder_show_hiddens() {
     defaults write com.apple.Finder AppleShowAllFiles YES
     killall Finder
