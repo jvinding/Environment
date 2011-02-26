@@ -13,16 +13,16 @@ git_is_on_branch() {
 git_push() {
 	local branch=`git_get_branch`
 	[[ -z "$branch" ]] && return 1
-	if ! git_is_on_branch master; then
+	if [ "$branch" != "master" ]; then
 		git checkout master || { echo "Failed to check out master"; return 1; }
 	fi
 	git pull || { echo "failed to pull"; return 1; }
-	if ! git_is_on_branch master; then
+	if [ "$branch" != "master" ]; then
 		git merge $branch || { echo "failed merge"; return 1; }
 	fi
 	git push || { echo "failed push"; return 1; }
 
-	if ! git_is_on_branch master; then
+	if [ "$branch" != "master" ]; then
 		read -p "Do you want to delete the branch ${branch}? y/N " -n1 delete
 		echo
 
@@ -30,6 +30,7 @@ git_push() {
 			git branch -d $branch
 		else
 			git checkout $branch
+			git merge master
 		fi
 	fi
 }
