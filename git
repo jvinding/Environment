@@ -45,6 +45,7 @@ git_branch() {
 		echo "Already on branch $branch"
 	elif git_has_branch "$branch"; then
 		git co "$branch"
+		git merge master
 	else
 		git checkout master || { echo "Failed to check out master"; return 1; }
 		git pull || { echo "failed to pull"; return 1; }
