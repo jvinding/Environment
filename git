@@ -70,7 +70,14 @@ git_abandon_branch() {
 
 		local branch=`git_get_branch`
 		git checkout master || { echo "Failed to check out master"; return 1; }
-		git branch -d "$branch"
+		git branch -d "$branch" || {
+			read -p "Do you want to force deletion of the branch ${branch}? y/N " -n1 delete
+			echo
+
+			if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
+				git branch -D $branch
+			fi
+		}
 	fi
 }
 # git_get_svn_branch() {
