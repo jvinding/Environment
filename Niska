@@ -1,0 +1,12 @@
+export SERVERPATH="/Users/jvinding/Tools/android/tools /Users/jvinding/Tools/android/platform-tools /Users/jvinding/Projects/Java/play /Users/jvinding/Tools/mongo/bin"
+export CDPATH=.:~:~/Projects:~/Projects/Android:~/Projects/iOS
+
+. ~/Environment/git
+. ~/Environment/git-completion.bash
+. ~/Environment/mac_shortcuts
+
+alias push='git_push'
+alias branch='git_branch'
+alias abandon='git_abandon_branch'
+
+alias lc="adb logcat | grep -E -v 'dalvikvm|CachedRequest|DETools\.|V/Wifi|wpa_supplicant'"
