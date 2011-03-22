@@ -47,7 +47,9 @@ git_branch() {
 		git co "$branch"
 		git merge master
 	else
-		git checkout master || { echo "Failed to check out master"; return 1; }
+		if ! git_is_on_branch master; then
+			git checkout master || { echo "Failed to check out master"; return 1; }
+		fi
 		git pull || { echo "failed to pull"; return 1; }
 		git co -b "$branch" || { echo "Failed to create branch $branch"; return 1; }
 	fi
