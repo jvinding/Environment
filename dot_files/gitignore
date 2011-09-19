@@ -1,8 +1,6 @@
 .gitignore
 target
 .DS_Store
-.classpath
-.project
 .eclipsebuild
 *.swp
 *~.nib
