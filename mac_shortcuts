@@ -33,3 +33,9 @@ volume_set() {
 volume_mute() {
     volume_set 0
 }
+
+back_to_my_mac() {
+	local hostname=$(echo -n $1 | sed 's/ /-/g')
+	echo "Connecting to ${hostname}.jvinding.members.mac.com"
+	ssh ${hostname}.jvinding.members.mac.com.
+}
