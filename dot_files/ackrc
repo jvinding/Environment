@@ -1,3 +1,5 @@
+--type-set=xib=.xib
 --type-add=jsp=.tag
 --type-set=ui=.css,.js,.jsp,.jspx,.jhtm,.jhtml,.tag,.htm,.html,.shtml,.xhtml
+
 --ignore-dir=target
