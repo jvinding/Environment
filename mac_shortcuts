@@ -39,3 +39,5 @@ back_to_my_mac() {
 	echo "Connecting to ${hostname}.jvinding.members.mac.com"
 	ssh ${hostname}.jvinding.members.mac.com.
 }
+
+alias lock='/System/Library/CoreServices/"Menu Extras"/User.menu/Contents/Resources/CGSession -suspend'
