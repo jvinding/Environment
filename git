@@ -10,31 +10,6 @@ git_is_on_branch() {
     [ "$(git_get_branch)" == "$1" ]
 }
 
-git_push() {
-	local branch=`git_get_branch`
-	[[ -z "$branch" ]] && return 1
-	if [ "$branch" != "master" ]; then
-		git checkout master || { echo "Failed to check out master"; return 1; }
-	fi
-	git pull || { echo "failed to pull"; return 1; }
-	if [ "$branch" != "master" ]; then
-		git merge $branch || { echo "failed merge"; return 1; }
-	fi
-	git push || { echo "failed push"; return 1; }
-
-	if [ "$branch" != "master" ]; then
-		read -p "Do you want to delete the branch ${branch}? y/N " -n1 delete
-		echo
-
-		if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
-			git branch -d $branch
-		else
-			git checkout $branch
-			git merge master
-		fi
-	fi
-}
-
 git_change_list() {
     git ls-files -m --exclude-standard
 }
@@ -80,166 +55,255 @@ git_abandon_branch() {
 		}
 	fi
 }
-# git_get_svn_branch() {
-#     local branch=`git svn info | grep URL | cut -c6-` || return 1
-#     if [[ "$branch" =~ '/trunk' ]]; then
-#         echo "trunk"
-#     elif [[ "$branch" =~ '/branches/' ]]; then
-#         echo ${branch##*branches/}
-#     elif [[ "$branch" =~ '/tags/' ]]; then
-#         echo ${branch##*tags/}
-#     fi
-# }
-# git_get_master_branch() {
-#     local branch=`git_get_svn_branch`
-#     [[ -z "$branch" ]] && return 1
-# 
-#     if [[ "$branch" == "trunk" ]]; then
-#         echo master
-#     else
-#         echo master-${branch}
-#     fi
-# }
-# git_switch_to_master() {
-#     local master=`git_get_master_branch`
-#     [[ -z "$master" ]] && return 1
-# 
-#     if git b | grep $master > /dev/null; then
-#         git checkout $master || { echo "could not change to $master branch"; return 1; }
-#     else
-#         local branch=`git_get_svn_branch`
-#         git checkout -b $master $branch || { echo "could not create to $master branch"; return 1; }
-#     fi
-# }
-# git_svn_dcommit() {
-#     if ! [ -d .git/svn ]; then
-#         echo not a git svn repository
-#         return 1
-#     fi
-# 
-#     local changes=`git_change_list`
-#     if ! [ -z "$changes" ]; then
-#         git stash save "dcommit stash"
-#     fi
-# 
-#     local branch=`git_get_branch`
-#     echo commiting $branch
-#     git svn rebase || { echo "failed to rebase"; return 1; }
-#     git svn dcommit || { echo "dcommit failed"; return 1; }
-# 
-#     if ! [[ "$branch" =~ "master" ]] && [ -z "$changes" ]; then
-#         git_switch_to_master || return 1
-#         git svn rebase || return 1
-#         read -p "Do you want to delete the branch ${branch}? y/N " -n1 delete
-#         echo
-# 
-#         if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
-#             git branch -d $branch
-#         else
-#             git checkout $branch
-#         fi
-#     fi
-#     if ! [ -z "$changes" ]; then
-#         git stash pop
-#     fi
-# }
+
+git_prompt_stage() {
+    local file="$1"
+    local ignore_white_space=${2:=false}
+    if [ true == $ignore_white_space ]; then
+        git diff -w -- $file
+    else
+        git diff -- $file
+    fi
+    read -p "Stage the above file? y/p/w/N " -n1 stage
+    echo
+    if [ "$stage" == "Y" ] || [ "$stage" == "y" ]; then
+        git add -- $file || { echo "failed to stage"; return 1; }
+    elif [ "$stage" == "P" ] || [ "$stage" == "p" ]; then
+        git add --patch -- $file || { echo "failed to stage"; return 1; }
+    elif [ "$stage" == "W" ] || [ "$stage" == "w" ]; then
+        git_prompt_stage $file true
+    fi
+}
+
+git_stage() {
+    ## TODO: support removed files
+    ## TODO: add ability to revert a file
+    for s in $(git_change_list); do
+        git_prompt_stage "$s" false
+    done
+}
+
+git_add() {
+    for s in $(git ls-files -o --exclude-standard); do
+        echo $s
+        read -p "Stage the above file? y/N/q " -n1 stage
+        if [ "$stage" == "Y" ] || [ "$stage" == "y" ]; then
+            git add $s || { echo "failed to stage"; return 1; }
+        elif [ "$stage" == "Q" ] || [ "$stage" == "q" ]; then
+            return 0
+        fi
+        echo
+    done
+}
+
+#
+# aliases
+#
+alias abandon=git_abandon_branch
+alias branch=git_branch
+alias push=git_push
+alias stage=git_stage
+alias add=git_add
+
+#
+# Completion -- requires git-completion.bash
+complete -o nospace -F _git_checkout git_branch
+complete -o nospace -F _git_checkout branch
+
+git_get_svn_branch() {
+    local branch=`git svn info | grep URL | cut -c6-` || return 1
+    if [[ "$branch" =~ '/trunk' ]]; then
+        echo "trunk"
+    elif [[ "$branch" =~ '/branches/' ]]; then
+        echo ${branch##*branches/}
+    elif [[ "$branch" =~ '/tags/' ]]; then
+        echo ${branch##*tags/}
+    fi
+}
+git_get_master_branch() {
+    local branch=`git_get_svn_branch`
+    [[ -z "$branch" ]] && return 1
+
+    if [[ "$branch" == "trunk" ]]; then
+        echo master
+    else
+        echo master-${branch}
+    fi
+}
+git_switch_to_master() {
+    local master=`git_get_master_branch`
+    [[ -z "$master" ]] && return 1
+
+    if git b | grep $master > /dev/null; then
+        git checkout $master || { echo "could not change to $master branch"; return 1; }
+    else
+        local branch=`git_get_svn_branch`
+        git checkout -b $master remotes/$branch || { echo "could not create $master branch"; return 1; }
+    fi
+}
+git_svn_dcommit() {
+    if ! [ -d .git/svn ]; then
+        echo not a git svn repository
+        return 1
+    fi
+
+    local changes=`git_change_list`
+    if ! [ -z "$changes" ]; then
+        git stash save "dcommit stash"
+    fi
+
+    local branch=`git_get_branch`
+    echo commiting $branch
+    git svn rebase || { echo "failed to rebase"; return 1; }
+    git svn dcommit || { echo "dcommit failed"; return 1; }
+
+    if ! [[ "$branch" =~ "master" ]] && [ -z "$changes" ]; then
+        git_switch_to_master || return 1
+        git svn rebase || return 1
+        read -p "Do you want to delete the branch ${branch}? y/N " -n1 delete
+        echo
+
+        if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
+            git branch -d $branch
+        else
+            git checkout $branch
+        fi
+    fi
+    if ! [ -z "$changes" ]; then
+        git stash pop
+    fi
+}
 # alias dcommit=git_svn_dcommit
 # 
-# git_update_from_subversion() {
-#     if ! [ -d .git/svn ]; then
-#         echo not a git svn repository
-#         return 1
-#     fi
-# 
-#     local branch=`git_get_branch`
-#     local changes=`git_change_list`
-#     if ! [ -z "$changes" ]; then
-#         git stash save "git update stash"
-#     fi
-#     if ! [[ "$branch" =~ "master" ]]; then
-#         git_switch_to_master || return 1
-#     fi
-# 
-#     git svn rebase || { echo "failed to rebase"; return 1; }
-# 
-#     if ! [[ "$branch" =~ "master" ]]; then
-#         local master=`git_get_master_branch`
-#         git checkout $branch || { echo "could not change to branch: $branch"; return 1; }
-#         git rebase $master || return 1
-#     fi
-#     if ! [ -z "$changes" ]; then
-#         git stash pop
-#     fi
-# }
-# 
-# git_update() {
-#     if [ -d .git/svn ]; then
-#         git_update_from_subversion
-#     else
-#         local branch=`git_get_branch`
-#         local changes=`git_change_list`
-# 
-#         if ! [ -z "$changes" ]; then
-#             git stash save "git update stash"
-#         fi
-# 
-#         if [ "$branch" == "master" ]; then
-#             git pull || return 1
-#         else
-#             git co master || return 1
-#             git pull || return 1
-#             git co $branch || return 1
-#             git rebase master || return 1
-#         fi
-# 
-#         if ! [ -z "$changes" ]; then
-#             git stash pop
-#         fi
-#     fi
-# }
-# 
+git_update_from_subversion() {
+    if ! [ -d .git/svn ]; then
+        echo not a git svn repository
+        return 1
+    fi
+
+    local branch=`git_get_branch`
+    local changes=`git_change_list`
+    if ! [ -z "$changes" ]; then
+        git stash save "git update stash"
+    fi
+    if ! [[ "$branch" =~ "master" ]]; then
+        git_switch_to_master || return 1
+    fi
+
+    git svn rebase || { echo "failed to rebase"; return 1; }
+
+    if ! [[ "$branch" =~ "master" ]]; then
+        local master=`git_get_master_branch`
+        git checkout $branch || { echo "could not change to branch: $branch"; return 1; }
+        git rebase $master || return 1
+    fi
+    if ! [ -z "$changes" ]; then
+        git stash pop
+    fi
+}
+
+git_update() {
+    # if [ -d .git/svn ]; then
+    #     git_update_from_subversion
+    # else
+        local branch=`git_get_branch`
+        local changes=`git_change_list`
+
+        if ! [ -z "$changes" ]; then
+            git stash save "git update stash"
+        fi
+
+        if [ "$branch" == "master" ]; then
+            git pull || return 1
+        else
+            git co master || return 1
+            git pull || return 1
+            git co $branch || return 1
+            git rebase master || return 1
+        fi
+
+        if ! [ -z "$changes" ]; then
+            git stash pop
+        fi
+    # fi
+}
+alias sup=git_update
+
+git_push() {
+    # if [ -d .git/svn ]; then
+    #     git_svn_dcommit
+    # else
+        git_update
+        local branch=`git_get_branch`
+        local changes=`git_change_list`
+
+        if ! [ -z "$changes" ]; then
+            git stash save "git update stash"
+        fi
+        if [ "$branch" != "master" ]; then
+            git co master || return 1
+            git merge $branch || return 1
+        fi
+        git push || return 1
+
+        if [ "$branch" != "master" ]; then
+            read -p "Do you want to delete the branch ${branch}? y/N " -n1 delete
+            echo
+        
+              if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
+                  git branch -d $branch
+              else
+                  git checkout $branch
+                  git merge master
+              fi
+          fi
+
+          if ! [ -z "$changes" ]; then
+              git stash pop
+          fi
+    # fi
+}
 # git_push() {
-#     if [ -d .git/svn ]; then
-#         git_svn_dcommit
-#     else
-#         git_update
-#         local branch=`git_get_branch`
-#         local changes=`git_change_list`
+#   local branch=`git_get_branch`
+#   [[ -z "$branch" ]] && return 1
+#   if [ "$branch" != "master" ]; then
+#       git checkout master || { echo "Failed to check out master"; return 1; }
+#   fi
+#   git pull || { echo "failed to pull"; return 1; }
+#   if [ "$branch" != "master" ]; then
+#       git merge $branch || { echo "failed merge"; return 1; }
+#   fi
+#   git push || { echo "failed push"; return 1; }
 # 
-#         if ! [ -z "$changes" ]; then
-#             git stash save "git update stash"
-#         fi
-#         if [ "$branch" != "master" ]; then
-#             git co master || return 1
-#             git merge $branch || return 1
-#         fi
-#         git push || return 1
+#   if [ "$branch" != "master" ]; then
+#       read -p "Do you want to delete the branch ${branch}? y/N " -n1 delete
+#       echo
 # 
-#         if [ "$branch" != "master" ]; then
-#             git co $branch || return 1
-#         fi
-# 
-#         if ! [ -z "$changes" ]; then
-#             git stash pop
-#         fi
-#     fi
+#       if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
+#           git branch -d $branch
+#       else
+#           git checkout $branch
+#           git merge master
+#       fi
+#   fi
 # }
-# alias push=git_push
-# 
-# git_diff_single_revision() {
-#     local revision=$(git svn find-rev r${1#r})
-#     [ -z "$revision" ] && { echo "no such revision found"; return 1; }
-#     git diff ${revision}^!
-# }
-# alias gdiff=git_diff_single_revision
-# 
-# gsco() {
-#     if [ -z "$SVN_ROOT" ]; then
-#         echo "SVN_ROOT must be defined"
-#         return 1;
-#     fi
-#     git svn clone --stdlayout $SVN_ROOT/$1 $2
-# }
+
+alias push=git_push
+
+git_diff_single_revision() {
+    local revision=$(git svn find-rev r${1#r})
+    [ -z "$revision" ] && { echo "no such revision found"; return 1; }
+    git diff ${revision}^!
+}
+alias gdiff=git_diff_single_revision
+
+gsco() {
+    if [ -z "$SVN_ROOT" ]; then
+        echo "SVN_ROOT must be defined"
+        return 1;
+    fi
+    git svn clone --stdlayout $SVN_ROOT/$1 $2
+}
 # gco() {
 #     GIT_SSL_NO_VERIFY=1 git clone https://subversion01.corp.localmatters.com/git/$1
 #     cd $1
