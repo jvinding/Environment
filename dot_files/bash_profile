@@ -40,7 +40,7 @@ HOSTNAME=${HOSTNAME%%.*}
 #
 # ~/bin and ~jvinding/bin for when i do su - <whoever>
 #
-for p in  $SERVERPATH ~/bin /usr/local/bin
+for p in  $SERVERPATH ~/bin /usr/local/bin ~/Environment/bin
 do
     if [ -d "$p" ] && ! echo $PATH | egrep "(^|:)$p($|:)" > /dev/null
     then
