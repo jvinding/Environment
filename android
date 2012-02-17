@@ -1,0 +1,2 @@
+alias android_assertions_enable='adb shell setprop debug.assert 1'
+alias android_assertions_disable='adb shell setprop debug.assert 0'
