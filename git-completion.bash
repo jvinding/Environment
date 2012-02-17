@@ -1454,7 +1454,7 @@ _git_stash ()
 		local cur="${COMP_WORDS[COMP_CWORD]}"
 		case "$subcommand,$cur" in
 		save,--*)
-			__gitcomp "--keep-index"
+			__gitcomp "--keep-index --include-untracked"
 			;;
 		apply,--*)
 			__gitcomp "--index"
