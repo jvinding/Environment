@@ -1,3 +1,6 @@
+#
+# Dock
+#
 dock_translucent_hiddens() {
     defaults write com.apple.Dock showhidden -bool YES
     killall Dock
@@ -6,6 +9,14 @@ dock_notranslucent_hiddens() {
     defaults write com.apple.Dock showhidden -bool NO
     killall Dock
 }
+dock_faster_animation() {
+    defaults write com.apple.dock autohide-time-modifier -float 0.5
+    killall Dock
+}
+
+#
+# Finder
+#
 finder_show_hiddens() {
     defaults write com.apple.Finder AppleShowAllFiles YES
     killall Finder
@@ -15,6 +26,9 @@ finder_hide_hiddens() {
     killall Finder
 }
 
+#
+# Environmental Variables
+#
 env_set_plist_var() {
     /usr/libexec/PlistBuddy -c 'Delete :'"$1" ~/.MacOSX/environment.plist
     /usr/libexec/PlistBuddy -c 'Add :'"$1"' string "'"$2"'"' ~/.MacOSX/environment.plist
@@ -25,6 +39,9 @@ env_set_var() {
     env_set_plist_var "$1" "$2"
 }
 
+#
+# Volume
+#
 volume_set() {
     local vol=$1;
     sudo osascript -e "set Volume $vol"
@@ -34,6 +51,9 @@ volume_mute() {
     volume_set 0
 }
 
+#
+# Misc
+#
 back_to_my_mac() {
 	local hostname=$(echo -n $1 | sed 's/ /-/g')
 	echo "Connecting to ${hostname}.jvinding.members.mac.com"
