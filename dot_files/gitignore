@@ -1,4 +1,3 @@
-.gitignore
 target
 .DS_Store
 .eclipsebuild
