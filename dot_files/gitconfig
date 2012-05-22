@@ -7,12 +7,16 @@
 	branch = auto
 [alias]
     co = checkout
-    s = status
+    pr = pull --rebase
+    s = status -sb
     b = branch
     d = diff
     dc = diff --cached
     sl = stash list
     ss = stash show -u
+    poop = stash pop
+    mf = merge --ff-only
+    changes = whatchanged -p
     shootmenow = submodule
     lol = log --graph --decorate --pretty=oneline --abbrev-commit
     lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
