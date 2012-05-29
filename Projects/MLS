@@ -1,0 +1,10 @@
+alias mls_un='adb uninstall com.mlssoccer'
+alias mls_db='adb pull /data/data/com.mlssoccer/databases/mls.db .'
+mls_clean() {
+    [ -d mls ] || { echo "This isn't the mls directory"; return; }
+    for s in $(find . -maxdepth 1 -type  d); do
+        pushd $s > /dev/null
+        [ -f build.xml ] && ant clean -Dsdk.dir=/Users/jvinding/Tools/android/
+        popd > /dev/null
+    done
+}

@@ -7,6 +7,8 @@ export JAVA_OPTS="-Xms256m -Xmx512m"
 . ~/Environment/mac_shortcuts
 . ~/Environment/android
 
+export ANDROID_SDK=/Users/jvinding/Tools/android/
+
 alias lc="adb logcat | grep -E -v 'dalvikvm|CachedRequest|DETools\.|V/Wifi|wpa_supplicant'"
 alias bounce="adb kill-server; adb start-server"
 
@@ -17,13 +19,6 @@ ormlite_log() {
 	adb -d shell setprop log.tag.MappedCreate $1
 }
 
-alias mls_un='adb uninstall com.mlssoccer'
-alias mls_db='adb pull /data/data/com.mlssoccer/databases/mls.db .'
-mls_clean() {
-    [ -d mls ] || { echo "This isn't the mls directory"; return; }
-    for s in $(find . -maxdepth 1 -type  d); do
-        pushd $s > /dev/null
-        [ -f build.xml ] && ant clean -Dsdk.dir=/Users/jvinding/Tools/android/
-        popd > /dev/null
-    done
-}
+. ~/Environment/Projects/MLS
+. ~/Environment/Projects/NDA/Alpine
+. ~/Environment/Projects/NDA/Airfoil
