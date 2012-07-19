@@ -178,14 +178,15 @@ then
             _TMP_PWD=${_TMP_PWD%/*}/
         fi
 
-        if [ -d .git ]
+        _TMP_SCM=$(git branch 2> /dev/null | grep ^\* | cut -c3-)
+        if [ -z "${_TMP_SCM}" ]
         then
-            _TMP_SCM=$(git branch | grep ^\* | cut -c3-)
-        elif [ -d .svn ]
-        then
-            _TMP_SCM=$(svn info | grep ^URL | sed -e's!.*/\([^/]*\)!\1!')
-        else
-            _TMP_SCM="N/A"
+            if [ -d .svn ]
+            then
+                _TMP_SCM=$(svn info | grep ^URL | sed -e's!.*/\([^/]*\)!\1!')
+            else
+                _TMP_SCM="N/A"
+            fi
         fi
     }
     export PROMPT_COMMAND=prompt_command
