@@ -61,3 +61,23 @@ back_to_my_mac() {
 }
 
 alias lock='/System/Library/CoreServices/"Menu Extras"/User.menu/Contents/Resources/CGSession -suspend'
+
+#
+# Trouble Shooting
+alias mac_assertions='pmset -g assertions' #  useful for figuring out why the machine won't sleep
+# see also http://hints.macworld.com/article.php?story=20120701234338952
+
+mac_entitlements() {
+    # see also http://hints.macworld.com/article.php?story=20120625231307279
+    if [ -z "$1" ]; then
+        echo You must specify the path to the app
+        return;
+    else
+        codesign -dvvv --entitlements - "$1"
+    fi
+}
+
+retina_show_upscaled() {
+    # see also http://hints.macworld.com/article.php?story=20120620224651723
+    defaults write -g CGContextHighlight2xScaledImages YES
+}
