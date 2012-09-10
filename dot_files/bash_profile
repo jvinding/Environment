@@ -190,6 +190,7 @@ then
         fi
     }
     export PROMPT_COMMAND=prompt_command
+    PROMPT_CLEAR_TO_COL_1="\[\033[G\]"
     PROMPT_SCM="$BLUE-=($GREEN\$_TMP_SCM$BLUE)=-"
     PROMPT_PWD="$BLUE-=($RED\${_TMP_PWD}$GREEN\${_LAST_DIR}$BLUE)=-"
     PROMPT_RETURN="$BLUE-=($RED\$?$BLUE)=-"
