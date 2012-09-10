@@ -101,7 +101,7 @@ git_add() {
 #
 alias abandon=git_abandon_branch
 alias branch=git_branch
-alias push=git_push
+##alias push=git_push
 alias stage=git_stage
 alias add=git_add
 
@@ -229,6 +229,7 @@ git_update() {
 }
 alias sup=git_update
 
+## this doesn't handle other branches very well
 git_push() {
     # if [ -d .git/svn ]; then
     #     git_svn_dcommit
@@ -242,7 +243,7 @@ git_push() {
         fi
         if [ "$branch" != "master" ]; then
             git co master || return 1
-            git merge $branch || return 1
+            git merge --ff-only $branch || return 1
         fi
         git push || return 1
 
@@ -254,7 +255,7 @@ git_push() {
                   git branch -d $branch
               else
                   git checkout $branch
-                  git merge master
+                  git rebase master
               fi
           fi
 
