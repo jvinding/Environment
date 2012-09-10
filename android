@@ -3,3 +3,5 @@ alias adbggn='adb -s 014E0F270A01900A' # GSM Galaxy Nexus
 alias adbhtc='adb -s HT16XMA05582' # HTC Dinc 2
 alias android_assertions_enable='adb shell setprop debug.assert 1'
 alias android_assertions_disable='adb shell setprop debug.assert 0'
+
+#adb -d shell 'run-as com.package.app cat /data/data/com.package.app/databases/app.db > /sdcard/app.db'
