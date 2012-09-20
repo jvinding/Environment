@@ -8,7 +8,13 @@ android_db_locked() {
     # pull a db from a non-rooted device
     local package=$1 # eg: com.jeremyvinding.MyApp
     local dbname=$2 # eg: myapp.jb
-    adb -d shell "run-as $package cat /data/data/$package/databases/$2 > /sdcard/$2"
-    adb pull /sdcard/$2 .
-    adb shell rm /sdcard/$2
+    local serial=$3 # eg HT118HL01235
+    local adb_command=adb
+    if ! [ -z "$serial" ]; then
+        local adb_command="adb -s $serial"
+    fi
+
+    $adb_command shell "run-as $package cat /data/data/$package/databases/$2 > /sdcard/$2"
+    $adb_command  pull /sdcard/$2 .
+    $adb_command  shell rm /sdcard/$2
 }
