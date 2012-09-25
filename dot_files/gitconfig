@@ -17,6 +17,7 @@
     poop = stash pop
     mf = merge --ff-only
     changes = whatchanged -p
+    sup = submodule update --recursive
     shootmenow = submodule
 	l = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)[%an]%Creset' --abbrev-commit
     lol = log --graph --decorate --pretty=oneline --abbrev-commit
