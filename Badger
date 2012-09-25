@@ -1,0 +1,7 @@
+export SERVERPATH="/usr/local/bin"
+export JAVA_HOME=`/usr/libexec/java_home`
+
+export CDPATH=.:~:~/Projects
+
+export PROJECT_DIR=/Users/jvinding/Projects
+source $PROJECT_DIR/closely-common-scripts/bash/project-aliases
