@@ -11,6 +11,7 @@
     s = status -sb
     b = branch
     d = diff
+    fa = fetch --all
     dc = diff --cached
     sl = stash list
     ss = stash show -u
