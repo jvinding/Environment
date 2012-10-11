@@ -163,6 +163,24 @@ then
             $p = "..." . scalar @d . "...$p" if @d;
             print $p;')
     }
+
+    function scm_status {
+        _TMP_SCM_BRANCH=$(git branch 2> /dev/null | grep ^\* | cut -c3-)
+        if [ -z "${_TMP_SCM_BRANCH}" ]; then
+            _TMP_SCM_STATUS="N/A"
+            if [ -d .svn ]; then
+                _TMP_SCM_BRANCH=$(svn info | grep ^URL | sed -e's!.*/\([^/]*\)!\1!')
+            else
+                _TMP_SCM_BRANCH="N/A"
+            fi
+        else
+            _TMP_SCM_STATUS=$(git status -sb | sed -n '/\[/ { s/^[^[]*\[//; s/\][^]]*$//; s/ahead \([0-9]*\)[, ]*/↑\1/; s/behind \([0-9]*\)/↓\1/; p; }')
+        fi
+        if [ -z "${_TMP_SCM_STATUS}" ]; then
+            _TMP_SCM_STATUS="OK"
+        fi
+    }
+
     function prompt_command {
         chop_front_dirs_to_fit
         if [ "$TERM" = "xterm" ]
@@ -177,30 +195,22 @@ then
             _LAST_DIR=${_TMP_PWD##*/}
             _TMP_PWD=${_TMP_PWD%/*}/
         fi
-
-        _TMP_SCM=$(git branch 2> /dev/null | grep ^\* | cut -c3-)
-        if [ -z "${_TMP_SCM}" ]
-        then
-            if [ -d .svn ]
-            then
-                _TMP_SCM=$(svn info | grep ^URL | sed -e's!.*/\([^/]*\)!\1!')
-            else
-                _TMP_SCM="N/A"
-            fi
-        fi
+        scm_status
     }
+
     export PROMPT_COMMAND=prompt_command
     PROMPT_CLEAR_TO_COL_1="\[\033[G\]"
-    PROMPT_SCM="$BLUE-=($GREEN\$_TMP_SCM$BLUE)=-"
+    PROMPT_SCM_BRANCH="$BLUE-=($GREEN\$_TMP_SCM_BRANCH$BLUE)=-"
+    PROMPT_SCM_STATUS="$BLUE-=($RED\$_TMP_SCM_STATUS$BLUE)=-"
     PROMPT_PWD="$BLUE-=($RED\${_TMP_PWD}$GREEN\${_LAST_DIR}$BLUE)=-"
     PROMPT_RETURN="$BLUE-=($RED\$?$BLUE)=-"
-    PROMPT_HISTORY="$BLUE-=($RED\!$BLUE)=-"
+##    PROMPT_HISTORY="$BLUE-=($RED\!$BLUE)=-"
     PROMPT_JOBS="$BLUE-=($RED\j$BLUE)=-"
     PROMPT_USER="$BLUE-=($RED\\u"
     PROMPT_HOST="@\\h$BLUE)=-"
     PROMPT_PROMPT="$CYAN \\$ $NORMAL"
     PROMPT_LINE_1="$PROMPT_PWD"
-    PROMPT_LINE_2="$PROMPT_SCM$PROMPT_RETURN$PROMPT_HISTORY$PROMPT_JOBS"
+    PROMPT_LINE_2="$PROMPT_SCM_BRANCH$PROMPT_SCM_STATUS$PROMPT_RETURN$PROMPT_JOBS"
     PROMPT_LINE_3="$PROMPT_USER$PROMPT_HOST$PROMPT_PROMPT"
     export PS1="$GREEN/$PROMPT_LINE_1\n$GREEN>$PROMPT_LINE_2\n$GREEN\\\\$PROMPT_LINE_3"
 ##  export PS1='\[\033]0;\u@\h:$_TMP_PWD\007\]($?) [\u@\h] \$ '
