@@ -1,5 +1,6 @@
 export SERVERPATH="/usr/local/bin"
 export JAVA_HOME=`/usr/libexec/java_home`
+export CATALINA_HOME=/usr/local/Cellar/tomcat6/6.0.33/libexec
 
 export CDPATH=.:~:~/Projects
 
