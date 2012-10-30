@@ -6,6 +6,7 @@ export CDPATH=.:~:~/Projects
 
 export PROJECT_DIR=/Users/jvinding/Projects
 source $PROJECT_DIR/closely-common-scripts/bash/project-aliases
+source $PROJECT_DIR/closely-common-scripts/bash/ssh-aliases
 
 . ~/Environment/git
 . ~/Environment/git-completion.bash
