@@ -89,3 +89,10 @@ mac_disable_dashboard() {
     defaults write com.apple.dashboard mcx-disabled -boolean YES
     killall Dock
 }
+
+#
+#
+#
+mac_flush_dns() {
+    dscacheutil -flushcache
+}
