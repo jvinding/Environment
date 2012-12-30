@@ -2,6 +2,9 @@ export SERVERPATH="/usr/local/bin"
 export JAVA_HOME=`/usr/libexec/java_home`
 export CATALINA_HOME=/usr/local/Cellar/tomcat6/6.0.33/libexec
 
+export GRAILS_OPTS="-Duser.timezone=UTC -Xms700m -XX:MaxPermSize=384m -DgitBranch=freedomofchoice -Dgrails.project.work.dir=/Users/jvinding/.grails/2.1.0/projects/lomain-web_freedomofchoice -Xmx2824m -Dserver.port=8080"
+## export GRAILS_OPTS="-Duser.timezone=UTC -Xms700m -XX:MaxPermSize=384m -DgitBranch=freedomofchoice -Dgrails.project.work.dir=/Users/jvinding/.grails/2.1.0/projects/lomain-web_freedomofchoice -Xmx2824m -Dserver.port=8080 -javaagent:/Users/jvinding/Projects/Utility-Config/dist/common/newrelic/newrelic-2_9_0.jar -Dnewrelic.environment=development"
+
 export CDPATH=.:~:~/Projects
 
 export PROJECT_DIR=/Users/jvinding/Projects
@@ -11,3 +14,5 @@ source $PROJECT_DIR/closely-common-scripts/bash/ssh-aliases
 . ~/Environment/git
 . ~/Environment/git-completion.bash
 . ~/Environment/mac_shortcuts
+
+. ~/Environment/Projects/closely_promote
