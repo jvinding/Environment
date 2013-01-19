@@ -1,4 +1,5 @@
-export SERVERPATH="/usr/local/bin"
+export SERVERPATH="/usr/local/bin /Users/jvinding/Tools/Android/sdk/platform-tools /Users/jvinding/Tools/Android/sdk/tools"
+
 export JAVA_HOME=`/usr/libexec/java_home`
 export CATALINA_HOME=/usr/local/Cellar/tomcat6/6.0.33/libexec
 
