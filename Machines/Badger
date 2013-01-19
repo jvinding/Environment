@@ -17,3 +17,4 @@ source $PROJECT_DIR/closely-common-scripts/bash/ssh-aliases
 . ~/Environment/mac_shortcuts
 
 . ~/Environment/Projects/closely_promote
+. ~/Environment/Projects/AntiSocialMedia
