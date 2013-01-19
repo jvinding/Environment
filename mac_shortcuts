@@ -15,6 +15,16 @@ dock_faster_animation() {
 }
 
 #
+# Spotlight
+#
+spotligt_disable() {
+    sudo mdutil -a -i off
+}
+spotligt_enable() {
+    sudo mdutil -a -i on
+}
+
+#
 # Finder
 #
 finder_show_hiddens() {
