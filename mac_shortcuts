@@ -13,6 +13,14 @@ dock_faster_animation() {
     defaults write com.apple.dock autohide-time-modifier -float 0.5
     killall Dock
 }
+dock_lock() {
+    defaults write com.apple.dock contents-immutable -bool true
+    killall Dock
+}
+dock_unlock() {
+    defaults write com.apple.dock contents-immutable -bool false
+    killall Dock
+}
 
 #
 # Spotlight
