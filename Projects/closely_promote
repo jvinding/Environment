@@ -1,9 +1,11 @@
 promote_db_drop() {
+  cly-cd-biz
   grails -Dgrails.env=development -DgitBranch=master dbm-drop-all
 }
 
 alias promote_db='psql -U closely -h localhost -d closely_master'
 
 promote_db_diff() {
+  cly-cd-biz
   grails dbm-gorm-diff -DgitBranch=master changelog-bob.groovy --defaultSchema=public
 }
