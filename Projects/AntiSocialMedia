@@ -1,2 +1,6 @@
-alias asm_db='adb pull /data/data/com.jeremyvinding.AntiSocialMedia/databases/Feed.db'
-alias asm_uninstall='adb uninstall com.jeremyvinding.AntiSocialMedia'
+asm_db() {
+    adb $* pull /data/data/com.jeremyvinding.AntiSocialMedia/databases/Feed.db
+}
+asm_uninstall() {
+    adb $* uninstall com.jeremyvinding.AntiSocialMedia
+}
