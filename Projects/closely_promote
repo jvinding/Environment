@@ -1,6 +1,6 @@
 promote_db_drop() {
   cly-cd-biz
-  grails -Dgrails.env=development -DgitBranch=master dbm-drop-all
+  grails -Dgrails.env=development -DgitBranch=master -Dgrails.project.work.dir=/Users/jvinding/.grails/2.1.0/projects/lomain-web_master dbm-drop-all
 }
 
 promote_shell() {
