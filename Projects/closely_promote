@@ -16,5 +16,5 @@ promote_shell() {
 
 promote_db_diff() {
   cly-cd-biz
-  grails dbm-gorm-diff -DgitBranch=master changelog-bob.groovy --defaultSchema=public
+  grails dbm-gorm-diff -Dgrails.env=development -DgitBranch=master -Dgrails.project.work.dir=/Users/jvinding/.grails/2.1.0/projects/lomain-web_master changelog-bob.groovy --defaultSchema=public
 }
