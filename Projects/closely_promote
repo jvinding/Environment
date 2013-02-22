@@ -1,14 +1,18 @@
+alias promote_db='psql -U closely -h localhost -d closely_master'
+
 promote_db_drop() {
   cly-cd-biz
-  grails -Dgrails.env=development -DgitBranch=master -Dgrails.project.work.dir=/Users/jvinding/.grails/2.1.0/projects/lomain-web_master dbm-drop-all
+#  grails -Dgrails.env=development -DgitBranch=master -Dgrails.project.work.dir=/Users/jvinding/.grails/2.1.0/projects/lomain-web_master dbm-drop-all
+  for s in $(promote_db -c '\d' | grep table | cut -d '|' -f 2); do
+    promote_db -c "drop table if exists $s cascade" > /dev/null
+  done
+  promote_db -c '\d'
 }
 
 promote_shell() {
   cly-cd-biz
   grails -Dgrails.env=development -DgitBranch=master shell
 }
-
-alias promote_db='psql -U closely -h localhost -d closely_master'
 
 promote_db_diff() {
   cly-cd-biz
