@@ -1,0 +1,16 @@
+alias api_db='psql -U directory -h localhost -d directory_master'
+
+api_db_drop() {
+  cly-cd-api
+  for s in $(api_db -c '\d' | grep table | cut -d '|' -f 2); do
+    api_db -c "drop table if exists $s cascade" > /dev/null
+  done
+}
+
+api_db_load() {
+  cly-cd-api
+  local branch=$(git_get_branch | tr '[:upper:]'- '[:lower:]'_)
+  psql -U jvinding -h localhost -d postgres -c"alter database directory_master rename to directory_${branch}" && \
+  cly-load-db $1
+  psql -U jvinding -h localhost -d postgres -c"alter database directory_${branch} rename to directory_master"
+}

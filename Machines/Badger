@@ -16,5 +16,7 @@ source $PROJECT_DIR/closely-common-scripts/bash/ssh-aliases
 . ~/Environment/git-completion.bash
 . ~/Environment/mac_shortcuts
 
+. ~/Environment/Projects/closely_api
 . ~/Environment/Projects/closely_promote
+. ~/Environment/Projects/closely_perch
 . ~/Environment/Projects/AntiSocialMedia

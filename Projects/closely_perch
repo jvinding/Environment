@@ -1,0 +1,3 @@
+perch_uninstall() {
+  adb $* uninstall com.closely.perch
+}
