@@ -163,7 +163,7 @@ then
     }
 
     function scm_status {
-        _TMP_SCM_BRANCH=$(git branch 2> /dev/null | grep ^\* | cut -c3-)
+        _TMP_SCM_BRANCH=$(git symbolic-ref --short HEAD 2> /dev/null)
         if [ -z "${_TMP_SCM_BRANCH}" ]; then
             _TMP_SCM_STATUS="N/A"
             if [ -d .svn ]; then

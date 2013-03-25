@@ -1,5 +1,6 @@
 git_get_branch() {
-    git branch | grep '^\*' | awk '{print $2}'
+    git symbolic-ref --short HEAD 2> /dev/null
+##    git branch | grep '^\*' | awk '{print $2}'
 }
 
 git_has_branch() {
