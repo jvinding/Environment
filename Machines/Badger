@@ -20,3 +20,6 @@ source $PROJECT_DIR/closely-common-scripts/bash/ssh-aliases
 . ~/Environment/Projects/closely_promote
 . ~/Environment/Projects/closely_perch
 . ~/Environment/Projects/AntiSocialMedia
+
+alias wifi_ip='ifconfig en1 | grep "\<inet\>" | awk "{print \$2}"'
+alias copy_wifi_ip='wifi_ip | tr -d '[:space:]' | pbcopy'
