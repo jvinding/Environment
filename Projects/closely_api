@@ -16,3 +16,8 @@ api_db_load() {
   cly-load-db $1
   psql -U jvinding -h localhost -d postgres -c"alter database directory_${branch} rename to directory_master"
 }
+
+api_db_diff() {
+  cly-cd-api
+  grails dbm-gorm-diff -Dgrails.env=development -DgitBranch=master -Dgrails.project.work.dir=/Users/jvinding/.grails/2.1.0/projects/api_master changelog-bob.groovy --defaultSchema=public
+}
