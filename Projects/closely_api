@@ -1,5 +1,7 @@
 alias api_db='psql -U directory -h localhost -d directory_master'
 
+alias api_clean_workspace='rm -rf /Users/jvinding/.grails/2.1.0/projects/api_*'
+
 api_db_drop() {
   cly-cd-api
   for s in $(api_db -c '\d' | grep table | cut -d '|' -f 2); do
