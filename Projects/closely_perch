@@ -1,3 +1,7 @@
 perch_uninstall() {
   adb $* uninstall com.closely.perch
 }
+
+perch_db() {
+  adb $* pull /data/data/com.closely.perch/databases/perch.db .
+}
