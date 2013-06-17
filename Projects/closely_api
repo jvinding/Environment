@@ -21,3 +21,15 @@ api_db_diff() {
   cly-cd-api
   grails dbm-gorm-diff -Dgrails.env=development -DgitBranch=master -Dgrails.project.work.dir=/Users/jvinding/.grails/2.1.0/projects/api_master changelog-bob.groovy --defaultSchema=public
 }
+
+api_ver_prod() {
+  echo -n 'api-production1: '
+  curl -H 'host:api.closely.com' http://50.57.153.141/dir/appVersion
+  echo
+  echo -n 'api-production2: '
+  curl -H 'host:api.closely.com' http://50.57.80.54/dir/appVersion
+  echo
+  echo -n 'kamino         : '
+  curl -H 'host:api.closely.com' http://50.57.90.57/dir/appVersion
+  echo
+}
