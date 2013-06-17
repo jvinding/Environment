@@ -25,3 +25,9 @@ promote_db_load() {
   cly-load-db $1
   psql -U jvinding -h localhost -d postgres -c"alter database closely_${branch} rename to closely_master"
 }
+
+redis_proxy() {
+  ## proxies to qa through admin
+  pkill -f 6379:10.176.3.158:6379
+  ssh -f closely@admin.closely.com -L 6379:10.176.3.158:6379 -N
+}
