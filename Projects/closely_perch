@@ -5,3 +5,10 @@ perch_uninstall() {
 perch_db() {
   adb $* pull /data/data/com.closely.perch/databases/perch.db .
 }
+
+perch_log_levels() {
+  local log_level=$1
+	adb shell setprop log.tag.BOB $log_level
+	adb shell setprop log.tag.VenueProvider $log_level
+	adb shell setprop log.tag.VenueService $log_level
+}
