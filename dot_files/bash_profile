@@ -54,15 +54,17 @@ export PATH
 #
 # read comment for PATH above
 #
-for p in /usr/local/lib /data/advantage/perl-5.8.0/lib/5.8.0 $SERVERLDPATH
-do
-    if [ -d $p ] && ! echo $LD_LIBRARY_PATH | egrep "(^|:)$p($|:)" > /dev/null
-    then
-        LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$p
-    fi
-done
-LD_LIBRARY_PATH=${LD_LIBRARY_PATH#:}
-export LD_LIBRARY_PATH
+if ! [ "$(uname -s | tr -d '[:space:]')" == "Darwin" ]; then # skip this on macs
+	for p in /usr/local/lib /data/advantage/perl-5.8.0/lib/5.8.0 $SERVERLDPATH
+	do
+	    if [ -d $p ] && ! echo $LD_LIBRARY_PATH | egrep "(^|:)$p($|:)" > /dev/null
+	    then
+	        LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$p
+	    fi
+	done
+	LD_LIBRARY_PATH=${LD_LIBRARY_PATH#:}
+	export LD_LIBRARY_PATH
+fi
 #
 #
 ############################### LD_LIBRARY_PATH  ###############################
