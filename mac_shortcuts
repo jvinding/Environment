@@ -26,10 +26,10 @@ dock_unlock() {
 # Spotlight
 #
 spotligt_disable() {
-    sudo mdutil -a -i off
+    jjv_sudo mdutil -a -i off
 }
 spotligt_enable() {
-    sudo mdutil -a -i on
+    jjv_sudo mdutil -a -i on
 }
 
 #
@@ -62,7 +62,7 @@ env_set_var() {
 #
 volume_set() {
     local vol=$1;
-    sudo osascript -e "set Volume $vol"
+    jjv_sudo "osascript -e 'set Volume $vol'"
 }
 
 volume_mute() {
@@ -109,8 +109,32 @@ mac_disable_dashboard() {
 }
 
 #
-#
+# DNS
 #
 mac_flush_dns() {
     dscacheutil -flushcache
+}
+
+#
+# Helpers
+#
+is_admin() {
+    local user=$1
+    local user_option=
+    if ! [ -z $user ]; then
+        user_option="-m $user"
+    fi
+    dseditgroup -o checkmember $user_option admin > /dev/null 2>&1
+}
+
+jjv_sudo() {
+    local command="$@"
+    if is_admin; then
+        sudo $command
+    elif is_admin admin; then
+        echo "This command requires sudo. Switching to 'admin' user, you may have to type the admin password twice"
+        su admin -c "sudo $command"
+    else
+        echo "neither the current user nor 'admin' are members of the 'admin' group"
+    fi
 }
