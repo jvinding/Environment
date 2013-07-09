@@ -1,5 +1,6 @@
 alias api_db='psql -U directory -h localhost -d directory_master'
 
+alias api_clean='grails clean -Dgrails.project.work.dir=/Users/jvinding/.grails/2.1.0/projects/api_master/'
 alias api_clean_workspace='rm -rf /Users/jvinding/.grails/2.1.0/projects/api_*'
 
 api_db_drop() {
