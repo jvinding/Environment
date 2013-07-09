@@ -26,3 +26,5 @@ perch_log_levels() {
     adb $option shell setprop log.tag.$tag $log_level
   done
 }
+
+alias perch_ack='ack --js --ignore-dir=dist'
