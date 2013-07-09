@@ -8,7 +8,21 @@ perch_db() {
 
 perch_log_levels() {
   local log_level=$1
-	adb shell setprop log.tag.BOB $log_level
-	adb shell setprop log.tag.VenueProvider $log_level
-	adb shell setprop log.tag.VenueService $log_level
+  local option=
+
+  local tags=(BOB VenueProvider VenueHandler VenueService MainActivity PerchEventPlugin PushService Client)
+
+  if [ '-e' == $log_level ] || [ '-d' == $log_level ]; then
+  	option=$log_level
+  	log_level=$2
+  fi
+
+  if [ -z $log_level ]; then
+    echo "no log level specified, defaulting to VERBOSE"
+    log_level=VERBOSE
+  fi
+
+  for tag in ${tags[@]}; do
+    adb $option shell setprop log.tag.$tag $log_level
+  done
 }
