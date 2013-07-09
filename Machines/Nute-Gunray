@@ -1,4 +1,3 @@
-export SERVERPATH="/usr/local/bin"
 export JAVA_HOME=`/usr/libexec/java_home`
 
 export CDPATH=.:~:~/Projects
