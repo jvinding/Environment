@@ -38,11 +38,10 @@ HOSTNAME=${HOSTNAME%%.*}
 #
 # ~/bin and ~jvinding/bin for when i do su - <whoever>
 #
-for p in  $SERVERPATH ~/bin /usr/local/bin ~/Environment/bin
+for p in  $SERVERPATH /usr/local/bin ~/Environment/bin ~/bin
 do
-    if [ -d "$p" ] && ! echo $PATH | egrep "(^|:)$p($|:)" > /dev/null
-    then
-        PATH=$p:$PATH
+    if [ -d "$p" ]; then
+        PATH=$p:$(echo $PATH | sed -e "s!:$p:!:!" -e"s!:$p\$!!")
     fi
 done
 export PATH
