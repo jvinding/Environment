@@ -4,6 +4,9 @@ alias adbhtc='adb -s HT16XMA05582' # HTC Dinc 2
 
 alias android_assertions_enable='adb shell setprop debug.assert 1'
 alias android_assertions_disable='adb shell setprop debug.assert 0'
+alias ea='android_assertions_enable'
+
+alias adb_bounce='adb kill-server && adb start-server && adb devices'
 
 android_db_locked() {
     # pull a db from a non-rooted device
