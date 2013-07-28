@@ -10,8 +10,6 @@ perch_log_levels() {
   local log_level=$1
   local option=
 
-  local tags=(BOB VenueProvider VenueHandler VenueService MainActivity PerchEventPlugin PushService Client)
-
   if [ '-e' == $log_level ] || [ '-d' == $log_level ]; then
   	option=$log_level
   	log_level=$2
@@ -22,8 +20,10 @@ perch_log_levels() {
     log_level=VERBOSE
   fi
 
-  for tag in ${tags[@]}; do
-    adb $option shell setprop log.tag.$tag $log_level
+  for s in BOB $(find ~/Projects/Perch/platforms/android/src/com/closely -type f -name '*.java' -exec grep -l TAG '{}' \;); do
+    s=${s##*/}
+    s=${s%%.*}
+    adb $option shell setprop log.tag.$s $log_level
   done
 }
 
