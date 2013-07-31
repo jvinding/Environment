@@ -27,6 +27,7 @@
     ls-assumed = !"git ls-files -v | grep '^[a-z]' | awk '{print $2}'"
     assume = update-index --assume-unchanged
     unassume = update-index --no-assume-unchanged
+    ls-files = ls-files --exclude-standard
 [core]
 	excludesfile = /Users/jvinding/.gitignore
 	autocrlf = input
