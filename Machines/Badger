@@ -1,6 +1,6 @@
 export EC2_HOME=/Users/jvinding/bin/ec2-api-tools-1.6.7.3
 
-export SERVERPATH="/Users/jvinding/Tools/Android/sdk/platform-tools /Users/jvinding/Tools/Android/sdk/tools /usr/local/share/npm/bin ${EC2_HOME}/bin"
+export SERVERPATH="/Users/jvinding/Tools/Android/sdk/platform-tools /Users/jvinding/Tools/Android/sdk/tools /usr/local/share/npm/bin ${EC2_HOME}/bin /Users/jvinding/Tools/Android/sdk/tools/proguard/bin"
 
 export JAVA_HOME=`/usr/libexec/java_home`
 export CATALINA_HOME=/usr/local/Cellar/tomcat6/6.0.33/libexec
