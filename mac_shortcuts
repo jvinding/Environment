@@ -1,4 +1,17 @@
 #
+# Keyboard
+#
+keyboard_repeat_enabled() {
+    defaults write -g ApplePressAndHoldEnabled -bool false
+    echo "you must restart running apps for the change to take affect"
+}
+keyboard_repeat_disabled() {
+    defaults write -g ApplePressAndHoldEnabled -bool true
+    echo "you must restart running apps for the change to take affect"
+}
+
+#
+#
 # Dock
 #
 dock_translucent_hiddens() {
