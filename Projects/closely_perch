@@ -4,7 +4,8 @@ perch_uninstall() {
 }
 
 perch_db() {
-  adb $* pull /data/data/com.closely.perch/databases/perch.db .
+  android_db_locked com.closely.perch.debug perch.db
+  ## adb $* pull /data/data/com.closely.perch.debug/databases/perch.db .
 }
 
 perch_log_levels() {
