@@ -1,4 +1,5 @@
 perch_uninstall() {
+  adb $* uninstall com.closely.perch.debug
   adb $* uninstall com.closely.perch
 }
 
@@ -23,7 +24,7 @@ perch_log_levels() {
     log_level=VERBOSE
   fi
 
-  for s in BOB $(find ~/Projects/Perch/platforms/android/src/com/closely -type f -name '*.java' -exec grep -l TAG '{}' \;); do
+  for s in BOB $(find ~/Projects/Perch/platforms/android/src/main/java/com/closely -type f -name '*.java' -exec grep -l TAG '{}' \;); do
     s=${s##*/}
     s=${s%%.*}
     adb_all $option shell setprop log.tag.$s $log_level
