@@ -1,5 +1,8 @@
 alias promote_db='psql -U closely -h localhost -d closely_master'
 
+alias promote_clean='grails clean -Dgrails.project.work.dir=/Users/jvinding/.grails/2.1.0/projects/lomain-web_master/'
+alias promote_clean_workspace='rm -rf /Users/jvinding/.grails/2.1.0/projects/lomain-web_*'
+
 promote_db_drop() {
   cly-cd-biz
 #  grails -Dgrails.env=development -DgitBranch=master -Dgrails.project.work.dir=/Users/jvinding/.grails/2.1.0/projects/lomain-web_master dbm-drop-all
