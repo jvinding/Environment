@@ -26,7 +26,7 @@ perch_log_levels() {
   for s in BOB $(find ~/Projects/Perch/platforms/android/src/com/closely -type f -name '*.java' -exec grep -l TAG '{}' \;); do
     s=${s##*/}
     s=${s%%.*}
-    adb $option shell setprop log.tag.$s $log_level
+    adb_all $option shell setprop log.tag.$s $log_level
   done
 }
 alias pll=perch_log_levels

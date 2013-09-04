@@ -2,6 +2,12 @@ alias adbcgn='adb -s 0146B5040800900E' # CDMA Galaxy Nexus
 alias adbggn='adb -s 014E0F270A01900A' # GSM Galaxy Nexus
 alias adbhtc='adb -s HT16XMA05582' # HTC Dinc 2
 
+adb_all() {
+    for s in $(adb devices |grep -v '^List' | cut -f 1); do
+        eval adb -s $s "$*"
+    done
+}
+
 alias android_assertions_enable='adb shell setprop debug.assert 1'
 alias android_assertions_disable='adb shell setprop debug.assert 0'
 alias ea='android_assertions_enable'
