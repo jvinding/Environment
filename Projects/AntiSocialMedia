@@ -4,3 +4,5 @@ asm_db() {
 asm_uninstall() {
     adb $* uninstall com.jeremyvinding.AntiSocialMedia
 }
+
+alias asm_log_levels='android_log_level ~/Projects/AntiSocialMedia/src/com/jeremyvinding'

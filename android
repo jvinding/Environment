@@ -28,3 +28,29 @@ android_db_locked() {
     $adb_command  pull /sdcard/$2 .
     $adb_command  shell rm /sdcard/$2
 }
+
+android_log_level() {
+  local project_path=$1
+  local log_level=$2
+  local option=
+
+  if [ '-e' == $log_level ] || [ '-d' == $log_level ]; then
+    option=$log_level
+    log_level=$3
+  elif [ '-s' == $log_level ]; then
+    option="$log_level $3"
+    log_level=$4
+  fi
+
+  if [ -z $log_level ]; then
+    echo "no log level specified, defaulting to VERBOSE"
+    log_level=VERBOSE
+  fi
+
+  for s in BOB $(find $project_path -type f -name '*.java' -exec grep -l TAG '{}' \;); do
+    s=${s##*/}
+    s=${s%%.*}
+    adb_all $option shell setprop log.tag.$s $log_level
+  done
+
+}

@@ -10,29 +10,7 @@ perch_db() {
   ## adb $* pull /data/data/com.closely.perch.debug/databases/perch.db .
 }
 
-perch_log_levels() {
-  local log_level=$1
-  local option=
-
-  if [ '-e' == $log_level ] || [ '-d' == $log_level ]; then
-  	option=$log_level
-  	log_level=$2
-  elif [ '-s' == $log_level ]; then
-    option="$log_level $2"
-    log_level=$3
-  fi
-
-  if [ -z $log_level ]; then
-    echo "no log level specified, defaulting to VERBOSE"
-    log_level=VERBOSE
-  fi
-
-  for s in BOB $(find ~/Projects/Perch/platforms/android/src/main/java/com/closely -type f -name '*.java' -exec grep -l TAG '{}' \;); do
-    s=${s##*/}
-    s=${s%%.*}
-    adb_all $option shell setprop log.tag.$s $log_level
-  done
-}
+alias perch_log_levels='android_log_level ~/Projects/Perch/platforms/android/src/main/java/com/closely'
 alias pll=perch_log_levels
 
 alias perch_ack='ack --js --ignore-dir=dist'
