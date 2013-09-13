@@ -1,6 +1,8 @@
 perch_uninstall() {
-  adb $* uninstall com.closely.perch.debug
-  adb $* uninstall com.closely.perch
+  adb_all $* uninstall com.closely.perch
+  adb_all $* uninstall com.closely.perch.debug
+  adb_all $* uninstall com.closely.perch.qa
+  adb_all $* uninstall com.closely.perch.staging
 }
 
 perch_db() {
