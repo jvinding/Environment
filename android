@@ -2,8 +2,11 @@ alias adbcgn='adb -s 0146B5040800900E' # CDMA Galaxy Nexus
 alias adbggn='adb -s 014E0F270A01900A' # GSM Galaxy Nexus
 alias adbhtc='adb -s HT16XMA05582' # HTC Dinc 2
 
+adb_device_serial_numbers() {
+  adb devices |grep -v '^List' | cut -f 1
+}
 adb_all() {
-    for s in $(adb devices |grep -v '^List' | cut -f 1); do
+    for s in $(adb_device_serial_numbers); do
         eval adb -s $s "$*"
     done
 }

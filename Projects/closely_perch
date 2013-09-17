@@ -1,8 +1,11 @@
 perch_uninstall() {
-  adb_all $* uninstall com.closely.perch
-  adb_all $* uninstall com.closely.perch.debug
-  adb_all $* uninstall com.closely.perch.qa
-  adb_all $* uninstall com.closely.perch.staging
+  for device in $(adb_device_serial_numbers); do
+  echo "$device:"
+    for s in com.closely.perch com.closely.perch.debug com.closely.perch.qa com.closely.perch.staging; do
+      echo -n "    $s: "
+      adb -s $device $* uninstall $s
+    done
+  done
 }
 
 perch_db() {
