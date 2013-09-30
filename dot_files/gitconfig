@@ -30,6 +30,7 @@
     ls = ls-files --exclude-standard
     lsm = ls-files --exclude-standard -m
     lso = ls-files --exclude-standard -o
+    lsc = ls-files --unmerged
 [core]
 	excludesfile = /Users/jvinding/.gitignore
 	autocrlf = input
