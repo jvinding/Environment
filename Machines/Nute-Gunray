@@ -3,5 +3,4 @@ export JAVA_HOME=`/usr/libexec/java_home`
 export CDPATH=.:~:~/Projects
 
 . ~/Environment/git
-. ~/Environment/git-completion.bash
 . ~/Environment/mac_shortcuts

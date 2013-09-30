@@ -3,7 +3,6 @@ export CDPATH=.:~:~/Projects:~/Projects/Android:~/Projects/iOS:~/Projects/MIX/:~
 export JAVA_OPTS="-Xms256m -Xmx512m"
 
 . ~/Environment/git
-. ~/Environment/git-completion.bash
 . ~/Environment/mac_shortcuts
 . ~/Environment/android
 

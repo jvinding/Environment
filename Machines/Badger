@@ -15,7 +15,6 @@ source $PROJECT_DIR/closely-common-scripts/bash/project-aliases
 source $PROJECT_DIR/closely-common-scripts/bash/ssh-aliases
 
 . ~/Environment/git
-. ~/Environment/git-completion.bash
 . ~/Environment/mac_shortcuts
 
 export ANDROID_HOME=/Users/jvinding/Tools/Android/sdk

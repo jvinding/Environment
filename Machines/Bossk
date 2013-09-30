@@ -1,7 +1,6 @@
 SERVERPATH="/usr/local/android/tools"
 
 . ~/Environment/git
-. ~/Environment/git-completion.bash
 . ~/Environment/mac_shortcuts
 
 alias gowar='cd "/Applications/Warhammer Online.app/Contents/Resources/transgaming/c_drive/Program Files/Warhammer Online/Interface/Addons"'

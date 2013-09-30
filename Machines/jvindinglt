@@ -18,7 +18,6 @@ export CDPATH=.:~:~/projects
 
 
 . ~/Environment/git
-. ~/Environment/git-completion.bash
 . ~/Environment/tomcat
 . ~/Environment/mac_shortcuts
 
