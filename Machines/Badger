@@ -30,3 +30,13 @@ alias copy_wifi_ip='wifi_ip | tr -d '[:space:]' | pbcopy'
 
 . ~/Environment/Secrets/aws_creds
 export EC2_URL=ec2.us-west-2.amazonaws.com
+
+postgres_start() {
+  echo type in the password for admin
+  su admin -c "pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start"
+}
+
+postgres_stop() {
+  echo type in the password for admin
+  su admin -c "pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log stop"
+}
