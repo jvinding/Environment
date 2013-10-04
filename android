@@ -29,8 +29,8 @@ android_db_locked() {
     fi
 
     $adb_command shell "run-as $package cat /data/data/$package/databases/$2 > /sdcard/$2"
-    $adb_command  pull /sdcard/$2 .
-    $adb_command  shell rm /sdcard/$2
+    $adb_command pull /sdcard/$2 .
+    $adb_command shell rm /sdcard/$2
 }
 
 android_log_level() {
@@ -56,5 +56,4 @@ android_log_level() {
     s=${s%%.*}
     adb_all $option shell setprop log.tag.$s $log_level
   done
-
 }
