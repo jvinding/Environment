@@ -31,6 +31,9 @@
     lsm = ls-files --exclude-standard -m
     lso = ls-files --exclude-standard -o
     lsc = ls-files --unmerged
+    ff = flow feature
+    ffl = flow feature list
+    ffc = flow feature checkout
 [core]
 	excludesfile = /Users/jvinding/.gitignore
 	autocrlf = input
