@@ -38,10 +38,10 @@ dock_unlock() {
 #
 # Spotlight
 #
-spotligt_disable() {
+spotlight_disable() {
     jjv_sudo mdutil -a -i off
 }
-spotligt_enable() {
+spotlight_enable() {
     jjv_sudo mdutil -a -i on
 }
 
