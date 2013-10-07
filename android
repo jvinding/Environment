@@ -54,6 +54,7 @@ android_log_level() {
   for s in BOB $(find $project_path -type f -name '*.java' -exec grep -l TAG '{}' \;); do
     s=${s##*/}
     s=${s%%.*}
+    s=${s:0:23}
     adb_all $option shell setprop log.tag.$s $log_level
   done
 }
