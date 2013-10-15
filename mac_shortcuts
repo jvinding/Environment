@@ -94,7 +94,13 @@ back_to_my_mac() {
 alias lock='/System/Library/CoreServices/"Menu Extras"/User.menu/Contents/Resources/CGSession -suspend'
 
 #
+# Development
+#
+alias dev_enable='jjv_sudo dscl . append /Groups/_developer GroupMembership $(whoami)'
+
+#
 # Trouble Shooting
+#
 alias mac_assertions='pmset -g assertions' #  useful for figuring out why the machine won't sleep
 # see also http://hints.macworld.com/article.php?story=20120701234338952
 
