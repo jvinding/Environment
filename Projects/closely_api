@@ -13,9 +13,9 @@ api_db_drop() {
 api_db_load() {
   cly-cd-api
   local branch=$(git_get_branch | tr '[:upper:]'- '[:lower:]'_)
-  psql -U jvinding -h localhost -d postgres -c"alter database directory_master rename to directory_${branch}" && \
+  psql -U admin -h localhost -d postgres -c"alter database directory_master rename to directory_${branch}" && \
   cly-load-db $1
-  psql -U jvinding -h localhost -d postgres -c"alter database directory_${branch} rename to directory_master"
+  psql -U admin -h localhost -d postgres -c"alter database directory_${branch} rename to directory_master"
 }
 
 api_db_diff() {
