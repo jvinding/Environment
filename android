@@ -55,6 +55,7 @@ android_log_level() {
     s=${s##*/}
     s=${s%%.*}
     s=${s:0:23}
+    echo adb_all $option shell setprop log.tag.$s $log_level
     adb_all $option shell setprop log.tag.$s $log_level
   done
 }
