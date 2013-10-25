@@ -51,7 +51,7 @@ android_log_level() {
     log_level=VERBOSE
   fi
 
-  for s in BOB $(find $project_path -type f -name '*.java' -exec grep -l TAG '{}' \;); do
+  for s in BOB $(find "$project_path" -type f -name '*.java' -exec grep -l TAG '{}' \;); do
     s=${s##*/}
     s=${s%%.*}
     s=${s:0:23}
