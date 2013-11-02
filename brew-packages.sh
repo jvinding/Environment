@@ -1,5 +1,5 @@
 #!/bin/bash
-. ~/Environment/mac_shortcuts
+. ~/Environment/admin
 if is_admin; then
     brew install ack git bash-completion
 else

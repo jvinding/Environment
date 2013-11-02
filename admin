@@ -1,0 +1,28 @@
+#
+# Helpers
+#
+safe_source() {
+    local file=$1
+	[ -f $1 ] && source $1
+}
+
+is_admin() {
+    local user=$1
+    local user_option=
+    if ! [ -z $user ]; then
+        user_option="-m $user"
+    fi
+    dseditgroup -o checkmember $user_option admin > /dev/null 2>&1
+}
+
+jjv_sudo() {
+    local command="$@"
+    if is_admin; then
+        sudo $command
+    elif is_admin admin; then
+        echo "This command requires sudo. Switching to 'admin' user, you may have to type the admin password twice"
+        su admin -c "sudo $command"
+    else
+        echo "neither the current user nor 'admin' are members of the 'admin' group"
+    fi
+}

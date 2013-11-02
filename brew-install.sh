@@ -1,5 +1,5 @@
 #!/bin/bash
-. ~/Environment/mac_shortcuts
+. ~/Environment/admin
 if is_admin; then
     ruby -e "$(curl -fsSL https://raw.github.com/mxcl/homebrew/go)"
 else
