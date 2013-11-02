@@ -1,0 +1,35 @@
+. ~/Environment/admin
+
+export ANDROID_HOME=/Users/Shared/android-sdk-macosx
+
+export SERVERPATH=""
+
+export JAVA_HOME=`/usr/libexec/java_home`
+
+export CDPATH=.:~:~/Projects
+
+export PROJECT_DIR=$HOME/Projects
+safe_source $PROJECT_DIR/closely-common-scripts/bash/project-aliases
+safe_source $PROJECT_DIR/closely-common-scripts/bash/ssh-aliases
+
+safe_source ~/Environment/android
+
+safe_source ~/Environment/git
+safe_source ~/Environment/mac_shortcuts
+
+safe_source ~/Environment/Projects/closely_api
+safe_source ~/Environment/Projects/closely_promote
+safe_source ~/Environment/Projects/closely_perch
+
+alias wifi_ip='ifconfig en0 | grep "\<inet\>" | awk "{print \$2}"'
+alias copy_wifi_ip='wifi_ip | tr -d '[:space:]' | pbcopy'
+
+postgres_start() {
+  echo type in the password for admin
+  su admin -c "pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start"
+}
+
+postgres_stop() {
+  echo type in the password for admin
+  su admin -c "pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log stop"
+}
