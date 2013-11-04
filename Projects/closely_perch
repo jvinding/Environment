@@ -1,7 +1,8 @@
 perch_uninstall() {
   for device in $(adb_device_serial_numbers); do
     echo "$device:"
-    for s in com.closely.perch com.closely.perch.debug com.closely.perch.qa com.closely.perch.staging; do
+#    for s in com.closely.perch com.closely.perch.debug com.closely.perch.qa com.closely.perch.staging; do
+    for s in com.closely.perch; do
       echo -n "    $s: "
       adb -s $device $* uninstall $s
     done
