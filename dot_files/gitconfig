@@ -24,7 +24,7 @@
 	l = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)[%an]%Creset' --abbrev-commit
     lol = log --graph --decorate --pretty=oneline --abbrev-commit
     lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
-    ls-assumed = !"git ls-files -v | grep '^[a-z]' | awk '{print $2}'"
+    ls-assumed = !"git ls-files -v | grep '^[a-z]' | cut -c3-"
     assume = update-index --assume-unchanged
     unassume = update-index --no-assume-unchanged
     ls = ls-files --exclude-standard
