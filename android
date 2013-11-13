@@ -24,8 +24,8 @@ adb_all() {
     fi
 }
 
-alias android_assertions_enable='adb shell setprop debug.assert 1'
-alias android_assertions_disable='adb shell setprop debug.assert 0'
+alias android_assertions_enable='adb_all shell setprop debug.assert 1'
+alias android_assertions_disable='adb_all shell setprop debug.assert 0'
 alias ea='android_assertions_enable'
 
 alias adb_bounce='adb kill-server && adb start-server && adb devices'
