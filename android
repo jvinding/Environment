@@ -18,6 +18,7 @@ adb_all() {
         echo "no devices attached"
     else
         for s in $devices; do
+		    printf "%-20s: adb $*\n" $s
             eval adb -s $s "$*"
         done
     fi
@@ -66,7 +67,7 @@ android_log_level() {
     s=${s##*/}
     s=${s%%.*}
     s=${s:0:23}
-    echo adb_all $option shell setprop log.tag.$s $log_level
+    ## echo adb_all $option shell setprop log.tag.$s $log_level
     adb_all $option shell setprop log.tag.$s $log_level
   done
 }
