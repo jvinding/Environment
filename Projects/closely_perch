@@ -10,7 +10,8 @@ perch_uninstall() {
 }
 
 perch_db() {
-  android_db_locked com.closely.perch.debug perch.db
+  local serial_no=$1
+  android_db_locked com.closely.perch perch.db $serial_no
   ## adb $* pull /data/data/com.closely.perch.debug/databases/perch.db .
 }
 
