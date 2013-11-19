@@ -4,9 +4,17 @@ fi
 
 export SERVERPATH="${SERVERPATH} ${ANDROID_HOME}/platform-tools ${ANDROID_HOME}/tools ${ANDROID_HOME}/tools/proguard/bin"
 
-alias adbcgn='adb -s 0146B5040800900E' # CDMA Galaxy Nexus
-alias adbggn='adb -s 014E0F270A01900A' # GSM Galaxy Nexus
-alias adbhtc='adb -s HT16XMA05582' # HTC Dinc 2
+export ANDROID_SN_GALAXY_NEXUS_CDMA=0146B5040800900E
+export ANDROID_SN_GALAXY_NEXUS_GSM=014E0F270A01900A
+export ANDROID_SN_NEXUS_5=030720d3d0211c33
+export ANDROID_SN_NEXUS_7=015d1884484c0009
+export ANDROID_SN_HTC_DINC2=HT16XMA05582
+
+alias adbcgn="adb -s ANDROID_SN_GALAXY_NEXUS_CDMA" # CDMA Galaxy Nexus
+alias adbggn="adb -s $ANDROID_SN_GALAXY_NEXUS_GSM" # GSM Galaxy Nexus
+alias adbhtc="adb -s $ANDROID_SN_HTC_DINC2" # HTC Dinc 2
+alias adbn5="adb -s $ANDROID_SN_NEXUS_5" # Nexus 5
+alias adbn7="adb -s $ANDROID_SN_NEXUS_7" # Nexus 7
 
 adb_device_serial_numbers() {
     adb devices | grep -v '^List' | grep -v daemon | egrep -v '^\s*$' | cut -f 1
