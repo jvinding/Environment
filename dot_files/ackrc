@@ -4,3 +4,4 @@
 --type-set=gsp=.gsp
 
 --ignore-dir=target
+--ignore-dir=build
