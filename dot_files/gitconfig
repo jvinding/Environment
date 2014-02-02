@@ -34,6 +34,7 @@
     ff = flow feature
     ffl = flow feature list
     ffc = flow feature checkout
+	unstage = reset HEAD
 [core]
 	excludesfile = /Users/jvinding/.gitignore
 	autocrlf = input
