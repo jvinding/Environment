@@ -15,7 +15,7 @@ perch_db() {
   ## adb $* pull /data/data/com.closely.perch.debug/databases/perch.db .
 }
 
-alias perch_log_levels="android_log_level '${HOME}/Projects/perch/Perch Android/Perch/src/main/java/com/closely'"
+alias perch_log_levels="android_log_level '${HOME}/Projects/perch/PerchAndroid/Perch/src/main/java/com/closely'"
 alias pll=perch_log_levels
 
 alias perch_ack='ack --js --ignore-dir=dist'
