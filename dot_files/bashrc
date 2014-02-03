@@ -48,12 +48,12 @@ then
     alias l='ls -lhF'
     alias tailf='tail -n 100 -f'
 else
-    alias l='ls -lF'
+    alias l='ls -lFGh'
     alias tailf='tail -100f'
 fi
 
-alias la='ls -al'
-alias lsd='ls -al | grep ^d'
+alias la='l -a'
+alias lsd='la | grep ^d'
 ## alias lsd='ls -ald */'
 alias ci='ci -u'
 alias co='co -l'

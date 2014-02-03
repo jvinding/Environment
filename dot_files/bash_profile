@@ -224,3 +224,6 @@ fi
 #
 #
 ################################## end prompt ##################################
+
+## export LSCOLORS=ExFxCxDxBxegedabagacad
+export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
