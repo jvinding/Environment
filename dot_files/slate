@@ -1,16 +1,6 @@
-# key aliases (hyper + colemak)
+# key layout (hyper + colemak)
+config keyboardLayout colemak
 alias hyper ctrl;shift;alt;cmd
-alias a a
-alias b b
-alias c c
-alias g t
-alias h h
-alias i l
-alias j y
-alias k n
-alias s d
-alias t f
-alias x x
 
 # position aliases
 alias full move screenOriginX;screenOriginY screenSizeX;screenSizeY
@@ -39,17 +29,18 @@ config windowHintsSpread true
 bind space:${hyper} hint ARSTDHNEIOQWFPGJLUYZXCVBKM
 
 # Window focusing
-bind ${a}:${hyper} focus 'Android Studio'
-bind ${b}:${hyper} focus 'Byword'
-bind ${c}:${hyper} focus 'AppCode'
-bind ${g}:${hyper} focus 'Google Chrome'
-bind ${h}:${hyper} focus 'HipChat'
-bind ${i}:${hyper} focus 'IntelliJ IDEA'
-bind ${j}:${hyper} focus 'Airmail'
-bind ${k}:${hyper} focus 'Skype'
-bind ${s}:${hyper} focus 'SourceTree'
-bind ${t}:${hyper} focus 'TextMate'
-bind ${x}:${hyper} focus 'Xcode'
+bind 1:${hyper} focus '1Password'
+bind a:${hyper} focus 'Android Studio'
+bind b:${hyper} focus 'Byword'
+bind c:${hyper} focus 'AppCode'
+bind g:${hyper} focus 'Google Chrome'
+bind h:${hyper} focus 'HipChat'
+bind i:${hyper} focus 'IntelliJ IDEA'
+bind j:${hyper} focus 'Airmail'
+bind k:${hyper} focus 'Skype'
+bind s:${hyper} focus 'SourceTree'
+bind t:${hyper} focus 'TextMate'
+bind x:${hyper} focus 'Xcode'
 
 # This is the default .slate file.
 # If no ~/.slate file exists this is the file that will be used.
