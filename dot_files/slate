@@ -15,8 +15,10 @@ alias bottomright corner bottom-right resize:screenSizeX/2;screenSizeY/2
 bind z:${hyper} ${full}
 bind left:${hyper} ${lefthalf}
 bind right:${hyper} ${righthalf}
-bind up:${hyper} ${topleft}
-bind down:${hyper} ${bottomleft}
+bind home:${hyper} ${topleft}
+bind pageUp:${hyper} ${topright}
+bind end:${hyper} ${bottomleft}
+bind pageDown:${hyper} ${bottomright}
 
 # window switching
 bind tab:${hyper} switch
@@ -38,6 +40,7 @@ bind h:${hyper} focus 'HipChat'
 bind i:${hyper} focus 'IntelliJ IDEA'
 bind j:${hyper} focus 'Airmail'
 bind k:${hyper} focus 'Skype'
+bind r:${hyper} focus 'iTerm'
 bind s:${hyper} focus 'SourceTree'
 bind t:${hyper} focus 'TextMate'
 bind x:${hyper} focus 'Xcode'
