@@ -173,7 +173,7 @@ then
     function scm_status {
         local git_branch=$(git symbolic-ref --short HEAD 2> /dev/null)
         if ! [ -z "$git_branch" ]; then
-            echo -en "${BLUE_UNESCAPED}-=(${GREEN_UNESCAPED}${git_branch}${BLUE_UNESCAPED})=-"
+            echo -ne "${GREEN_UNESCAPED}>${BLUE_UNESCAPED}-=(${GREEN_UNESCAPED}${git_branch}${BLUE_UNESCAPED})=-"
 
             local git_status=$(git status -sb)
             local status_counts=
@@ -194,8 +194,10 @@ then
             local server_diffs=$(git status -sb | sed -n '/\[/ { s/^[^[]*\[//; s/\][^]]*$//; s/ahead \([0-9]*\)[, ]*/\1↑/; s/behind \([0-9]*\)/\1↓/; p; }')
             status_counts="${status_counts}${server_diffs}"
             if ! [ -z "$status_counts" ]; then
-              echo -en "${BLUE_UNESCAPED}-=(${RED_UNESCAPED}${status_counts}${BLUE_UNESCAPED})=-"
+              echo -ne "${BLUE_UNESCAPED}-=(${RED_UNESCAPED}${status_counts}${BLUE_UNESCAPED})=-"
             fi
+            echo
+            echo .
         fi
     }
 
@@ -224,11 +226,11 @@ then
     PROMPT_USER="$BLUE-=($RED\\u"
     PROMPT_HOST="@\\h$BLUE)=-"
     PROMPT_PROMPT="$CYAN \\$ $NORMAL"
-    PROMPT_LINE_1="$PROMPT_PWD"
+    PROMPT_LINE_1="$PROMPT_PWD$PROMPT_RETURN"
 ##    PROMPT_LINE_2="$PROMPT_SCM_BRANCH$PROMPT_SCM_STATUS$PROMPT_RETURN$PROMPT_JOBS"
-    PROMPT_LINE_2="\$(scm_status)$PROMPT_RETURN"
-    PROMPT_LINE_3="$PROMPT_USER$PROMPT_HOST$PROMPT_PROMPT"
-    export PS1="$GREEN/$PROMPT_LINE_1\n$GREEN>$PROMPT_LINE_2\n$GREEN\\\\$PROMPT_LINE_3"
+    PROMPT_LINE_2="\$(scm_status)"
+    PROMPT_LINE_3="${PROMPT_USER}${PROMPT_HOST}${PROMPT_PROMPT}"
+    export PS1="${GREEN}/${PROMPT_LINE_1}\n${PROMPT_LINE_2}${PROMPT_CLEAR_TO_COL_1}${GREEN}\\\\${PROMPT_LINE_3}"
 ##  export PS1='\[\033]0;\u@\h:$_TMP_PWD\007\]($?) [\u@\h] \$ '
 else
     if [ "$TERM" = "xterm" ] || [ "$TERM" = "cygwin" ]
