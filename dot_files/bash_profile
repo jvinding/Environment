@@ -172,6 +172,10 @@ then
     
     function scm_status {
         local git_branch=$(git symbolic-ref --short HEAD 2> /dev/null)
+        if [ -z "$git_branch" ]; then
+            git_branch=$(git status | grep detached | perl -lpe 's/(?:\w+\W+)*(\w+)/Detached HEAD at \1/')
+        fi
+
         if ! [ -z "$git_branch" ]; then
             echo -ne "${GREEN_UNESCAPED}>${BLUE_UNESCAPED}-=(${GREEN_UNESCAPED}${git_branch}${BLUE_UNESCAPED})=-"
 
