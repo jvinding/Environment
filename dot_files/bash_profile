@@ -200,8 +200,8 @@ then
             if ! [ -z "$status_counts" ]; then
               echo -ne "${BLUE_UNESCAPED}-=(${RED_UNESCAPED}${status_counts}${BLUE_UNESCAPED})=-"
             fi
-            echo
-            echo .
+          else 
+            echo -ne "${BLUE_UNESCAPED}-=(${GREEN_UNESCAPED}N/A${BLUE_UNESCAPED})=-"
         fi
     }
 
@@ -234,7 +234,7 @@ then
 ##    PROMPT_LINE_2="$PROMPT_SCM_BRANCH$PROMPT_SCM_STATUS$PROMPT_RETURN$PROMPT_JOBS"
     PROMPT_LINE_2="\$(scm_status)"
     PROMPT_LINE_3="${PROMPT_USER}${PROMPT_HOST}${PROMPT_PROMPT}"
-    export PS1="${GREEN}/${PROMPT_LINE_1}\n${PROMPT_LINE_2}${PROMPT_CLEAR_TO_COL_1}${GREEN}\\\\${PROMPT_LINE_3}"
+    export PS1="${GREEN}/${PROMPT_LINE_1}\n${PROMPT_LINE_2}\n${GREEN}\\\\${PROMPT_LINE_3}"
 ##  export PS1='\[\033]0;\u@\h:$_TMP_PWD\007\]($?) [\u@\h] \$ '
 else
     if [ "$TERM" = "xterm" ] || [ "$TERM" = "cygwin" ]
