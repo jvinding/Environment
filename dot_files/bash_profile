@@ -23,7 +23,7 @@ export HISTCONTROL=ignoredups
 #
 #
 HOSTNAME=`uname -n`
-HOSTNAME=${HOSTNAME%%.*}
+export HOSTNAME=${HOSTNAME%%.*}
 [ -f ~/Environment/Machines/$HOSTNAME ] && . ~/Environment/Machines/$HOSTNAME
 #
 #

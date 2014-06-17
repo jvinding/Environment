@@ -1,0 +1,15 @@
+export _SSH_AGENT_ENV_FILE=${HOME}/.ssh/agent-enviroment-${HOSTNAME}
+
+_ssh_agent_start() {
+    echo "starting ssh-agent..."
+    /usr/bin/env ssh-agent | sed 's/^echo/#echo/' > $_SSH_AGENT_ENV_FILE
+    chmod 600 ${_SSH_AGENT_ENV_FILE}
+    . ${_SSH_AGENT_ENV_FILE} > /dev/null
+    ssh-add
+}
+
+if [ -f "${_SSH_AGENT_ENV_FILE}" ] && ( ps x | grep "${SSH_AGENT_PID}" | grep ssh-agent ) > /dev/null; then
+    . ${_SSH_AGENT_ENV_FILE} > /dev/null
+else
+    _ssh_agent_start
+fi
