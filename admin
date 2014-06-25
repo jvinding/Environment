@@ -3,7 +3,11 @@
 #
 safe_source() {
     local file=$1
-	[ -f $1 ] && source $1
+    if [ -f "$file" ]; then
+        source $file
+    else
+        echo "not sourcing non-existant file: '$file'"
+    fi
 }
 
 is_admin() {
