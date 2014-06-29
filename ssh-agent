@@ -8,8 +8,11 @@ _ssh_agent_start() {
     ssh-add
 }
 
-if [ -f "${_SSH_AGENT_ENV_FILE}" ] && ( ps x | grep "${SSH_AGENT_PID}" | grep ssh-agent > /dev/null ); then
+if [ -f "${_SSH_AGENT_ENV_FILE}" ]; then
     . ${_SSH_AGENT_ENV_FILE} > /dev/null
+    if ! ps x | fgrep "${SSH_AGENT_PID}" | fgrep ssh-agent > /dev/null; then
+        _ssh_agent_start
+    fi
 else
     _ssh_agent_start
 fi
