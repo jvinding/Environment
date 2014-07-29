@@ -21,6 +21,8 @@ safe_source ~/Environment/git
 safe_source ~/Environment/mac_shortcuts
 safe_source ~/Environment/java
 
+safe_source ~/Environment/docker
+
 safe_source ~/Environment/Projects/closely_api
 safe_source ~/Environment/Projects/closely_promote
 safe_source ~/Environment/Projects/closely_perch

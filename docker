@@ -1,0 +1,24 @@
+docker_env() {
+    export DOCKER_IP=$(boot2docker ip 2> /dev/null)
+    export DOCKER_HOST=tcp://${DOCKER_IP}:2375
+}
+
+docker_start() {
+    /usr/local/bin/boot2docker up && docker_env
+    docker version
+}
+
+docker_ensure() {
+    if ! docker_is_running; then
+        docker_start
+    fi
+}
+
+docker_is_running() {
+    [ "running" == "$(boot2docker status 2> /dev/null)" ]
+}
+
+if docker_is_running; then
+    docker_env
+fi
+
