@@ -8,6 +8,8 @@ export JAVA_HOME=`/usr/libexec/java_home`
 
 export CDPATH=.:~:~/Projects
 
+. `brew --prefix`/etc/profile.d/z.sh
+
 export PROJECT_DIR=$HOME/Projects
 safe_source $PROJECT_DIR/closely-common-scripts/bash/project-aliases
 safe_source $PROJECT_DIR/closely-common-scripts/bash/ssh-aliases
