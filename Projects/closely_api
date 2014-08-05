@@ -18,10 +18,10 @@ api_db_drop() {
 
 api_db_load() {
   cly-cd-api
-  local branch=$(git_get_branch | tr '[:upper:]'- '[:lower:]'_)
-  psql -U admin -h localhost -d postgres -c"alter database directory_master rename to directory_${branch}" && \
-  cly-load-db $1
-  psql -U admin -h localhost -d postgres -c"alter database directory_${branch} rename to directory_master"
+  local branch=$(git_get_branch | tr '[:upper:]-./' '[:lower:]___')
+  psql -U admin -h localhost -d postgres -c"alter database directory_master rename to directory_${branch}" || { echo "failed rename to directory_${branch}"; return 1; }
+  cly-load-db $1 || { echo "failed cly-load-db"; }
+  psql -U admin -h localhost -d postgres -c"alter database directory_${branch} rename to directory_master" || { echo "failed rename to directory_${branch}"; return 1; }
 }
 
 api_db_diff() {
