@@ -1,0 +1,11 @@
+
+crawl() {
+    cd $PROJECT_DIR/crawl
+    java_use 1.8
+    gvm use grails
+}
+
+crawl_tunnel() {
+    ssh -L 61616:10.210.1.222:61616 -N admin
+}
+
