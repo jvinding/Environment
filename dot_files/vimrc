@@ -5,6 +5,7 @@ set ts=4
 set shiftwidth=4
 set expandtab autoindent smartindent
 set ruler showcmd wildmenu nohlsearch
+set title titlestring=
 
 set vb t_vb=
 
