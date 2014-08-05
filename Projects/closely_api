@@ -1,3 +1,9 @@
+api() {
+    cly-cd-api
+    java_use 1.6
+    gvm use grails 2.1.0
+}
+
 alias api_db='psql -U directory -h localhost -d directory_master'
 
 alias api_clean='grails clean -Dgrails.project.work.dir=/Users/jvinding/.grails/2.1.0/projects/api_master/'
