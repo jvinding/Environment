@@ -1,0 +1,14 @@
+path_remove() {
+    local dir=$1
+    PATH=$(echo $PATH | sed -e "s!:$dir:!:!" -e"s!:$dir\$!!")
+}
+
+path_append() {
+    local dir=$1
+    PATH=$(echo $PATH | sed -e "s!:$dir:!:!" -e"s!:$dir\$!!"):$dir
+}
+
+path_prepend() {
+    local dir=$1
+    PATH=$dir:$(echo $PATH | sed -e "s!:$dir:!:!" -e"s!:$dir\$!!")
+}
