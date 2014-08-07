@@ -6,6 +6,6 @@ crawl() {
 }
 
 crawl_tunnel() {
-    ssh -L 61616:10.210.1.222:61616 -N admin
+    ssh -f -L 61616:10.210.1.222:61616 -N admin
 }
 
