@@ -18,6 +18,22 @@ docker_is_running() {
     [ "running" == "$(boot2docker status 2> /dev/null)" ]
 }
 
+docker_kill_all() {
+    for s in $(docker ps | grep -v ^CONTAINER | awk '{print $1}'); do docker kill $s; done
+}
+
+docker_containers_rm_all() {
+    for s in $(docker ps -a | grep -v ^CONTAINER | awk '{print $1}'); do docker rm $s; done
+}
+
+docker_containers_rm_exited() {
+    for s in $(docker ps -a | grep Exit | awk '{print $1}'); do docker rm $s; done
+}
+
+docker_images_rm_all() {
+    for s in $(docker images | grep -v ^REPOSITORY | awk '{print $3}'); do docker rmi $s; done
+}
+
 if docker_is_running; then
     docker_env
 fi
