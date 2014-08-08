@@ -177,7 +177,7 @@ then
         fi
 
         if ! [ -z "$git_branch" ]; then
-            echo -ne "${GREEN_UNESCAPED}>${BLUE_UNESCAPED}-=(${GREEN_UNESCAPED}${git_branch}${BLUE_UNESCAPED})=-"
+            echo -ne "${BLUE_UNESCAPED}-=(${GREEN_UNESCAPED}${git_branch}${BLUE_UNESCAPED})=-"
 
             local git_status=$(git status -sb)
             local status_counts=
