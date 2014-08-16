@@ -1,0 +1,6 @@
+[submodule "dot_files/vim/bundle/command-t"]
+	path = dot_files/vim/bundle/command-t
+	url = git@github.com:wincent/command-t
+[submodule "dot_files/vim/bundle/vim-easymotion"]
+	path = dot_files/vim/bundle/vim-easymotion
+	url = git@github.com:Lokaltog/vim-easymotion
