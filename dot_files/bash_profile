@@ -250,3 +250,8 @@ fi
 
 ## export LSCOLORS=ExFxCxDxBxegedabagacad
 export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+
+#
+# run per-machine commands that must be run at the end of .bash_profile (eg: for gvm)
+#
+[ -f ~/Environment/Machines/${HOSTNAME}.post_profile ] && . ~/Environment/Machines/${HOSTNAME}.post_profile

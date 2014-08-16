@@ -89,3 +89,8 @@ alias sdiff='svn diff | sed -e"s/\(todo\)/\x1b[0;32m\1\x1b[0;0m/ig" -e"s/\(xxx\)
 #
 #
 ################################# end aliases #################################
+
+#
+# run per-machine commands that must be run at the end of .bashrc (eg: for gvm)
+#
+[ -f ~/Environment/Machines/${HOSTNAME}.post_rc ] && . ~/Environment/Machines/${HOSTNAME}.post_rc
