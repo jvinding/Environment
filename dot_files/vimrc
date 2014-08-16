@@ -1,3 +1,4 @@
+call pathogen#infect()
 syntax on
 color torte
 
@@ -16,6 +17,10 @@ set nocompatible        " Use Vim defaults (much better!)
 set bs=2                " backspace over newlines and all
 
 let mapleader=","
+nnoremap ,, ,
+
+nmap ; :
+nnoremap ;; ;
 
 map <C-l> :syn sync fromstart<CR>
 map <A-n> :set number!<CR> " show line numbers
@@ -26,8 +31,6 @@ nmap <C-s> :w<CR>
 let g:FTCOperateOnFirstColumnOnly = 0
 let g:FTCOperateOnlyOnNonComments = 1
 let g:FTCOperateOnBlankLines = 0
-
-
 "
 " set up some insert mode mappings
 "
@@ -120,8 +123,8 @@ highlight ColorColumn ctermbg=magenta
 call matchadd('ColorColumn', '\%106v', 100)
 
 "=====[ Highlight matches when jumping to next ]=============
-nnoremap <silent> n   n:call HLNext(0.4)<cr>
-nnoremap <silent> N   N:call HLNext(0.4)<cr>
+" nnoremap <silent> n   n:call HLNext(0.4)<cr>
+" nnoremap <silent> N   N:call HLNext(0.4)<cr>
 function! HLNext (blinktime)
     highlight WhiteOnRed ctermfg=white ctermbg=red
     let [bufnum, lnum, col, off] = getpos('.')
@@ -137,3 +140,20 @@ endfunction
 "====[ Make tabs, trailing whitespace, and non-breaking spaces visible ]======
 exec "set listchars=tab:\uBB\uBB,trail:\uB7,nbsp:~"
 set list
+
+"
+" Easy Motion
+"
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_enter_jump_first = 1
+let g:EasyMotion_space_jump_first = 1
+
+map  / <Plug>(easymotion-sn)
+omap / <Plug>(easymotion-tn)
+map  n <Plug>(easymotion-next)
+map  N <Plug>(easymotion-prev)
+
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
+map <Leader>l <Plug>(easymotion-lineforward)
+map <Leader>h <Plug>(easymotion-linebackward)

@@ -1,6 +1,6 @@
 if [[ $- != *i* ]] ; then
-        # Shell is non-interactive.  Be done now!
-        return
+    # Shell is non-interactive.  Be done now!
+    return
 fi
 
 ########################## source global definitions ##########################
@@ -9,7 +9,7 @@ fi
 
 if [ ! -z "$BASH" ] && [ -f /etc/bashrc ]
 then
-	. /etc/bashrc
+    . /etc/bashrc
 fi
 #
 #
