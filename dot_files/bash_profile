@@ -12,9 +12,9 @@ else
     export ENV=~/.bashrc
 fi
 
-export HISTSIZE=1000
-export HISTFILESIZE=1000
-export HISTCONTROL=ignoredups
+export HISTSIZE=100000
+export HISTFILESIZE=100000
+export HISTCONTROL=erasedups
 #
 #
 ############################## end set shell opts ##############################
