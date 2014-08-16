@@ -35,6 +35,7 @@
     ffl = flow feature list
     ffc = flow feature checkout
 	unstage = reset HEAD
+	permission-reset = !git diff -p -R | grep -E \"^(diff|(old|new) mode)\" | git apply
 [core]
 	excludesfile = /Users/jvinding/.gitignore
 	autocrlf = input
