@@ -1,11 +1,33 @@
-
 crawl() {
     cd $PROJECT_DIR/crawl
     java_use 1.8
     gvm use grails
 }
 
-crawl_tunnel() {
-    ssh -f -L 61616:10.210.1.222:61616 -N admin
+_crawl_tunnel() {
+    local ip=$1
+    ssh -f -L 61616:$ip:61616 -N admin
+    ssh -f -L 8162:$ip:8162 -N admin
 }
 
+_crawl_tunnel_close() {
+    local ip=$1
+    pkill -f "ssh -f -L 61616:$ip"
+    pkill -f "ssh -f -L 8162:$ip"
+}
+
+crawl_tunnel_prod1() {
+    _crawl_tunnel 10.210.1.222
+}
+
+crawl_tunnel_prod1_close() {
+    _crawl_tunnel_close 10.210.1.222
+}
+
+crawl_tunnel_qa() {
+    _crawl_tunnel 10.209.161.141
+}
+
+crawl_tunnel_qa_close() {
+    _crawl_tunnel_close 10.209.161.141
+}
