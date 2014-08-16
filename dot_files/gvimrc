@@ -10,3 +10,8 @@ winsize 105 50
 match error /\s\+$/
 
 " map <C-s> :winsize 105 50<CR>
+
+if has("gui_macvim")
+    macmenu &File.New\ Tab key=<nop>
+    map <D-t> :CommandT<CR>
+endif
