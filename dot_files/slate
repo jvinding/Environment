@@ -92,7 +92,7 @@ config resizePercentOf screenSize
 # bind 2:ctrl;alt         throw 1 resize
 # bind 3:ctrl;alt         throw 2 resize
 bind right:${hyper} throw right resize
-bind left:#{hyper}  throw left  resize
+bind left:${hyper}  throw left  resize
 # bind up:ctrl;alt;cmd    throw up    resize
 # bind down:ctrl;alt;cmd  throw down  resize
 
