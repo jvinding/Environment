@@ -137,3 +137,14 @@ map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
 map <Leader>l <Plug>(easymotion-lineforward)
 map <Leader>h <Plug>(easymotion-linebackward)
+
+"
+" Airline
+"
+set laststatus=2
+let g:airline_theme='solarized'
+
+"
+" Bufferline
+"
+let g:bufferline_echo = 0

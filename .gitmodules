@@ -4,3 +4,15 @@
 [submodule "dot_files/vim/bundle/vim-easymotion"]
 	path = dot_files/vim/bundle/vim-easymotion
 	url = git@github.com:Lokaltog/vim-easymotion
+[submodule "dot_files/vim/bundle/vim-airline"]
+	path = dot_files/vim/bundle/vim-airline
+	url = https://github.com/bling/vim-airline
+[submodule "dot_files/vim/bundle/vim-fugitive"]
+	path = dot_files/vim/bundle/vim-fugitive
+	url = https://github.com/tpope/vim-fugitive.git
+[submodule "dot_files/vim/bundle/vim-gitgutter"]
+	path = dot_files/vim/bundle/vim-gitgutter
+	url = git://github.com/airblade/vim-gitgutter.git
+[submodule "dot_files/vim/bundle/vim-bufferline"]
+	path = dot_files/vim/bundle/vim-bufferline
+	url = https://github.com/bling/vim-bufferline.git
