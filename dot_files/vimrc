@@ -28,9 +28,6 @@ map <A-n> :set number!<CR> " show line numbers
 map! <C-s> <ESC>:w<CR> " save
 nmap <C-s> :w<CR>
 
-let g:FTCOperateOnFirstColumnOnly = 0
-let g:FTCOperateOnlyOnNonComments = 1
-let g:FTCOperateOnBlankLines = 0
 "
 " set up some insert mode mappings
 "
@@ -48,10 +45,6 @@ let g:FTCOperateOnBlankLines = 0
 "imap _ifo _tclif,gotomark
 "imap _ife _tclif else {<CR>},gotomark
 "imap _for for {,setmark} {} {} {<CR>},gotomark
-
-"source ~/.vim/plugins/feraltogglecommentify.vim
-"source ~/.vim/plugins/matchit.vim
-" source ~/.vim/plugin/AnsiEsc.vba
 
 "
 "
@@ -122,24 +115,11 @@ command! -nargs=1 Find :call Find()
 highlight ColorColumn ctermbg=magenta
 call matchadd('ColorColumn', '\%106v', 100)
 
-"=====[ Highlight matches when jumping to next ]=============
-" nnoremap <silent> n   n:call HLNext(0.4)<cr>
-" nnoremap <silent> N   N:call HLNext(0.4)<cr>
-function! HLNext (blinktime)
-    highlight WhiteOnRed ctermfg=white ctermbg=red
-    let [bufnum, lnum, col, off] = getpos('.')
-    let matchlen = strlen(matchstr(strpart(getline('.'),col-1),@/))
-    let target_pat = '\c\%#'.@/
-    let ring = matchadd('WhiteOnRed', target_pat, 101)
-    redraw
-    exec 'sleep ' . float2nr(a:blinktime * 1000) . 'm'
-    call matchdelete(ring)
-    redraw
-endfunction
-
 "====[ Make tabs, trailing whitespace, and non-breaking spaces visible ]======
 exec "set listchars=tab:\uBB\uBB,trail:\uB7,nbsp:~"
 set list
+
+"===================================[ END ]===================================="
 
 "
 " Easy Motion
