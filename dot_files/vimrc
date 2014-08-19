@@ -128,6 +128,8 @@ let g:EasyMotion_smartcase = 1
 let g:EasyMotion_enter_jump_first = 1
 let g:EasyMotion_space_jump_first = 1
 
+" map  <Leader>/ <Plug>(easymotion-sn)
+" omap <Leader>/ <Plug>(easymotion-tn)
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
 map  n <Plug>(easymotion-next)
@@ -147,4 +149,4 @@ let g:airline_theme='solarized'
 "
 " Bufferline
 "
-let g:bufferline_echo = 0
+let g:bufferline_echo = 0 " only show it in airline
