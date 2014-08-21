@@ -116,8 +116,9 @@ highlight ColorColumn ctermbg=magenta
 call matchadd('ColorColumn', '\%106v', 100)
 
 "====[ Make tabs, trailing whitespace, and non-breaking spaces visible ]======
-exec "set listchars=tab:\uBB\uBB,trail:\uB7,nbsp:~"
-set list
+" exec "set listchars=tab:\uBB\uBB,trail:\uB7,nbsp:~"
+" set list
+set list listchars=tab:»·,trail:·,nbsp:~
 
 "===================================[ END ]===================================="
 

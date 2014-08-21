@@ -1,7 +1,7 @@
 set guifont=Source\ Code\ Pro:h13
 winsize 105 50
 
-match error /\s\+$/
+" match error /\s\+$/
 
 " map <C-s> :winsize 105 50<CR>
 
