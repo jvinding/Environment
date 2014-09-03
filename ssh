@@ -1,0 +1,56 @@
+ssh_tunnel() {
+    local jumpbox=$1
+    local targetbox=$2
+    local remote_port=$3
+    local local_port=${4:-$remote_port}
+
+    _ssh_tunnel_available "$jumpbox" "$targetbox" "$remote_port" "$local_port" || return 1
+
+    eval $(_ssh_tunnel_command "$jumpbox" "$targetbox" "$remote_port" "$local_port")
+}
+
+ssh_tunnel_close() {
+    local jumpbox=$1
+    local targetbox=$2
+    local remote_port=$3
+    local local_port=${4:-$remote_port}
+
+    command=$(_ssh_tunnel_command "$jumpbox" "$targetbox" "$remote_port" "$local_port")
+    pkill -f "$command"
+}
+
+ssh_tunnel_list() {
+    IFS=$'\n'
+    for proc in $(ps -afe | fgrep "ssh -f -L" | fgrep -v fgrep); do
+        echo $proc | xargs | cut -f 8- -d' '
+    done
+}
+
+_ssh_tunnel_command() {
+    local jumpbox=$1
+    local targetbox=$2
+    local remote_port=$3
+    local local_port=${4:-$remote_port}
+
+    echo "ssh -f -L ${local_port}:${targetbox}:${remote_port} -N ${jumpbox}"
+}
+
+_ssh_tunnel_available() {
+    local jumpbox=$1
+    local targetbox=$2
+    local remote_port=$3
+    local local_port=$4
+
+    if [ -z "$jumpbox" ] || [ -z "$targetbox" ] || [ -z "$remote_port" ] || [ -z "$local_port" ]; then
+        echo "Usage: _ssh_tunnel_available jumpbox targetbox remote_port local_port"
+        return 1
+    fi
+
+    command=$(_ssh_tunnel_command "$jumpbox" "$targetbox" "$remote_port" "$local_port")
+
+    if ps -afe | fgrep "ssh -f -L ${local_port}:" | fgrep -v grep > /dev/null; then
+        echo "Tunnel already open on ${local_port}"
+        ps -afe | fgrep "ssh -f -L ${local_port}:" | fgrep -v fgrep | xargs | cut -f 8- -d' '
+        return 1
+    fi
+}

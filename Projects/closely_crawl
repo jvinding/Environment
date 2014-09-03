@@ -6,21 +6,15 @@ crawl() {
 
 _crawl_tunnel() {
     local ip=$1
-    if pgrep -f "ssh -f -L 61616:$ip:" > /dev/null; then
-        echo "tunnel already open"
-    else
-        if  pgrep -f "ssh -f -L 61616:" > /dev/null; then
-            echo "closing existing tunnel"
-            crawl_tunnel_close
-        fi
-        ssh -f -L 61616:$ip:61616 -N admin
-        ssh -f -L 8162:$ip:8162 -N admin
-    fi
+    ssh_tunnel admin $ip 61616
+    ssh_tunnel admin $ip 8162
 }
 
 crawl_tunnel_close() {
-    pkill -f "ssh -f -L 61616:"
-    pkill -f "ssh -f -L 8162:"
+    ssh_tunnel_close admin 10.210.1.222 61616
+    ssh_tunnel_close admin 10.210.1.222 8162
+    ssh_tunnel_close admin 10.209.161.141 61616
+    ssh_tunnel_close admin 10.209.161.141 8162
 }
 
 crawl_tunnel_prod1() {
