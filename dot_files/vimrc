@@ -23,7 +23,7 @@ nmap ; :
 nnoremap ;; ;
 
 map <C-l> :syn sync fromstart<CR>
-map <A-n> :set number!<CR> " show line numbers
+map <Leader><Leader>n :set number!<CR>
 
 map! <C-s> <ESC>:w<CR> " save
 nmap <C-s> :w<CR>
@@ -133,8 +133,8 @@ let g:EasyMotion_space_jump_first = 1
 " omap <Leader>/ <Plug>(easymotion-tn)
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
-map  n <Plug>(easymotion-next)
-map  N <Plug>(easymotion-prev)
+map  <Leader>n <Plug>(easymotion-next)
+map  <Leader>N <Plug>(easymotion-prev)
 
 map <Leader>j <Plug>(easymotion-j)
 map <Leader>k <Plug>(easymotion-k)
