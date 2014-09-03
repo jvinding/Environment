@@ -15,6 +15,7 @@ safe_source $PROJECT_DIR/closely-common-scripts/bash/project-aliases
 safe_source $PROJECT_DIR/closely-common-scripts/bash/ssh-aliases
 
 
+safe_source ~/Environment/ssh
 safe_source ~/Environment/ssh-agent
 
 safe_source ~/Environment/android
