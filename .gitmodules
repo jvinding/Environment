@@ -16,3 +16,6 @@
 [submodule "dot_files/vim/bundle/vim-bufferline"]
 	path = dot_files/vim/bundle/vim-bufferline
 	url = https://github.com/bling/vim-bufferline.git
+[submodule "dot_files/vim/bundle/nerdtree"]
+	path = dot_files/vim/bundle/nerdtree
+	url = https://github.com/scrooloose/nerdtree

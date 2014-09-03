@@ -151,3 +151,8 @@ let g:airline_theme='solarized'
 " Bufferline
 "
 let g:bufferline_echo = 0 " only show it in airline
+
+"
+" NerdTree
+"
+map <C-t> :NERDTreeToggle<CR>
