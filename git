@@ -1,5 +1,5 @@
 if which hub > /dev/null; then
-	alias git=hub
+    alias git=hub
 fi
 alias gff="git flow feature"
 
@@ -9,6 +9,11 @@ git_assert_clean_tree() {
     echo "Uncommited changes. Stash them then try again."
     return 1
   fi
+}
+
+git_cdup() {
+    git branch > /dev/null 2>&1 || return 1
+    cd "$(git rev-parse --show-cdup)".
 }
 
 gfrf() {
