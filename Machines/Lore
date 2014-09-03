@@ -43,3 +43,7 @@ postgres_stop() {
   echo type in the password for admin
   su admin -c "pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log stop"
 }
+
+pui() {
+    ssh admin "jvinding/user_info.sh '$1'"
+}
