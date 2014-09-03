@@ -11,6 +11,28 @@ git_assert_clean_tree() {
   fi
 }
 
+gfrf() {
+  git_assert_clean_tree || return 1
+
+  local version=$1
+  if [ -z "$version" ]; then
+    echo "usage: gfrf <version>"
+    echo "e.g.:"
+    echo "     gfrf 2.8.3"
+    return 1
+  fi
+
+  git checkout master || return 1
+  git pull --rebase || return 1
+
+  git checkout develop || return 1
+  git pull --rebase || return 1
+
+  git flow release finish $version
+
+  git push --all origin
+}
+
 gfhs() {
   git_assert_clean_tree || return 1
 
