@@ -1,4 +1,4 @@
-. ~/Environment/admin
+ . ~/Environment/admin
 
 export ANDROID_HOME=/Users/Shared/android-sdk-macosx
 
@@ -34,14 +34,20 @@ safe_source ~/Environment/Projects/closely_crawl
 alias wifi_ip='ifconfig en0 | grep "\<inet\>" | awk "{print \$2}"'
 alias copy_wifi_ip='wifi_ip | tr -d '[:space:]' | pbcopy'
 
+export PGDATA=/usr/local/var/postgres
 postgres_start() {
   echo type in the password for admin
-  su admin -c "pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start"
+  su admin -c "pg_ctl -D $PGDATA -l $PGDATA/server.log start"
 }
 
 postgres_stop() {
   echo type in the password for admin
-  su admin -c "pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log stop"
+  su admin -c "pg_ctl -D $PGDATA -l $PGDATA/server.log stop"
+}
+
+postgres_log() {
+  echo type in the password for admin
+  su admin -c "less +F $PGDATA/server.log"
 }
 
 pui() {
