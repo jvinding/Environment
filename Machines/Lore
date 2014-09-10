@@ -36,13 +36,15 @@ alias copy_wifi_ip='wifi_ip | tr -d '[:space:]' | pbcopy'
 
 export PGDATA=/usr/local/var/postgres
 postgres_start() {
-  echo type in the password for admin
-  su admin -c "pg_ctl -D $PGDATA -l $PGDATA/server.log start"
+  sudo -u admin pg_ctl -D $PGDATA -l $PGDATA/server.log start
 }
 
 postgres_stop() {
-  echo type in the password for admin
-  su admin -c "pg_ctl -D $PGDATA -l $PGDATA/server.log stop"
+  if [ "-f" == "$1" ]; then
+    sudo -u admin pg_ctl -D $PGDATA -m fast -l $PGDATA/server.log stop
+  else
+    sudo -u admin pg_ctl -D $PGDATA -l $PGDATA/server.log stop
+  fi
 }
 
 postgres_log() {
