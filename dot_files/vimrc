@@ -16,6 +16,8 @@ set vb t_vb=
 set nocompatible        " Use Vim defaults (much better!)
 set bs=2                " backspace over newlines and all
 
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.class
+
 let mapleader=","
 nnoremap ,, ,
 
