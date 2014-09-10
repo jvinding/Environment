@@ -19,9 +19,10 @@ set bs=2                " backspace over newlines and all
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.class
 
 let mapleader=","
-nnoremap ,, ,
 
 nmap ; :
+
+nnoremap ,, ,
 nnoremap ;; ;
 
 map <C-l> :syn sync fromstart<CR>
