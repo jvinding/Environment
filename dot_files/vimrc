@@ -125,3 +125,8 @@ map <C-t> :NERDTreeToggle<CR>
 "
 let g:ctrlp_map = '<D-t>'
 
+"
+" Git Gutter
+"
+highlight GitGutterChange ctermfg=blue guifg=blue ctermbg=gray guibg=gray
+
