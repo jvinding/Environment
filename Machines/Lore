@@ -53,5 +53,6 @@ postgres_log() {
 }
 
 pui() {
-    ssh admin "jvinding/user_info.sh '$1'"
+    ssh admin "jvinding/user_info.sh $@" | pbcopy
+    echo "Info copied to pastboard"
 }
