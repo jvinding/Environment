@@ -71,43 +71,6 @@ imap <unique>	<C-/>	<esc><Plug>FtcTc
 "map ,q :source ~/.vim/qwerty<CR>
 
 nmap <Leader>c :cclose<CR>
-nmap <Leader>f :Find()<CR>
-function! Find()
-    let l:name=input("File pattern: ",expand("%:t:r"))
-    if !empty(name)
-        let l:list=system("find . -type d \\( -name .git -o -name target \\) -prune -o -type f -not -name \".*\" -type f -iname '*".l:name."*' -print")
-        let l:num=strlen(substitute(l:list, "[^\n]", "", "g"))
-        if l:num < 1
-            echo "'".name."' not found"
-            return
-        endif
-        if l:num == 1
-            exe "open " . substitute(l:list, "\n", "", "g")
-        else
-            let tmpfile = tempname()
-            exe "redir! > " . tmpfile
-            silent echon l:list
-            redir END
-            let old_efm = &efm
-            set efm=%f
-
-            if exists(":cgetfile")
-                execute "silent! cgetfile " . tmpfile
-            else
-                execute "silent! cfile " . tmpfile
-            endif
-
-            let &efm = old_efm
-
-            " Open the quickfix window below the current window
-            botright copen
-
-            call delete(tmpfile)
-        endif
-    endif
-endfunction
-
-command! -nargs=1 Find :call Find()
 
 "============[ everything below this is from http://is.gd/IBV2013 ]============"
 
@@ -156,3 +119,9 @@ let g:bufferline_echo = 0 " only show it in airline
 " NerdTree
 "
 map <C-t> :NERDTreeToggle<CR>
+
+"
+" Ctrl-P
+"
+let g:ctrlp_map = '<D-t>'
+

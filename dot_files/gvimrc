@@ -7,5 +7,5 @@ winsize 105 50
 
 if has("gui_macvim")
     macmenu &File.New\ Tab key=<nop>
-    map <D-t> :CommandT<CR>
+"    map <D-t> :CommandT<CR>
 endif
