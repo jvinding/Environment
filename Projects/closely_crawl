@@ -15,6 +15,10 @@ crawl_tunnel_close() {
     ssh_tunnel_close admin 10.210.1.222 8162
     ssh_tunnel_close admin 10.209.161.141 61616
     ssh_tunnel_close admin 10.209.161.141 8162
+    ssh_tunnel_close admin 10.209.161.141 61617 61616
+    ssh_tunnel_close admin 10.209.161.141 8163 8162
+    ssh_tunnel_close localhost $DOCKER_IP 61616
+    ssh_tunnel_close localhost $DOCKER_IP 8162
 }
 
 crawl_tunnel_prod1() {
@@ -23,4 +27,14 @@ crawl_tunnel_prod1() {
 
 crawl_tunnel_qa() {
     _crawl_tunnel 10.209.161.141
+}
+
+crawl_tunnel_staging() {
+    ssh_tunnel admin 10.209.161.141 61617 61616
+    ssh_tunnel admin 10.209.161.141 8163 8162
+}
+
+crawl_tunnel_dev() {
+    ssh_tunnel localhost $DOCKER_IP 61616
+    ssh_tunnel localhost $DOCKER_IP 8162
 }
