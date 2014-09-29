@@ -132,6 +132,7 @@ map <C-t> :NERDTreeToggle<CR>
 " Ctrl-P
 "
 let g:ctrlp_map = '<D-t>'
+nmap <Leader>t :CtrlP<CR>
 
 "
 " Git Gutter
