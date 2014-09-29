@@ -21,6 +21,8 @@ docker_stop() {
 docker_ensure() {
     if ! docker_is_running; then
         docker_start
+    else
+        docker_env
     fi
 }
 
