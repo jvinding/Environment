@@ -34,6 +34,8 @@
     ff = flow feature
     ffl = flow feature list
     ffc = flow feature checkout
+    list-whitespace-only-files = !"git diff -b --numstat | egrep $'^0\t0\t' | cut -d$'\t' -f3-"
+    checkout-whitespace-only-files = !"git list-whitespace-only-files | sed -e 's/\\(.*\\)/\"\\1\"/' | xargs git checkout HEAD --"
 	unstage = reset HEAD
 	permission-reset = !git diff -p -R | grep -E \"^(diff|(old|new) mode)\" | git apply
 [core]
