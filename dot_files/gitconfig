@@ -1,10 +1,10 @@
 [user]
-	name = Jeremy Vinding
-	email = jeremy.vinding@closely.com
+    name = Jeremy Vinding
+    email = jeremy.vinding@closely.com
 [color]
-	diff = auto
-	status = auto
-	branch = auto
+    diff = auto
+    status = auto
+    branch = auto
 [alias]
     co = checkout
     pr = pull --rebase
@@ -21,7 +21,7 @@
     changes = whatchanged -p
     sup = submodule update --recursive
     shootmenow = submodule
-	l = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)[%an]%Creset' --abbrev-commit
+    l = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)[%an]%Creset' --abbrev-commit
     lol = log --graph --decorate --pretty=oneline --abbrev-commit
     lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
     ls-assumed = !"git ls-files -v | grep '^[a-z]' | cut -c3-"
@@ -36,19 +36,19 @@
     ffc = flow feature checkout
     list-whitespace-only-files = !"git diff -b --numstat | egrep $'^0\t0\t' | cut -d$'\t' -f3-"
     checkout-whitespace-only-files = !"git list-whitespace-only-files | sed -e 's/\\(.*\\)/\"\\1\"/' | xargs git checkout HEAD --"
-	unstage = reset HEAD
-	permission-reset = !git diff -p -R | grep -E \"^(diff|(old|new) mode)\" | git apply
+    unstage = reset HEAD
+    permission-reset = !git diff -p -R | grep -E \"^(diff|(old|new) mode)\" | git apply
 [core]
-	excludesfile = /Users/jvinding/.gitignore
-	autocrlf = input
-	ignorecase = false
+    excludesfile = /Users/jvinding/.gitignore
+    autocrlf = input
+    ignorecase = false
 [branch]
-	autosetupmerge = true
+    autosetupmerge = true
 [difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    path = 
 [mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+    cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+    trustExitCode = true
 [push]
-	default = current
+    default = current
