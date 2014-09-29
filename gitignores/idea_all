@@ -1,0 +1,4 @@
+# Idea files
+out/
+.idea/
+*.iml

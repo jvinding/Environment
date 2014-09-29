@@ -1,0 +1,7 @@
+# Idea files
+out/
+.idea/workspace.xml
+.idea/dictionaries
+.idea/dataSources.ids
+.idea/dataSources.xml
+.idea/uiDesigner.xml
