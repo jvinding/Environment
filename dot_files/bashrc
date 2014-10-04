@@ -78,7 +78,7 @@ alias asdf="setxkbmap us; xmodmap ~/colemak/xmodmap/xmodmap.colemak && xset r 66
 #
 # find aliases
 #
-ff() { find . -name '*'$1'*' ; }
+alias ff="find . -type f -name"
 fe() { find . -name '*'$1'*' -exec $2 {} \; ; }
 fg() { find . -type f -name "$1" -exec grep "$2" {} /dev/null \; ; }
 
