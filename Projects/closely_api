@@ -2,8 +2,8 @@ WORKDIR=/Users/jvinding/.grails/2.1.0/projects/api_master/
 
 api() {
     cly-cd-api
-    java_use 1.6
-    gvm use grails 2.1.0
+    java_use 1.8
+    gvm use grails 2.4.4
 }
 
 alias api_db='psql -U directory -h localhost -d directory_master'
