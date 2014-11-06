@@ -14,7 +14,7 @@ fi
 
 export HISTSIZE=100000
 export HISTFILESIZE=100000
-export HISTCONTROL=erasedups
+export HISTCONTROL=erasedups:ignorespace
 #
 #
 ############################## end set shell opts ##############################
@@ -74,7 +74,7 @@ fi
 export DISPLAY=${SSH_CLIENT%% *}:0
 if [ $BASH ]
 then
-    export HISTIGNORE='l:l[sa]:lsd'
+    export HISTIGNORE='l:l[sa]:lsd:clear'
 fi
 #
 #
