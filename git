@@ -224,7 +224,7 @@ git_svn_dcommit() {
 
     local changes=`git_change_list`
     if ! [ -z "$changes" ]; then
-        git stash save "dcommit stash"
+        git stash save --include-untracked "dcommit stash"
     fi
 
     local branch=`git_get_branch`
@@ -259,7 +259,7 @@ git_update_from_subversion() {
     local branch=`git_get_branch`
     local changes=`git_change_list`
     if ! [ -z "$changes" ]; then
-        git stash save "git update stash"
+        git stash save --include-untracked "git update stash"
     fi
     if ! [[ "$branch" =~ "master" ]]; then
         git_switch_to_master || return 1
@@ -280,7 +280,7 @@ git_update_from_subversion() {
 git_update() {
     local changes=`git_change_list`
     if ! [ -z "$changes" ]; then
-        git stash save "git update stash"
+        git stash save --include-untracked "git update stash"
     fi
 
     git pull --rebase || return 1
@@ -301,7 +301,7 @@ git_push() {
         local changes=`git_change_list`
 
         if ! [ -z "$changes" ]; then
-            git stash save "git update stash"
+            git stash save --include-untracked "git update stash"
         fi
         if [ "$branch" != "master" ]; then
             git co master || return 1
