@@ -12,6 +12,7 @@
     s = status -sb
     b = branch
     d = diff
+    vd = difftool -y -t vimdiff -R
     fa = fetch --all
     dc = diff --cached
     sl = stash list
