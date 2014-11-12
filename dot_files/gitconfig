@@ -15,6 +15,7 @@
     vd = difftool -y -t vimdiff -R
     fa = fetch --all
     dc = diff --cached
+    su = stash save --include-untracked
     sl = stash list
     ss = stash show -u
     poop = stash pop
