@@ -90,45 +90,45 @@ git_change_list() {
 }
 
 git_branch() {
-	local branch=$1
-	if git_is_on_branch "$branch"; then
-		echo "Already on branch $branch"
-	elif git_has_branch "$branch"; then
-		git co "$branch"
-		git merge master
-	else
-		if ! git_is_on_branch master; then
-			git checkout master || { echo "Failed to check out master"; return 1; }
-		fi
-		git pull || { echo "failed to pull"; return 1; }
-		git co -b "$branch" || { echo "Failed to create branch $branch"; return 1; }
-	fi
+    local branch=$1
+    if git_is_on_branch "$branch"; then
+        echo "Already on branch $branch"
+    elif git_has_branch "$branch"; then
+        git co "$branch"
+        git merge master
+    else
+        if ! git_is_on_branch master; then
+            git checkout master || { echo "Failed to check out master"; return 1; }
+        fi
+        git pull || { echo "failed to pull"; return 1; }
+        git co -b "$branch" || { echo "Failed to create branch $branch"; return 1; }
+    fi
 }
 
 git_abandon_branch() {
-	if ! git_is_on_branch master; then
-		local changes=`git_change_list`
-		if ! [ -z "$changes" ]; then
-			git_change_list
-			read -p "Abandon changes to the above files? y/N " -n1 delete
-			if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
-				git checkout . || { echo "failed to checkout"; return 1; }
-			else
-				return 0
-			fi
-		fi
+    if ! git_is_on_branch master; then
+        local changes=`git_change_list`
+        if ! [ -z "$changes" ]; then
+            git_change_list
+            read -p "Abandon changes to the above files? y/N " -n1 delete
+            if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
+                git checkout . || { echo "failed to checkout"; return 1; }
+            else
+                return 0
+            fi
+        fi
 
-		local branch=`git_get_branch`
-		git checkout master || { echo "Failed to check out master"; return 1; }
-		git branch -d "$branch" || {
-			read -p "Do you want to force deletion of the branch ${branch}? y/N " -n1 delete
-			echo
+        local branch=`git_get_branch`
+        git checkout master || { echo "Failed to check out master"; return 1; }
+        git branch -d "$branch" || {
+            read -p "Do you want to force deletion of the branch ${branch}? y/N " -n1 delete
+            echo
 
-			if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
-				git branch -D $branch
-			fi
-		}
-	fi
+            if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
+                git branch -D $branch
+            fi
+        }
+    fi
 }
 
 git_prompt_stage() {
@@ -249,7 +249,7 @@ git_svn_dcommit() {
     fi
 }
 # alias dcommit=git_svn_dcommit
-# 
+#
 git_update_from_subversion() {
     if ! [ -d .git/svn ]; then
         echo not a git svn repository
@@ -312,7 +312,7 @@ git_push() {
         if [ "$branch" != "master" ]; then
             read -p "Do you want to delete the branch ${branch}? y/N " -n1 delete
             echo
-        
+
               if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
                   git branch -d $branch
               else
@@ -337,11 +337,11 @@ git_push() {
 #       git merge $branch || { echo "failed merge"; return 1; }
 #   fi
 #   git push || { echo "failed push"; return 1; }
-# 
+#
 #   if [ "$branch" != "master" ]; then
 #       read -p "Do you want to delete the branch ${branch}? y/N " -n1 delete
 #       echo
-# 
+#
 #       if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
 #           git branch -d $branch
 #       else
@@ -372,7 +372,7 @@ gsco() {
 #     cd $1
 #     git config http.sslverify false
 # }
-# 
+#
 # gitgcall() {
 #     pushd ~/projects > /dev/null
 #     local dirs=($(find . -type d -maxdepth 2 -name .git))
