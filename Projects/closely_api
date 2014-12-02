@@ -6,6 +6,8 @@ api() {
     gvm use grails 2.4.4
 }
 
+alias api_version="$PROJECT_DIR/api-clean/scripts/war_versions.sh"
+
 alias api_db='psql -U directory -h localhost -d directory_master'
 
 alias api_clean="grails clean -Dgrails.project.work.dir=$WORKDIR"
