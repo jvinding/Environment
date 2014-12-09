@@ -1,0 +1,16 @@
+postgres_start() {
+  sudo -u admin pg_ctl -D $PGDATA -l $PGDATA/server.log start
+}
+
+postgres_stop() {
+  if [ "-f" == "$1" ]; then
+    sudo -u admin pg_ctl -D $PGDATA -m fast -l $PGDATA/server.log stop
+  else
+    sudo -u admin pg_ctl -D $PGDATA -l $PGDATA/server.log stop
+  fi
+}
+
+postgres_log() {
+  echo type in the password for admin
+  su admin -c "less +F $PGDATA/server.log"
+}

@@ -8,9 +8,11 @@ export JAVA_HOME=`/usr/libexec/java_home`
 
 export CDPATH=.:~:~/Projects
 
+export PGDATA=/usr/local/var/postgres
+
 . `brew --prefix`/etc/profile.d/z.sh
 
-PLUGINS=(git git_flow java ssh android ssh-agent docker)
+PLUGINS=(git git_flow java ssh android ssh-agent docker postgresql)
 
 export PROJECT_DIR=$HOME/Projects
 safe_source $PROJECT_DIR/closely-common-scripts/bash/project-aliases
@@ -26,23 +28,6 @@ safe_source ~/Environment/Projects/closely_crawl
 alias wifi_ip='ifconfig en0 | grep "\<inet\>" | awk "{print \$2}"'
 alias copy_wifi_ip='wifi_ip | tr -d '[:space:]' | pbcopy'
 
-export PGDATA=/usr/local/var/postgres
-postgres_start() {
-  sudo -u admin pg_ctl -D $PGDATA -l $PGDATA/server.log start
-}
-
-postgres_stop() {
-  if [ "-f" == "$1" ]; then
-    sudo -u admin pg_ctl -D $PGDATA -m fast -l $PGDATA/server.log stop
-  else
-    sudo -u admin pg_ctl -D $PGDATA -l $PGDATA/server.log stop
-  fi
-}
-
-postgres_log() {
-  echo type in the password for admin
-  su admin -c "less +F $PGDATA/server.log"
-}
 
 pui() {
     ssh admin "jvinding/user_info.sh $@" | pbcopy
