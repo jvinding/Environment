@@ -40,6 +40,10 @@ dock_unlock() {
     defaults write com.apple.dock contents-immutable -bool false
     killall Dock
 }
+dock_add_spacer() {
+    defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
+    killall Dock
+}
 
 #
 # Spotlight
