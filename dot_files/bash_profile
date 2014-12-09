@@ -1,3 +1,12 @@
+
+#################################### globals ###################################
+#
+#
+export ENVIRONMENT_DIR=~/Environment
+#
+#
+################################## end globals #################################
+
 ################################ set shell opts ################################
 #
 #
@@ -24,7 +33,7 @@ export HISTCONTROL=erasedups:ignorespace
 #
 HOSTNAME=`uname -n`
 export HOSTNAME=${HOSTNAME%%.*}
-[ -f ~/Environment/Machines/$HOSTNAME ] && . ~/Environment/Machines/$HOSTNAME
+[ -f $ENVIRONMENT_DIR/Machines/$HOSTNAME ] && . $ENVIRONMENT_DIR/Machines/$HOSTNAME
 #
 #
 ##################### end source server specific settings  #####################
@@ -38,7 +47,7 @@ export HOSTNAME=${HOSTNAME%%.*}
 #
 # ~/bin and ~jvinding/bin for when i do su - <whoever>
 #
-for p in  $SERVERPATH /usr/local/bin ~/Environment/bin ~/bin
+for p in  $SERVERPATH /usr/local/bin $ENVIRONMENT_DIR/bin ~/bin
 do
     if [ -d "$p" ]; then
         PATH=$p:$(echo $PATH | sed -e "s!:$p:!:!" -e"s!:$p\$!!")
@@ -252,6 +261,14 @@ fi
 export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
 
 #
+# load plugins
+#
+source $ENVIRONMENT_DIR/lib/plugin
+if [ ${#PLUGINS[@]} -gt 0 ]; then
+    plugin_source_all
+fi
+
+#
 # run per-machine commands that must be run at the end of .bash_profile (eg: for gvm)
 #
-[ -f ~/Environment/Machines/${HOSTNAME}.post_profile ] && . ~/Environment/Machines/${HOSTNAME}.post_profile
+[ -f $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile ] && . $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile
