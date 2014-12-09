@@ -21,6 +21,7 @@ safe_source ~/Environment/ssh-agent
 safe_source ~/Environment/android
 
 safe_source ~/Environment/git
+safe_source ~/Environment/git_flow
 safe_source ~/Environment/mac_shortcuts
 safe_source ~/Environment/java
 
