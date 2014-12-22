@@ -126,6 +126,20 @@ git_update() {
     fi
 }
 
+git_push() {
+    local changes=`git_change_list`
+    if ! [ -z "$changes" ]; then
+        git stash save --include-untracked "git update stash"
+    fi
+
+    git pull --rebase || return 1
+    git push
+
+    if ! [ -z "$changes" ]; then
+        git stash pop
+    fi
+}
+
 #
 # aliases
 #
@@ -134,6 +148,7 @@ alias branch=git_branch
 alias stage=git_stage
 alias add=git_add
 alias pr=git_update
+alias push=git_push
 
 #
 # Completion -- requires git-completion.bash
