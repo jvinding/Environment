@@ -4,7 +4,7 @@ git_flow_feature_start() {
   git_assert_clean_tree || return 1
 
   local feature_name=$1
-  if [ -z "feature_name" ]; then
+  if [ -z "$feature_name" ]; then
     echo "Usage: gffs <feature name>"
     echo "e.g.:"
     echo "     gffs things_and_stuff"
@@ -21,7 +21,7 @@ git_flow_feature_finish() {
   git_assert_clean_tree || return 1
 
   local feature_name=$1
-  if [ -z "feature_name" ]; then
+  if [ -z "$feature_name" ]; then
     echo "Usage: git_flow_feature_finish <feature name>"
     echo "e.g.:"
     echo "     git_flow_feature_finish things_and_stuff"
@@ -39,6 +39,23 @@ git_flow_feature_finish() {
 #
 # Release
 #
+git_flow_release_start() {
+  git_assert_clean_tree || return 1
+
+  local version=$1
+  if [ -z "$version" ]; then
+    echo "Usage: gfrs <version>"
+    echo "e.g.:"
+    echo "     gfrs 1.3"
+    return 1
+  fi
+
+  git checkout develop || return 1
+  git pull --rebase || return 1
+
+  git flow release start $version
+}
+
 git_flow_release_finish() {
   git_assert_clean_tree || return 1
 
@@ -81,10 +98,34 @@ git_flow_hotfix_start() {
   git flow hotfix start $version
 }
 
+git_flow_hotfix_finish() {
+  git_assert_clean_tree || return 1
+
+  local version=$1
+  if [ -z "$version" ]; then
+    echo "usage: git_flow_hotfix_finish <version>"
+    echo "e.g.:"
+    echo "     git_flow_hotfix_finish 2.8.3"
+    return 1
+  fi
+
+  git checkout master || return 1
+  git pull --rebase || return 1
+
+  git checkout develop || return 1
+  git pull --rebase || return 1
+
+  git flow hotfix finish $version
+
+  git push --all origin
+}
+
 #
 # Aliases
 #
 alias gffs=git_flow_feature_start
 alias gfff=git_flow_feature_finish
+alias gfrs=git_flow_release_start
 alias gfrf=git_flow_release_finish
 alias gfhs=git_flow_hotfix_start
+alias gfhf=git_flow_hotfix_finish
