@@ -38,6 +38,18 @@ export HOSTNAME=${HOSTNAME%%.*}
 #
 ##################### end source server specific settings  #####################
 
+
+################################ source plugins ################################
+#
+#
+source $ENVIRONMENT_DIR/lib/plugin
+if [ ${#PLUGINS[@]} -gt 0 ]; then
+    plugin_source_all
+fi
+#
+#
+############################## end source plugins ##############################
+
 ##################################### PATH #####################################
 #
 # let's setup the PATH so it works across many different machines
@@ -259,14 +271,6 @@ fi
 
 ## export LSCOLORS=ExFxCxDxBxegedabagacad
 export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
-
-#
-# load plugins
-#
-source $ENVIRONMENT_DIR/lib/plugin
-if [ ${#PLUGINS[@]} -gt 0 ]; then
-    plugin_source_all
-fi
 
 #
 # run per-machine commands that must be run at the end of .bash_profile (eg: for gvm)
