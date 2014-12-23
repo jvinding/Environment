@@ -73,6 +73,9 @@ git_flow_release_finish() {
   git checkout develop || return 1
   git pull --rebase || return 1
 
+  git checkout release/$version || return 1
+  git pull --rebase || return 1
+
   git flow release finish $version
 
   git push --all origin
@@ -113,6 +116,9 @@ git_flow_hotfix_finish() {
   git pull --rebase || return 1
 
   git checkout develop || return 1
+  git pull --rebase || return 1
+
+  git checkout hotfix/$version || return 1
   git pull --rebase || return 1
 
   git flow hotfix finish $version
