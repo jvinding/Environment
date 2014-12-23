@@ -54,3 +54,8 @@
     trustExitCode = true
 [push]
     default = current
+[mergetool]
+    prompt = false
+[merge]
+    conflictstyle = diff3
+    tool = vimdiff
