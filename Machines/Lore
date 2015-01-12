@@ -17,6 +17,7 @@ PLUGINS=(git git_flow java ssh android ssh-agent docker postgresql)
 export PROJECT_DIR=$HOME/Projects
 safe_source $PROJECT_DIR/closely-common-scripts/bash/project-aliases
 safe_source $PROJECT_DIR/closely-common-scripts/bash/ssh-aliases
+safe_source $PROJECT_DIR/closely-common-scripts/bash/db-aliases
 
 safe_source ~/Environment/mac_shortcuts
 
