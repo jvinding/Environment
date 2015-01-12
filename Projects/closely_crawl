@@ -1,3 +1,5 @@
+alias crawl_version="$PROJECT_DIR/crawl/scripts/war_versions.sh"
+
 crawl() {
     cd $PROJECT_DIR/crawl
     java_use 1.8
