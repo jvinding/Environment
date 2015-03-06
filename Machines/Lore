@@ -31,6 +31,6 @@ alias copy_wifi_ip='wifi_ip | tr -d '[:space:]' | pbcopy'
 
 
 pui() {
-    ssh admin "jvinding/user_info.sh $@" | pbcopy
+    ssh bucket1 "jvinding/user_info.sh $@" | pbcopy
     echo "Info copied to pastboard"
 }
