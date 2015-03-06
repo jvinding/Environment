@@ -2,6 +2,7 @@
 --type-add=jsp=.tag
 --type-set=ui=.css,.js,.jsp,.jspx,.jhtm,.jhtml,.tag,.htm,.html,.shtml,.xhtml,.gsp
 --type-set=gsp=.gsp
+--type-set=yml=.yml
 
 --ignore-dir=target
 --ignore-dir=build
