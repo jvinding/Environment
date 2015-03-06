@@ -7,6 +7,7 @@ color torte
 "
 set ts=4
 set shiftwidth=4
+filetype indent on
 set expandtab autoindent smartindent
 set ruler showcmd wildmenu nohlsearch
 set title titlestring=
