@@ -19,3 +19,6 @@
 [submodule "dot_files/vim/bundle/ctrlp.vim"]
 	path = dot_files/vim/bundle/ctrlp.vim
 	url = https://github.com/kien/ctrlp.vim.git
+[submodule "dot_files/vim/bundle/vim-ack"]
+	path = dot_files/vim/bundle/vim-ack
+	url = git@github.com:mileszs/ack.vim.git
