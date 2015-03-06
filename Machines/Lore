@@ -12,6 +12,8 @@ export PGDATA=/usr/local/var/postgres
 
 . `brew --prefix`/etc/profile.d/z.sh
 
+safe_source $ENVIRONMENT_DIR/Secrets/nagios_creds
+
 PLUGINS=(git git_flow java ssh android ssh-agent docker postgresql)
 
 export PROJECT_DIR=$HOME/Projects
