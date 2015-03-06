@@ -26,7 +26,7 @@ adb_all() {
         echo "no devices attached"
     else
         for s in $devices; do
-		    printf "%-20s: adb $*\n" $s
+            printf "%-20s: adb $*\n" $s
             eval adb -s $s "$*"
         done
     fi
