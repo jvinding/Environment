@@ -48,9 +48,9 @@ _ssh_tunnel_available() {
 
     command=$(_ssh_tunnel_command "$jumpbox" "$targetbox" "$remote_port" "$local_port")
 
-    if ps -afe | fgrep "ssh -f -L ${local_port}:" | fgrep -v grep > /dev/null; then
+    if ps -afe | fgrep "$command" | fgrep -v grep  > /dev/null; then
         echo "Tunnel already open on ${local_port}"
-        ps -afe | fgrep "ssh -f -L ${local_port}:" | fgrep -v fgrep | xargs | cut -f 8- -d' '
+        ps -afe | fgrep "$command" | fgrep -v grep | xargs | cut -f 8- -d' '
         return 1
     fi
 }
