@@ -124,12 +124,14 @@ git_update() {
     if ! [ -z "$changes" ]; then
         git stash pop
     fi
+
+    git submodule update --recursive
 }
 
 git_push() {
     local changes=`git_change_list`
     if ! [ -z "$changes" ]; then
-        git stash save --include-untracked "git update stash"
+        git stash save --include-untracked "[$(date +"%Y-%d-%m")] git update stash"
     fi
 
     git pull --rebase || return 1
