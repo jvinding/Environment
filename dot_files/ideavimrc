@@ -1,0 +1,5 @@
+nmap Q :qa<CR>
+nmap ; :
+
+nnoremap ,, ,
+nnoremap ;; ;
