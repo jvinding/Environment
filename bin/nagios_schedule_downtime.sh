@@ -11,9 +11,15 @@ fi
 NAGIOS_HOST=admin.closely.com
 NAGIOS_PATH=/nagios/cgi-bin
 
+## now
+## date +%m-%d-%Y+%H:%M:%S
+## now + 20 minutes on mac
+## date -v +20M +%m-%d-%Y+%H:%M:%S
+## now + 20 minutes on linux
+## date -d "@$(($(date +%s) + 1200))" '+%m-%d-%Y+%H:%M:%S'
 ## MM-DD-YY+HH:mm:ss
-DOWNTIME_START="03-06-2015+04:00:00"
-DOWNTIME_END="03-06-2015+08:00:00"
+DOWNTIME_START="03-07-2015+03:00:00"
+DOWNTIME_END="03-07-2015+19:00:00"
 
 for host in ${HOSTS[@]}; do
     echo -n "${host}: "
