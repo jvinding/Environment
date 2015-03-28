@@ -36,3 +36,8 @@ pui() {
     ssh bucket1 "jvinding/user_info.sh $@" | pbcopy
     echo "Info copied to pastboard"
 }
+
+pwl() {
+    ssh bucket1 "jvinding/watchlist.sh $@" | pbcopy
+    echo "Info copied to pastboard"
+}
