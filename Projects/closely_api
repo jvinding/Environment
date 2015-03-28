@@ -33,16 +33,4 @@ api_db_diff() {
   grails dbm-gorm-diff -Dgrails.env=development -DgitBranch=master -Dgrails.project.work.dir=$WORKDIR changelog-bob.groovy --defaultSchema=public
 }
 
-api_ver_prod() {
-  echo -n 'api-production1: '
-  curl -H 'host:api.closely.com' http://50.57.153.141/dir/appVersion
-  echo
-  echo -n 'api-production2: '
-  curl -H 'host:api.closely.com' http://50.57.80.54/dir/appVersion
-  echo
-  echo -n 'kamino         : '
-  curl -H 'host:api.closely.com' http://50.57.90.57/dir/appVersion
-  echo
-}
-
 alias api_shell="grails -Duser.timezone=UTC -Xms700m -XX:MaxPermSize=384m -Xmx2824m -Dserver.port=8081 -DgitBranch=master -Dgrails.project.work.dir=$WORKDIR shell"
