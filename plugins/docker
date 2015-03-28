@@ -35,11 +35,11 @@ docker_kill_all() {
 }
 
 docker_containers_rm_all() {
-    for s in $(docker ps -a | grep -v ^CONTAINER | awk '{print $1}'); do docker rm $s; done
+    for s in $(docker ps -a | grep -v ^CONTAINER | awk '{print $1}'); do docker rm -fv $s; done
 }
 
 docker_containers_rm_exited() {
-    for s in $(docker ps -a | grep Exit | awk '{print $1}'); do docker rm $s; done
+    for s in $(docker ps -a | grep Exit | awk '{print $1}'); do docker rm -fv $s; done
 }
 
 docker_images_rm_all() {
