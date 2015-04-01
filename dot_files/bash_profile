@@ -139,7 +139,9 @@ eBLUE="\[\033[1;34m\]"   # light blue
 eGREEN="\[\033[1;32m\]"  # light green
 eCYAN="\[\033[1;36m\]"   # light cyan
 eRED="\[\033[1;31m\]"    # light red
+eRED_UNESCAPED="\033[1;31m"    # light red
 ePURPLE="\[\033[1;35m\]" # light purple
+ePURPLE_UNESCAPED="\[\033[1;35m\]" # light purple
 eYELLOW="\[\033[1;33m\]" # yellow
 eWHITE="\[\033[1;37m\]"  # white
 # reset to teminal default
@@ -215,7 +217,11 @@ then
             if [ "0" != "$mods" ]; then
               status_counts="${status_counts}${mods}!"
             fi
-            
+            local tracked_branch=$(git_get_tracked_branch)
+            if [ -z "$tracked_branch" ]; then
+                status_counts="${status_counts}${eRED_UNESCAPED}?"
+            fi
+
             local server_diffs=$(git status -sb | sed -n '/\[/ { s/^[^[]*\[//; s/\][^]]*$//; s/ahead \([0-9]*\)[, ]*/\1↑/; s/behind \([0-9]*\)/\1↓/; p; }')
             status_counts="${status_counts}${server_diffs}"
             if ! [ -z "$status_counts" ]; then

@@ -19,6 +19,10 @@ git_get_branch() {
     git symbolic-ref --short HEAD 2> /dev/null
 }
 
+git_get_tracked_branch() {
+    git config --get branch.$(git_get_branch).merge
+}
+
 git_has_branch() {
     git b | grep "\<${1}\$" > /dev/null
 }
