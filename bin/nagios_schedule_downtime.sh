@@ -31,6 +31,5 @@ DOWNTIME_END=$(date -u -v +90M +%m-%d-%Y+%H:%M:%S)
 
 for host in ${HOSTS[@]}; do
     echo -n "${host}: "
-    echo curl -s --basic -u "${NAGIOS_USERNAME}:${NAGIOS_PASSWORD}" "https://${NAGIOS_HOST}/${NAGIOS_PATH}/cmd.cgi?cmd_typ=55&cmd_mod=2&host=${host}&com_author=jvinding&com_data=rackspace+outage&trigger=0&start_time=${DOWNTIME_START}&end_time=${DOWNTIME_END}&fixed=1&childoptions=1&btnSubmit=Commit"
     curl -s --basic -u "${NAGIOS_USERNAME}:${NAGIOS_PASSWORD}" "https://${NAGIOS_HOST}/${NAGIOS_PATH}/cmd.cgi?cmd_typ=55&cmd_mod=2&host=${host}&com_author=jvinding&com_data=outage&trigger=0&start_time=${DOWNTIME_START}&end_time=${DOWNTIME_END}&fixed=1&childoptions=1&btnSubmit=Commit" | perl -n -e '/(?:error|info)Message.>*([^<]+)/ && print "$1\n"'
 done
