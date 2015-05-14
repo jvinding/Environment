@@ -1,0 +1,18 @@
+tunnel_metadata_qa() {
+    if ! ps -afe | fgrep "ssh -f -L 10005:metadata-qa1:80 -N closely@bucket1" | fgrep -v fgrep > /dev/null; then
+        ssh -f -L 10005:metadata-qa1:80 -N closely@bucket1
+    fi
+}
+
+tunnel_metadata_qa_close() {
+    pkill -f "ssh -f -L 10005:metadata-qa1:80 -N closely@bucket1"
+}
+
+metadata() {
+    cly-cd-metadata
+    java_use 1.8
+}
+
+alias metadata_version="$PROJECT_DIR/metadata/scripts/war_versions.sh"
+
+alias metadata_db='psql -U metadata -h localhost -d metadata_dev'
