@@ -42,4 +42,9 @@ if [ "closely" == "$USER" ]; then
         ssh bucket1 "jvinding/watchlist.sh $@" | pbcopy
         echo "Info copied to pastboard"
     }
+
+    psv() {
+        ssh bucket1 "jvinding/selected_venue.sh $@" | pbcopy
+        echo "Info copied to pastboard"
+    }
 fi
