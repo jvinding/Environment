@@ -2,4 +2,6 @@
 
 export CDPATH=.:~:~/Projects
 
+PLUGINS=(git)
+
 . ~/Environment/mac_shortcuts
