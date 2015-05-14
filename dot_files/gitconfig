@@ -11,6 +11,8 @@
     pf = pull --ff-only
     s = status -sb
     b = branch
+    sb = show-branch
+    sbt = show-branch --topics
     d = diff
     vd = difftool -y -t vimdiff -R
     fa = fetch --all
