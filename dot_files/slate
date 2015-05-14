@@ -50,14 +50,14 @@ bind c:${hyper} focus 'AppCode'
 bind g:${hyper} focus 'Google Chrome'
 bind h:${hyper} focus 'HipChat'
 bind i:${hyper} focus 'IntelliJ IDEA'
-## bind j:${hyper} focus 'Postbox'
+## bind i:${hyper} focus 'IntelliJ IDEA-EAP'
 bind j:${hyper} focus 'Airmail'
 bind k:${hyper} focus 'Skype'
 bind r:${hyper} focus 'iTerm'
 bind s:${hyper} focus 'SourceTree'
 bind t:${hyper} focus 'MacVim'
-## bind t:${hyper} focus 'TextMate'
 bind x:${hyper} focus 'Xcode'
+bind y:${hyper} focus 'You Need a Budget 4'
 
 # This is the default .slate file.
 # If no ~/.slate file exists this is the file that will be used.
