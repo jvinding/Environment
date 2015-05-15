@@ -5,7 +5,9 @@ usage() {
     echo "    -v - verbose"
     echo "    deletes any files from 'source_dir' that are duplicated in 'target_dir'" >&2
     echo "    'duplicate' is determined by filename, size and md5 sum" >&2
-    echo "    DOES NOT RECURSE. All directories are left untouched"
+    echo "    DOES NOT RECURSE. All directories are left untouched" >&2
+    echo "    to recurse one might do something like the following:" >&2
+    echo "        find /Users/jvinding/source -type d -maxdepth 1 -exec bash -c '$0 \"\$0\" \"/Users/jvinding/target/\$\(basename \"\$0\"\)\"' '{}' \;" >&2
 }
 
 if [ $# -lt 2 ]; then
