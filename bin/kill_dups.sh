@@ -10,20 +10,13 @@ usage() {
     echo "        find /Users/jvinding/source -type d -maxdepth 1 -exec bash -c '$0 \"\$0\" \"/Users/jvinding/target/\$\(basename \"\$0\"\)\"' '{}' \;" >&2
 }
 
-if [ $# -lt 2 ]; then
+VERBOSE=0
+if [ 3 == $# ] && [ "-v" == "$1" ]; then
+    VERBOSE=1
+    shift
+elif [ $# != 2 ]; then
     usage
     exit 1
-fi
-
-VERBOSE=0
-if [ 3 == $# ]; then
-    if [ "-v" == "$1" ]; then
-        VERBOSE=1
-        shift
-    else
-        usage
-        exit 2
-    fi
 fi
 
 SOURCE_DIR="$1"
