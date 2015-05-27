@@ -22,3 +22,6 @@
 [submodule "dot_files/vim/bundle/vim-ack"]
 	path = dot_files/vim/bundle/vim-ack
 	url = git@github.com:mileszs/ack.vim.git
+[submodule "dot_files/vim/bundle/vim-markdown"]
+	path = dot_files/vim/bundle/vim-markdown
+	url = https://github.com/plasticboy/vim-markdown.git
