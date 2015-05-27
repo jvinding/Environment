@@ -2,6 +2,9 @@ call pathogen#infect()
 syntax on
 color torte
 
+" yank to the system pasteboard
+set clipboard=unnamed
+
 "
 " set indentation options
 "
