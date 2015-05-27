@@ -135,9 +135,12 @@ map <C-t> :NERDTreeToggle<CR>
 
 "
 " Ctrl-P
+" http://kien.github.io/ctrlp.vim/
 "
 let g:ctrlp_map = '<D-t>'
 nmap <Leader>t :CtrlP<CR>
+let g:ctrlp_follow_symlinks = 1
+let g:ctrlp_working_path_mode = 'r'
 
 "
 " Git Gutter
