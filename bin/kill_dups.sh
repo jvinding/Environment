@@ -5,9 +5,7 @@ usage() {
     echo "    -v - verbose"
     echo "    deletes any files from 'source_dir' that are duplicated in 'target_dir'" >&2
     echo "    'duplicate' is determined by filename, size and md5 sum" >&2
-    echo "    DOES NOT RECURSE. All directories are left untouched" >&2
-    echo "    to recurse one might do something like the following:" >&2
-    echo "        find /Users/jvinding/source -type d -maxdepth 1 -exec bash -c '$0 \"\$0\" \"/Users/jvinding/target/\$\(basename \"\$0\"\)\"' '{}' \;" >&2
+    echo "    RECURSES into subdirectories" >&2
 }
 
 VERBOSE=0
@@ -60,24 +58,37 @@ __duplicates() {
     [ $(__size "$1") == $(__size "$2") ] && [ $(__md5 "$1") == $(__md5 "$2") ]
 }
 
+__log "Source: '$SOURCE_DIR', Target: '$TARGET_DIR'"
+
+
+OLDIFS=$IFS
+IFS=$'\n'
+files=($(find "$SOURCE_DIR" -type f))
+IFS=$OLDIFS
+
+count=${#files[@]}
+
+__log "Checking $count files"
+
 deleted=0
-for s in "$SOURCE_DIR"/*; do
-    __log "Checking $s"
-    if [ -f "$s" ]; then
-        target="${TARGET_DIR}/$(basename "$s")"
-        if [ -f "$target" ]; then
-            if __duplicates "$s" "$target"; then
+for (( i=0; i<${count}; i++ )); do
+    sourceFile="${files[$i]}"
+    targetFile="${TARGET_DIR}/${sourceFile##${SOURCE_DIR}/}"
+    __log "Checking $sourceFile"
+    if [ -f "$sourceFile" ]; then
+        if [ -f "$targetFile" ]; then
+            if __duplicates "$sourceFile" "$targetFile"; then
                 deleted=$(($deleted + 1))
-                rm "$s"
-                __log "$s && $target - Match, '$s' deleted"
+                rm "$sourceFile"
+                __log "$sourceFile && $targetFile - Match, '$sourceFile' deleted"
             else
-                __log "$s && $target - Not a match"
+                __log "$sourceFile && $targetFile - Not a match"
             fi
         else
-            __log "$target - Not a file"
+            __log "$targetFile - Not a file"
         fi
     else
-        __log "$s - Not a file"
+        __log "$sourceFile - Not a file"
     fi
 done
 
