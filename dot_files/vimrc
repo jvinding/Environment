@@ -131,7 +131,7 @@ let g:bufferline_echo = 0 " only show it in airline
 "
 " NerdTree
 "
-map <C-t> :NERDTreeToggle<CR>
+map <C-t> :NERDTreeFind<CR>
 
 "
 " Ctrl-P
