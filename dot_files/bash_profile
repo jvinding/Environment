@@ -234,9 +234,10 @@ then
 
     function prompt_command {
         chop_front_dirs_to_fit
-        if [ "$TERM" = "xterm" ]
-        then
-            echo -e "\033]0;${USER}@${HOSTNAME}:$_TMP_PWD\007"
+        if [[ "$TERM" =~ (xterm|screen).* ]]; then
+            ## echo -e "\033]0;${USER}@${HOSTNAME}:$_TMP_PWD\007"
+            host=$(hostname)
+            printf "\033k${host%%.*}\033\\"
         fi
 
         if [ "$_TMP_PWD" == "~" ]; then
