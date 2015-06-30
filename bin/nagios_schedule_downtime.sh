@@ -16,7 +16,7 @@ usage() {
 LENGTH=90M
 
 if [ 0 != $# ] && [ "-l" == "$1" ]; then
-    if [ $# -ge 2 ] && [[ "$2" =~ ^[0-9]+[MHD]$ ]]; then
+    if [ $# -ge 2 ] && [[ "$2" =~ ^[0-9]+[ymwdHMS]$ ]]; then
         LENGTH=$2
         shift
         shift
