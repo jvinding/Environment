@@ -2,4 +2,4 @@
 "\e[B": history-search-forward
 set show-all-if-ambiguous on
 set completion-ignore-case on
-"\C-l":"clear\n"
+set editing-mode vi
