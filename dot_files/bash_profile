@@ -16,6 +16,7 @@ export EDITOR=vi
 if [ $BASH ]
 then
     set -o vi
+    shopt -s extglob
     shopt -s checkwinsize
 else
     export ENV=~/.bashrc
