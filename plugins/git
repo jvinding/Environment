@@ -32,7 +32,7 @@ git_is_on_branch() {
 }
 
 git_change_list() {
-    git ls-files -m --exclude-standard
+    git ls-files -cdmosuk --exclude-standard
 }
 
 git_branch() {
@@ -119,8 +119,13 @@ git_add() {
 
 git_update() {
     local changes=`git_change_list`
-    if ! [ -z "$changes" ]; then
+    if [ -n "$changes" ]; then
         git stash save --include-untracked "git update stash"
+    fi
+
+    if [ -n "$changes" ]; then
+        echo "Unstashable changes" >&2
+        return 1
     fi
 
     git pull --rebase || return 1
