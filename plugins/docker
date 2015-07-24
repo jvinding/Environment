@@ -20,6 +20,7 @@ docker_stop() {
 docker_ensure() {
     if ! docker_is_running; then
         docker_start
+        /usr/local/bin/boot2docker ssh sudo ntpclient -s -h pool.ntp.org > /dev/null
     else
         docker_env
         /usr/local/bin/boot2docker ssh sudo ntpclient -s -h pool.ntp.org > /dev/null
