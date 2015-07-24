@@ -173,28 +173,32 @@ then
                 print qq!/$d[0]/...$l.../$d[-1]!')
         fi
     }
-    function chop_front_dirs_to_fit {
-        local pwd_length=50
-        _TMP_PWD="${PWD/$HOME/~}"
-        _TMP_PWD=$(echo -n "${_TMP_PWD#/} $pwd_length" | perl -e'
-            my $arg = <>;
-            my ($dir, $len) = $arg =~ /(\S*(?:\s\S*)*)\s(\S+)/;
-            my @d = split m!/!, $dir;
-            my $p = "";
-            while (length $p < $len && @d) {
-                my $part = pop @d;
-                $part = "/" . $part if $part ne "~";
-                $p = $part . "$p" if ((length $p + length $part) < $len);
-            }
-            $p = "..." . scalar @d . "...$p" if @d;
-            print $p;')
+    function prompt_pwd_chop_from_front {
+        local pwd_length=${1:-50}
+        local modified=0
+        local pretty_pwd="${PWD/$HOME/~}"
+        while [ -n "${pretty_pwd}" ] && [ ${#pretty_pwd} -gt $pwd_length ] && echo "$pretty_pwd" | grep -s '/'; do
+            modified=1
+            pretty_pwd=${pretty_pwd#*/}
+        done
+
+        if [ 1 -eq $modified ]; then
+            pretty_pwd=".../${pretty_pwd}"
+        fi
+
+        local front_dirs=${pretty_pwd%/*}/
+        local last_dir=${pretty_pwd##*/}
+        if [ "~" == "${last_dir}" ]; then
+            front_dirs=
+        fi
+        echo -ne "${BLUE_UNESCAPED}-=\(${RED_UNESCAPED}${front_dirs}${GREEN_UNESCAPED}${last_dir}${BLUE_UNESCAPED})=-"
     }
 
     function svn_branch {
         echo $(svn info | grep ^URL | sed -e's!.*/\([^/]*\)!\1!')
     }
-    
-    function scm_status {
+
+    prompt_scm_status() {
         local git_branch=$(git symbolic-ref --short HEAD 2> /dev/null)
         if [ -z "$git_branch" ]; then
             git_branch=$(git status 2> /dev/null | fgrep detached | perl -lpe 's/(?:\w+\W+)*(\w+)/Detached HEAD at \1/')
@@ -228,42 +232,41 @@ then
             if ! [ -z "$status_counts" ]; then
               echo -ne "${BLUE_UNESCAPED}-=(${RED_UNESCAPED}${status_counts}${BLUE_UNESCAPED})=-"
             fi
-          else 
-            echo -ne "${BLUE_UNESCAPED}-=(${GREEN_UNESCAPED}N/A${BLUE_UNESCAPED})=-"
         fi
     }
 
-    function prompt_command {
-        chop_front_dirs_to_fit
+    prompt_command() {
+        ## chop_front_dirs_to_fit
         if [[ "$TERM" =~ (xterm|screen).* ]]; then
             ## echo -e "\033]0;${USER}@${HOSTNAME}:$_TMP_PWD\007"
             host=$(hostname)
-            printf "\033k${host%%.*}\033\\"
+            printf "\033k${USER}@${host%%.*}\033\\"
         fi
 
-        if [ "$_TMP_PWD" == "~" ]; then
-            _LAST_DIR="~"
-            _TMP_PWD=
-        else
-            _LAST_DIR=${_TMP_PWD##*/}
-            _TMP_PWD=${_TMP_PWD%/*}/
+        PS1="${GREEN}/$(prompt_pwd_chop_from_front)$BLUE-=($RED\$?$BLUE)=-" ## modified pwd and the return code of the last command
+        scm=$(prompt_scm_status)
+        if [ -n "$scm" ]; then
+            PS1="${PS1}\n${GREEN}>${scm}"
         fi
+        PS1="${PS1}\n${GREEN}\\\\$BLUE-=($RED\\u@\\h$BLUE)=-$CYAN \\$ $NORMAL" # user@host
     }
 
+
     export PROMPT_COMMAND=prompt_command
-    PROMPT_CLEAR_TO_COL_1="\[\033[G\]"
-    PROMPT_PWD="$BLUE-=($RED\${_TMP_PWD}$GREEN\${_LAST_DIR}$BLUE)=-"
-    PROMPT_RETURN="$BLUE-=($RED\$?$BLUE)=-"
+    ## PROMPT_CLEAR_TO_COL_1="\[\033[G\]"
+    ## PROMPT_PWD="$BLUE-=($RED\${_TMP_PWD}$GREEN\${_LAST_DIR}$BLUE)=-"
+    ## PROMPT_RETURN="$BLUE-=($RED\$?$BLUE)=-"
 ##    PROMPT_HISTORY="$BLUE-=($RED\!$BLUE)=-"
-    PROMPT_JOBS="$BLUE-=($RED\j$BLUE)=-"
-    PROMPT_USER="$BLUE-=($RED\\u"
-    PROMPT_HOST="@\\h$BLUE)=-"
-    PROMPT_PROMPT="$CYAN \\$ $NORMAL"
-    PROMPT_LINE_1="$PROMPT_PWD$PROMPT_RETURN"
+    ## PROMPT_JOBS="$BLUE-=($RED\j$BLUE)=-"
+    ## PROMPT_USER="$BLUE-=($RED\\u"
+    ## PROMPT_HOST="@\\h$BLUE)=-"
+    ## PROMPT_PROMPT="$CYAN \\$ $NORMAL"
+    ## PROMPT_LINE_1="$PROMPT_PWD$PROMPT_RETURN"
 ##    PROMPT_LINE_2="$PROMPT_SCM_BRANCH$PROMPT_SCM_STATUS$PROMPT_RETURN$PROMPT_JOBS"
-    PROMPT_LINE_2="${GREEN}>\$(scm_status)"
-    PROMPT_LINE_3="${PROMPT_USER}${PROMPT_HOST}${PROMPT_PROMPT}"
-    export PS1="${GREEN}/${PROMPT_LINE_1}\n${PROMPT_LINE_2}\n${GREEN}\\\\${PROMPT_LINE_3}"
+    ## PROMPT_LINE_2="${GREEN}>\$(scm_status)"
+    ## PROMPT_LINE_3="${PROMPT_USER}${PROMPT_HOST}${PROMPT_PROMPT}"
+    ## export PS1="${GREEN}/${PROMPT_LINE_1}\n${PROMPT_LINE_2}\n${GREEN}\\\\${PROMPT_LINE_3}"
+    ## export PS1='($?) [$USER@$HOSTNAME] \$ '
 ##  export PS1='\[\033]0;\u@\h:$_TMP_PWD\007\]($?) [\u@\h] \$ '
 else
     if [ "$TERM" = "xterm" ] || [ "$TERM" = "cygwin" ]
