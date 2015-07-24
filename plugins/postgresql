@@ -18,7 +18,7 @@ postgres_stop() {
     if [ "-f" == "$1" ]; then
         sudo -u admin pg_ctl -D $PGDATA -m fast -l $PGDATA/server.log stop
     else
-        sudo -u admin pg_ctl -D $PGDATA -l $PGDATA/server.log stop
+        sudo -u admin pg_ctl -D $PGDATA -l $PGDATA/server.log stop || echo "jjv hint: use -f to add '-m fast' to the stop command"
   fi
 }
 
