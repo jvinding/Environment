@@ -123,7 +123,7 @@ git_update() {
         git stash save --include-untracked "git update stash"
     fi
 
-    if [ -n "$changes" ]; then
+    if [ -n "$(git_change_list)" ]; then
         echo "Unstashable changes" >&2
         return 1
     fi
