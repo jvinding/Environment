@@ -1,6 +1,8 @@
 #
 # Helpers
 #
+SUDO_COMMAND=$(which sudo)
+
 safe_source() {
     local file=$1
     if [ -f "$file" ]; then
@@ -22,11 +24,15 @@ is_admin() {
 jjv_sudo() {
     local command="$@"
     if is_admin; then
-        sudo $command
+        $SUDO_COMMAND $command
     elif is_admin admin; then
-        echo "This command requires sudo. Switching to 'admin' user, you may have to type the admin password twice"
-        su admin -c "sudo $command"
+        echo "Switching to 'admin' user to enable sudo, you may have to type the admin password twice"
+        su admin -c "$SUDO_COMMAND $command"
     else
         echo "neither the current user nor 'admin' are members of the 'admin' group"
     fi
 }
+
+if ! is_admin; then
+    alias sudo=jjv_sudo
+fi
