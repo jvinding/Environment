@@ -3,6 +3,9 @@
 if is_admin; then
     brew install ack git bash-completion git-flow
 
+    # tmux
+    brew install tmux reattach-to-user-namespace
+
     # cask
     brew tap phinze/cask
     brew install brew-cask
