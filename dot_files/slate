@@ -61,6 +61,7 @@ bind s:${hyper} focus 'SourceTree'
 bind t:${hyper} focus 'MacVim'
 bind x:${hyper} focus 'Xcode'
 bind y:${hyper} focus 'You Need a Budget 4'
+bind z:${hyper} focus 'Amazon Music'
 
 # This is the default .slate file.
 # If no ~/.slate file exists this is the file that will be used.
