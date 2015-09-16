@@ -2,9 +2,25 @@ alias crawl_version="$PROJECT_DIR/crawl/scripts/war_versions.sh"
 
 crawl() {
     unset GRAILS_OPTS
-    cd $PROJECT_DIR/crawl
+    _crawl_cd
     java_use 1.8
     gvm use grails 2.4.4
+}
+
+crawl_run() {
+    _crawl_cd
+    ./grailsw run-app -reloading -Dserver.port=8099
+}
+
+crawl_run_master() {
+    _crawl_cd
+    ./grailsw run-app -reloading -Dserver.port=8099 -Dcrawl.role=MASTER
+}
+
+_crawl_cd() {
+    if [ "$(pwd)" != "$PROJECT_DIR/crawl" ]; then
+        cd $PROJECT_DIR/crawl
+    fi
 }
 
 _crawl_tunnel() {
