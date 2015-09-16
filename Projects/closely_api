@@ -1,4 +1,4 @@
-WORKDIR=/Users/jvinding/.grails/2.1.0/projects/api_master/
+WORKDIR=${HOME}/.grails/2.4.4/projects/api_develop/
 
 api() {
     cly-cd-api
@@ -6,12 +6,24 @@ api() {
     gvm use grails 2.4.4
 }
 
+api_run() {
+    cly-cd-api
+    ./grailsw run-app -reloading \
+                      -Duser.timezone=UTC \
+                      -Xms700m \
+                      -XX:MaxPermSize=384m \
+                      -DgitBranch=develop \
+                      -Dgrails.project.work.dir=${WORKDIR}\
+                      -Xmx2824m \
+                      -Dserver.port=8081
+}
+
 alias api_version="$PROJECT_DIR/api-clean/scripts/war_versions.sh"
 
-alias api_db='psql -U directory -h localhost -d directory_master'
+alias api_db='psql -U directory -h localhost -d directory_develop'
 
 alias api_clean="grails clean -Dgrails.project.work.dir=$WORKDIR"
-alias api_clean_workspace="rm -ri ${WORKDIR%%_master/}_*"
+alias api_clean_workspace="rm -ri ${WORKDIR%%_develop/}_*"
 
 api_db_drop() {
   cly-cd-api
@@ -23,14 +35,14 @@ api_db_drop() {
 api_db_load() {
   cly-cd-api
   local branch=$(git_get_branch | tr '[:upper:]-./' '[:lower:]___')
-  psql -U admin -h localhost -d postgres -c"alter database directory_master rename to directory_${branch}" || { echo "failed rename to directory_${branch}"; return 1; }
+  psql -U admin -h localhost -d postgres -c"alter database directory_develop rename to directory_${branch}" || { echo "failed rename to directory_${branch}"; return 1; }
   cly-load-db $1 || { echo "failed cly-load-db"; }
-  psql -U admin -h localhost -d postgres -c"alter database directory_${branch} rename to directory_master" || { echo "failed rename to directory_${branch}"; return 1; }
+  psql -U admin -h localhost -d postgres -c"alter database directory_${branch} rename to directory_develop" || { echo "failed rename to directory_${branch}"; return 1; }
 }
 
 api_db_diff() {
   cly-cd-api
-  grails dbm-gorm-diff -Dgrails.env=development -DgitBranch=master -Dgrails.project.work.dir=$WORKDIR changelog-bob.groovy --defaultSchema=public
+  grails dbm-gorm-diff -Dgrails.env=development -DgitBranch=develop -Dgrails.project.work.dir=$WORKDIR changelog-bob.groovy --defaultSchema=public
 }
 
-alias api_shell="grails -Duser.timezone=UTC -Xms700m -XX:MaxPermSize=384m -Xmx2824m -Dserver.port=8081 -DgitBranch=master -Dgrails.project.work.dir=$WORKDIR shell"
+alias api_shell="grails -Duser.timezone=UTC -Xms700m -XX:MaxPermSize=384m -Xmx2824m -Dserver.port=8081 -DgitBranch=develop -Dgrails.project.work.dir=$WORKDIR shell"
