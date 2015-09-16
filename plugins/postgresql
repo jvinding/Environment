@@ -1,24 +1,26 @@
+SUDO_COMMAND=$(which sudo)
+
 _postgres_is_running() {
     postgres_status | grep -q "is running"
 }
 
 postgres_status() {
-    sudo -u admin pg_ctl -D $PGDATA -m fast -l $PGDATA/server.log status
+    $SUDO_COMMAND -u admin pg_ctl -D $PGDATA -m fast -l $PGDATA/server.log status
 }
 
 postgres_start() {
     if  _postgres_is_running; then
         echo "Postgres is already running"
     else
-        sudo -u admin pg_ctl -D $PGDATA -l $PGDATA/server.log start
+        $SUDO_COMMAND -u admin pg_ctl -D $PGDATA -l $PGDATA/server.log start
     fi
 }
 
 postgres_stop() {
     if [ "-f" == "$1" ]; then
-        sudo -u admin pg_ctl -D $PGDATA -m fast -l $PGDATA/server.log stop
+        $SUDO_COMMAND -u admin pg_ctl -D $PGDATA -m fast -l $PGDATA/server.log stop
     else
-        sudo -u admin pg_ctl -D $PGDATA -l $PGDATA/server.log stop || echo "jjv hint: use -f to add '-m fast' to the stop command"
+        $SUDO_COMMAND -u admin pg_ctl -D $PGDATA -l $PGDATA/server.log stop || echo "jjv hint: use -f to add '-m fast' to the stop command"
   fi
 }
 
