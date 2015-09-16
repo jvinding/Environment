@@ -33,7 +33,8 @@ git_flow_feature_finish() {
 
   git flow feature finish $feature_name
 
-  git push
+  git push --all origin
+  git push --tags origin
 }
 
 #
@@ -79,6 +80,7 @@ git_flow_release_finish() {
   git flow release finish $version
 
   git push --all origin
+  git push --tags origin
 }
 
 #
@@ -124,6 +126,7 @@ git_flow_hotfix_finish() {
   git flow hotfix finish $version
 
   git push --all origin
+  git push --tags origin
 }
 
 #
