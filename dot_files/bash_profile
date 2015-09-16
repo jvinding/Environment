@@ -18,6 +18,7 @@ then
     set -o vi
     shopt -s extglob
     shopt -s checkwinsize
+    shopt -s histappend
 else
     export ENV=~/.bashrc
 fi
