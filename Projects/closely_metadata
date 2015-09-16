@@ -13,6 +13,11 @@ metadata() {
     java_use 1.8
 }
 
+metadata_run() {
+    cly-cd-metadata
+    mvn tomcat7:run -DENVIRONMENT=develop
+}
+
 alias metadata_version="$PROJECT_DIR/metadata/scripts/war_versions.sh"
 
 alias metadata_db='psql -U metadata -h localhost -d metadata_dev'
