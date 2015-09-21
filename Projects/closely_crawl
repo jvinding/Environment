@@ -4,7 +4,7 @@ crawl() {
     unset GRAILS_OPTS
     _crawl_cd
     java_use 1.8
-    gvm use grails 2.4.4
+    sdk use grails 2.4.4
 }
 
 crawl_run() {

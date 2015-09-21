@@ -3,7 +3,7 @@ WORKDIR=${HOME}/.grails/2.4.4/projects/api_develop/
 api() {
     cly-cd-api
     java_use 1.8
-    gvm use grails 2.4.4
+    sdk use grails 2.4.4
 }
 
 api_run() {

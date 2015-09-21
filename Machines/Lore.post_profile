@@ -1,1 +1,3 @@
-[[ -s "${HOME}/.gvm/bin/gvm-init.sh" ]] && source "${HOME}/.gvm/bin/gvm-init.sh"
+export SDKMAN_DIR="${HOME}/.sdkman"
+SDKMAN_INIT="${SDKMAN_DIR}/bin/sdkman-init.sh"
+[[ -r "${SDKMAN_INIT}" ]] && source "${SDKMAN_INIT}"
