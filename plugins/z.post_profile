@@ -1,0 +1,2 @@
+Z_INIT_FILE=`brew --prefix`/etc/profile.d/z.sh
+[ -r "$Z_INIT_FILE" ] && source "$Z_INIT_FILE"

@@ -287,4 +287,5 @@ export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
 #
 # run per-machine commands that must be run at the end of .bash_profile (eg: for gvm)
 #
+plugin_source_post_profile
 [ -f $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile ] && . $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile

@@ -14,3 +14,17 @@ plugin_source_all() {
         plugin_source "$plugin"
     done
 }
+
+plugin_source_post_profile() {
+    for plugin in ${PLUGINS[@]}; do
+        FILE="${PLUGIN_DIR}/${plugin}.post_profile"
+        [ -r "$FILE" ] && source "$FILE"
+    done
+}
+
+plugin_source_post_rc() {
+    for plugin in ${PLUGINS[@]}; do
+        FILE="${PLUGIN_DIR}/${plugin}.post_rc"
+        [ -r "$FILE" ] && source "$FILE"
+    done
+}

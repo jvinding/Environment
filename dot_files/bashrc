@@ -102,4 +102,5 @@ skip_lines() {
 #
 # run per-machine commands that must be run at the end of .bashrc (eg: for gvm)
 #
+plugin_source_post_rc
 [ -f ~/Environment/Machines/${HOSTNAME}.post_rc ] && . ~/Environment/Machines/${HOSTNAME}.post_rc
