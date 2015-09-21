@@ -10,8 +10,6 @@ export CDPATH=.:~:~/Projects
 
 export PGDATA=/usr/local/var/postgres
 
-. `brew --prefix`/etc/profile.d/z.sh
-
 PLUGINS=(git git_flow java ssh android ssh-agent docker postgresql)
 
 safe_source ~/Environment/mac_shortcuts
