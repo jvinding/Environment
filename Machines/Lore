@@ -15,7 +15,11 @@ PLUGINS=(git git_flow java ssh android ssh-agent docker postgresql z sdkman)
 safe_source ~/Environment/mac_shortcuts
 
 alias wifi_ip='ifconfig en0 | grep "\<inet\>" | awk "{print \$2}"'
-alias copy_wifi_ip='wifi_ip | tr -d '[:space:]' | pbcopy'
+copy_wifi_ip() {
+    local ip=$(wifi_ip)
+    echo $ip | tr -d '[:space:]' | pbcopy
+    echo "Copied '${ip}' to the clipboard"
+}
 
 if [ "closely" == "$USER" ]; then
     export PROJECT_DIR=$HOME/Projects
