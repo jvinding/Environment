@@ -17,11 +17,13 @@
     d = diff
     vd = difftool -y -t vimdiff -R
     fa = fetch --all
+    fap = fetch --all --prune
     dc = diff --cached
     su = stash save --include-untracked
     sl = stash list
     ss = stash show -u
     poop = stash pop
+    merge-no-space = merge -Xignore-space-change
     mf = merge --ff-only
     changes = whatchanged -p
     sup = submodule update --recursive
@@ -37,6 +39,7 @@
     lsm = ls-files --exclude-standard -m
     lso = ls-files --exclude-standard -o
     lsc = ls-files --unmerged
+    lsd = ls-files --deleted
     ff = flow feature
     ffl = flow feature list
     ffc = flow feature checkout
