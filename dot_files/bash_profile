@@ -178,7 +178,7 @@ then
         local pwd_length=${1:-50}
         local modified=0
         local pretty_pwd="${PWD/$HOME/~}"
-        while [ -n "${pretty_pwd}" ] && [ ${#pretty_pwd} -gt $pwd_length ] && echo "$pretty_pwd" | grep -s '/'; do
+        while [ -n "${pretty_pwd}" ] && [ ${#pretty_pwd} -gt $pwd_length ] && [[ "$pretty_pwd" =~ / ]]; do
             modified=1
             pretty_pwd=${pretty_pwd#*/}
         done
