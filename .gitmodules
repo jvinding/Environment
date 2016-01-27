@@ -31,3 +31,6 @@
 [submodule "submodules/tmux-powerline"]
 	path = submodules/tmux-powerline
 	url = https://github.com/erikw/tmux-powerline.git
+[submodule "dot_files/vim/bundle/typescript-vim"]
+	path = dot_files/vim/bundle/typescript-vim
+	url = https://github.com/leafgarland/typescript-vim.git
