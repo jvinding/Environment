@@ -28,3 +28,6 @@
 [submodule "dot_files/vim/bundle/ag"]
 	path = dot_files/vim/bundle/ag
 	url = git://github.com/rking/ag.vim.git
+[submodule "submodules/tmux-powerline"]
+	path = submodules/tmux-powerline
+	url = https://github.com/erikw/tmux-powerline.git
