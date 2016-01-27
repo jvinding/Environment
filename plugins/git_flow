@@ -31,7 +31,7 @@ git_flow_feature_finish() {
   git checkout develop || return 1
   git pull --rebase || return 1
 
-  git flow feature finish $feature_name
+  git flow feature finish $feature_name || return 1
 
   git push --all origin
   git push --tags origin
