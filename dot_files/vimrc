@@ -12,6 +12,10 @@ set ts=4
 set shiftwidth=4
 filetype indent on
 set expandtab autoindent smartindent
+
+"
+"" set term=ansi
+
 set ruler showcmd wildmenu nohlsearch
 set title titlestring=
 
@@ -121,6 +125,7 @@ map <Leader>h <Plug>(easymotion-linebackward)
 " Airline
 "
 set laststatus=2
+let g:airline_powerline_fonts = 1
 let g:airline_theme='solarized'
 
 "
@@ -146,6 +151,12 @@ let g:ctrlp_working_path_mode = 'r'
 " Git Gutter
 "
 highlight GitGutterChange ctermfg=blue guifg=blue ctermbg=gray guibg=gray
+
+"
+" Silver Searcher
+"
+let g:ag_highlight=1
+
 
 "
 " tmux support
