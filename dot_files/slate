@@ -3,10 +3,11 @@ config keyboardLayout colemak
 alias hyper ctrl;shift;alt;cmd
 
 alias mon-iMac 5120x2880
-alias mon-laptop 2880x1800
+alias mon-laptop      1440x900
+alias mon-acd         1920x1200
+alias mon-thunderbolt 2560x1440
 
-bind `:${hyper} grid 0:8,4 #hpadding:5 16,9
-
+bind `:${hyper} grid ${mon-iMac}:8,4 ${mon-laptop}:6,3 ${mon-acd}:8,4 ${mon-thunderbolt}:8,4 #hpadding:5 16,9
 
 # position aliases
 alias full move screenOriginX;screenOriginY screenSizeX;screenSizeY
