@@ -2,6 +2,12 @@
 config keyboardLayout colemak
 alias hyper ctrl;shift;alt;cmd
 
+alias mon-iMac 5120x2880
+alias mon-laptop 2880x1800
+
+bind `:${hyper} grid 0:8,4 #hpadding:5 16,9
+
+
 # position aliases
 alias full move screenOriginX;screenOriginY screenSizeX;screenSizeY
 alias lefthalf move screenOriginX;screenOriginY screenSizeX/2;screenSizeY
@@ -32,9 +38,6 @@ bind pad9:${hyper} ${topright}
 #bind end:${hyper} ${bottomleft}
 #bind pageDown:${hyper} ${bottomright}
 
-# window switching
-bind tab:${hyper} switch
-
 # window hints
 config windowHintsShowIcons true
 config windowHintsIgnoreHiddenWindows false
@@ -52,9 +55,9 @@ bind h:${hyper} focus 'HipChat'
 bind l:${hyper} focus 'Slack'
 bind i:${hyper} focus 'IntelliJ IDEA'
 ## bind i:${hyper} focus 'IntelliJ IDEA-EAP'
-## bind j:${hyper} focus 'Airmail'
+bind j:${hyper} focus 'Airmail'
 ## bind j:${hyper} focus 'Postbox'
-bind j:${hyper} focus 'Kiwi for Gmail'
+## bind j:${hyper} focus 'Kiwi for Gmail'
 bind k:${hyper} focus 'Skype'
 bind r:${hyper} focus 'iTerm'
 bind s:${hyper} focus 'SourceTree'
@@ -63,9 +66,13 @@ bind x:${hyper} focus 'Xcode'
 bind y:${hyper} focus 'You Need a Budget 4'
 bind z:${hyper} focus 'Amazon Music'
 
-# This is the default .slate file.
-# If no ~/.slate file exists this is the file that will be used.
+# Push to edge
+bind right:${hyper}  push right
+bind left:${hyper}   push left
+bind up:${hyper}     push up
+bind down:${hyper}   push down
 
+#
 config defaultToCurrentScreen true
 config nudgePercentOf screenSize
 config resizePercentOf screenSize
@@ -96,8 +103,8 @@ config resizePercentOf screenSize
 # bind 1:ctrl;alt         throw 0 resize
 # bind 2:ctrl;alt         throw 1 resize
 # bind 3:ctrl;alt         throw 2 resize
-bind right:${hyper} throw right resize
-bind left:${hyper}  throw left  resize
+# bind right:${hyper} throw right resize
+# bind left:${hyper}  throw left  resize
 # bind up:ctrl;alt;cmd    throw up    resize
 # bind down:ctrl;alt;cmd  throw down  resize
 
