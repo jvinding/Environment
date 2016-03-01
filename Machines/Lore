@@ -10,6 +10,8 @@ export CDPATH=.:~:~/Projects
 
 export PGDATA=/usr/local/var/postgres
 
+export GEM_HOME=$HOME/.gem
+
 PLUGINS=(git git_flow java ssh android ssh-agent docker postgresql z sdkman)
 
 safe_source ~/Environment/mac_shortcuts
