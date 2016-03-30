@@ -155,10 +155,12 @@ ql_select_text() {
 
 #
 gamecenter_disable() {
-    defaults write com.apple.gamed Disabled -bool true
-    sudo launchctl stop com.apple.gamed
+    ## defaults write com.apple.gamed Disabled -bool true
+    ## sudo launchctl stop com.apple.gamed
+    launchctl unload -w /System/Library/LaunchAgents/com.apple.gamed.plist
 }
 gamecenter_enable() {
-    defaults write com.apple.gamed Disabled -bool false
-    sudo launchctl start com.apple.gamed
+    ## defaults write com.apple.gamed Disabled -bool false
+    ## sudo launchctl start com.apple.gamed
+    launchctl load -w /System/Library/LaunchAgents/com.apple.gamed.plist
 }
