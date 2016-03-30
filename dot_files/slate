@@ -2,7 +2,7 @@
 config keyboardLayout colemak
 alias hyper ctrl;shift;alt;cmd
 
-alias mon-iMac 5120x2880
+alias mon-iMac        5120x2880
 alias mon-laptop      1440x900
 alias mon-acd         1920x1200
 alias mon-thunderbolt 2560x1440
@@ -46,23 +46,36 @@ config windowHintsSpread true
 
 bind space:${hyper} hint ARSTDHNEIOQWFPGJLUYZXCVBKM
 
+# Apps
+
+## alias email_client 'Kiwi for Gmail'
+alias email_client 'Postbox'
+## alias email_client 'Airmail'
+alias ide_java 'IntelliJ IDEA'
+## alias ide_java 'IntelliJ IDEA-EAP'
+## alias ide_apple 'Xcode'
+alias ide_apple 'Xcode-beta'
+## alias ide_ios 'AppCode'
+alias ide_ios 'AppCode-EAP'
+alias text_editor 'MacVim'
+## alias text_editor 'Neovim'
+alias git_gui 'Tower'
+## alias git_gui 'SourceTree'
+
 # Window focusing
 bind 1:${hyper} focus '1Password'
 bind a:${hyper} focus 'Android Studio'
 bind b:${hyper} focus 'Byword'
-bind c:${hyper} focus 'AppCode'
+bind c:${hyper} focus ${ide_ios}
 bind g:${hyper} focus 'Google Chrome'
 bind h:${hyper} focus 'HipChat'
 bind l:${hyper} focus 'Slack'
-bind i:${hyper} focus 'IntelliJ IDEA'
-## bind i:${hyper} focus 'IntelliJ IDEA-EAP'
-bind j:${hyper} focus 'Airmail'
-## bind j:${hyper} focus 'Postbox'
-## bind j:${hyper} focus 'Kiwi for Gmail'
+bind i:${hyper} focus ${ide_java}
+bind j:${hyper} focus ${email_client}
 bind k:${hyper} focus 'Skype'
 bind r:${hyper} focus 'iTerm'
-bind s:${hyper} focus 'SourceTree'
-bind t:${hyper} focus 'MacVim'
+bind s:${hyper} focus ${git_gui}
+bind t:${hyper} focus ${text_editor}
 bind x:${hyper} focus 'Xcode'
 bind y:${hyper} focus 'You Need a Budget 4'
 bind z:${hyper} focus 'Amazon Music'
