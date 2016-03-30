@@ -28,9 +28,9 @@
 [submodule "dot_files/vim/bundle/ag"]
 	path = dot_files/vim/bundle/ag
 	url = git://github.com/rking/ag.vim.git
-[submodule "submodules/tmux-powerline"]
-	path = submodules/tmux-powerline
-	url = https://github.com/erikw/tmux-powerline.git
 [submodule "dot_files/vim/bundle/typescript-vim"]
 	path = dot_files/vim/bundle/typescript-vim
 	url = https://github.com/leafgarland/typescript-vim.git
+[submodule "submodules/powerline"]
+	path = submodules/powerline
+	url = git://github.com/powerline/powerline.git
