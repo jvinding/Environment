@@ -73,6 +73,7 @@ bind l:${hyper} focus 'Slack'
 bind i:${hyper} focus ${ide_java}
 bind j:${hyper} focus ${email_client}
 bind k:${hyper} focus 'Skype'
+bind n:${hyper} focus 'Navicat Essentials for PostgreSQL'
 bind r:${hyper} focus 'iTerm2'
 bind s:${hyper} focus ${git_gui}
 bind t:${hyper} focus ${text_editor}
