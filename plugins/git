@@ -32,7 +32,7 @@ git_is_on_branch() {
 }
 
 git_change_list() {
-    git ls-files -cdmosuk --exclude-standard
+    git ls-files -cdmosuk --exclude-standard | awk '{print $NF}'
 }
 
 git_branch() {
