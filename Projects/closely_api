@@ -2,8 +2,8 @@ WORKDIR=${HOME}/.grails/2.4.4/projects/api_develop/
 
 api() {
     cly-cd-api
-    java_use 1.8
-    sdk use grails 2.4.4
+    ## java_use 1.8
+    ## sdk use grails 2.4.4
 }
 
 api_run() {
@@ -58,7 +58,7 @@ alias api_version="$PROJECT_DIR/api-clean/scripts/war_versions.sh"
 
 alias api_db='psql -U directory -h localhost -d directory_develop'
 
-alias api_clean="grails clean -Dgrails.project.work.dir=$WORKDIR"
+alias api_clean="./grailsw clean -Dgrails.project.work.dir=$WORKDIR"
 alias api_clean_workspace="rm -ri ${WORKDIR%%_develop/}_*"
 
 api_db_drop() {
@@ -84,7 +84,7 @@ api_db_load() {
 
 api_db_diff() {
   cly-cd-api
-  grails dbm-gorm-diff -Dgrails.env=development -DgitBranch=develop -Dgrails.project.work.dir=$WORKDIR changelog-bob.groovy --defaultSchema=public
+  ./grailsw dbm-gorm-diff -Dgrails.env=development -DgitBranch=develop -Dgrails.project.work.dir=$WORKDIR changelog-bob.groovy --defaultSchema=public --stacktrace
 }
 
-alias api_shell="grails -Duser.timezone=UTC -Xms700m -XX:MaxPermSize=384m -Xmx2824m -Dserver.port=8081 -DgitBranch=develop -Dgrails.project.work.dir=$WORKDIR shell"
+alias api_shell="./grailsw -Duser.timezone=UTC -Xms700m -XX:MaxPermSize=384m -Xmx2824m -Dserver.port=8081 -DgitBranch=develop -Dgrails.project.work.dir=$WORKDIR shell"
