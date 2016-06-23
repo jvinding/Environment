@@ -14,8 +14,7 @@ metadata() {
 }
 
 metadata_run() {
-    cly-cd-metadata
-    mvn tomcat7:run -DENVIRONMENT=develop
+    mvn tomcat7:run -DENVIRONMENT=develop -Dmaven.tomcat.port=7373
 }
 
 alias metadata_version="$PROJECT_DIR/metadata/scripts/war_versions.sh"
