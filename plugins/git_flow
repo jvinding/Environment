@@ -1,5 +1,11 @@
 #
 # helpers
+__git_flow_assert_clean_tree() {
+    git_assert_clean_tree || return 1
+    ## fail if the repo isn't configured for git-flow
+    git config --get gitflow.branch.develop > /dev/null || ( echo "Not a git-flow repo"; return 1 )
+}
+
 __git_flow_branch_name() {
   local branch_type=$1
   local branch_name=$2
@@ -27,7 +33,7 @@ __git_flow_release_branch_name() {
 }
 
 git_flow_feature_start() {
-  git_assert_clean_tree || return 1
+  __git_flow_assert_clean_tree || return 1
 
   local feature_name=$(__git_flow_feature_branch_name "$1")
   if [ -z "$feature_name" ]; then
@@ -44,7 +50,7 @@ git_flow_feature_start() {
 }
 
 git_flow_feature_finish() {
-  git_assert_clean_tree || return 1
+  __git_flow_assert_clean_tree || return 1
 
   local feature_name=$(__git_flow_feature_branch_name "$1")
   if [ -z "$feature_name" ]; then
@@ -67,7 +73,7 @@ git_flow_feature_finish() {
 # Release
 #
 git_flow_release_start() {
-  git_assert_clean_tree || return 1
+  __git_flow_assert_clean_tree || return 1
 
   local version=$(__git_flow_release_branch_name "$1")
   if [ -z "$version" ]; then
@@ -84,7 +90,7 @@ git_flow_release_start() {
 }
 
 git_flow_release_finish() {
-  git_assert_clean_tree || return 1
+  __git_flow_assert_clean_tree || return 1
 
   local version=$(__git_flow_release_branch_name "$1")
   if [ -z "$version" ]; then
@@ -113,7 +119,7 @@ git_flow_release_finish() {
 # Hotfix
 #
 git_flow_hotfix_start() {
-  git_assert_clean_tree || return 1
+  __git_flow_assert_clean_tree || return 1
 
   local version=$(__git_flow_hotfix_branch_name "$1")
   if [ -z "$version" ]; then
@@ -130,7 +136,7 @@ git_flow_hotfix_start() {
 }
 
 git_flow_hotfix_finish() {
-  git_assert_clean_tree || return 1
+  __git_flow_assert_clean_tree || return 1
 
   local version=$(__git_flow_hotfix_branch_name "$1")
   if [ -z "$version" ]; then
