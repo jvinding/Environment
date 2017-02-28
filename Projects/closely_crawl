@@ -1,7 +1,7 @@
 alias crawl_version="$PROJECT_DIR/crawl/scripts/war_versions.sh"
 
 crawl() {
-    unset GRAILS_OPTS
+    export GRAILS_OPTS="-Duser.timezone=UTC"
     _crawl_cd
     ## java_use 1.8
     ## sdk use grails 2.4.4
