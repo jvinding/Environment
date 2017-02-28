@@ -160,6 +160,7 @@ alias stage=git_stage
 alias add=git_add
 alias pr=git_update
 alias push=git_push
+alias gup=git_cdup
 
 #
 # Completion -- requires git-completion.bash
