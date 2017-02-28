@@ -48,22 +48,22 @@ bind space:${hyper} hint ARSTDHNEIOQWFPGJLUYZXCVBKM
 
 # Apps
 
-## alias email_client 'Kiwi for Gmail'
+alias email_client 'Kiwi for Gmail'
 ## alias email_client 'Postbox'
-alias email_client 'Airmail'
+## alias email_client 'Airmail'
 alias ide_java 'IntelliJ IDEA'
 ## alias ide_java 'IntelliJ IDEA-EAP'
 ## alias ide_apple 'Xcode'
 alias ide_apple 'Xcode-beta'
-## alias ide_ios 'AppCode'
-alias ide_ios 'AppCode-EAP'
+alias ide_ios 'AppCode'
+## alias ide_ios 'AppCode-EAP'
 alias text_editor 'MacVim'
 ## alias text_editor 'Neovim'
 alias git_gui 'Tower'
 ## alias git_gui 'SourceTree'
 
 # Window focusing
-bind 1:${hyper} focus '1Password'
+bind 1:${hyper} focus '1Password 6'
 bind a:${hyper} focus 'Android Studio'
 bind b:${hyper} focus 'Byword'
 bind c:${hyper} focus ${ide_ios}
@@ -79,7 +79,7 @@ bind s:${hyper} focus ${git_gui}
 bind t:${hyper} focus ${text_editor}
 bind x:${hyper} focus 'Xcode'
 bind y:${hyper} focus 'You Need a Budget 4'
-bind z:${hyper} focus 'Amazon Music'
+bind z:${hyper} focus 'Zeplin'
 
 # Push to edge
 bind right:${hyper}  push right
