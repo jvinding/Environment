@@ -11,7 +11,7 @@ git_flow_feature_start() {
     return 1
   fi
 
-  git checkout develop || return 1
+  git checkout $(git config --get gitflow.branch.develop) || return 1
   git pull --rebase || return 1
 
   git flow feature start $feature_name
@@ -28,7 +28,7 @@ git_flow_feature_finish() {
     return 1
   fi
 
-  git checkout develop || return 1
+  git checkout $(git config --get gitflow.branch.develop) || return 1
   git pull --rebase || return 1
 
   git flow feature finish $feature_name || return 1
@@ -51,7 +51,7 @@ git_flow_release_start() {
     return 1
   fi
 
-  git checkout develop || return 1
+  git checkout $(git config --get gitflow.branch.develop) || return 1
   git pull --rebase || return 1
 
   git flow release start $version
@@ -68,13 +68,13 @@ git_flow_release_finish() {
     return 1
   fi
 
-  git checkout master || return 1
+  git checkout $(git config --get gitflow.branch.master) || return 1
   git pull --rebase || return 1
 
-  git checkout develop || return 1
+  git checkout $(git config --get gitflow.branch.develop) || return 1
   git pull --rebase || return 1
 
-  git checkout release/$version || return 1
+  git checkout $(git config --get gitflow.prefix.release)$version || return 1
   git pull --rebase || return 1
 
   git flow release finish $version
@@ -97,7 +97,7 @@ git_flow_hotfix_start() {
     return 1
   fi
 
-  git checkout master || return 1
+  git checkout $(git config --get gitflow.branch.master) || return 1
   git pull --rebase || return 1
 
   git flow hotfix start $version
@@ -114,13 +114,13 @@ git_flow_hotfix_finish() {
     return 1
   fi
 
-  git checkout master || return 1
+  git checkout $(git config --get gitflow.branch.master) || return 1
   git pull --rebase || return 1
 
-  git checkout develop || return 1
+  git checkout $(git config --get gitflow.branch.develop) || return 1
   git pull --rebase || return 1
 
-  git checkout hotfix/$version || return 1
+  git checkout $(git config --get gitflow.prefix.hotfix)$version || return 1
   git pull --rebase || return 1
 
   git flow hotfix finish $version
