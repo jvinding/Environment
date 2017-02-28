@@ -2,6 +2,26 @@ if which hub > /dev/null; then
     alias git=hub
 fi
 
+git_get_config_file() {
+    local done=0
+    local file=
+    local gitdir=.git
+    while [ 0 -eq $done ]; do
+        if [ -d "$gitdir" ]; then
+            if [ -f "${gitdir}/config" ]; then
+                file="${gitdir}/config"
+            fi
+            done=1
+        elif [ -f "$gitdir" ]; then
+            gitdir="$(cat "$gitdir" | grep gitdir | awk '{print $2}')"
+        else
+            done=1
+        fi
+    done
+
+    echo -n "$file"
+}
+
 git_assert_clean_tree() {
   local changes=`git_change_list`
   if ! [ -z "$changes" ]; then
