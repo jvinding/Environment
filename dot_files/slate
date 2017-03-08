@@ -65,7 +65,7 @@ alias git_gui 'Tower'
 # Window focusing
 bind 1:${hyper} focus '1Password 6'
 bind a:${hyper} focus 'Android Studio'
-bind b:${hyper} focus 'Byword'
+bind b:${hyper} focus 'Brave'
 bind c:${hyper} focus ${ide_ios}
 bind g:${hyper} focus 'Google Chrome'
 bind h:${hyper} focus 'HipChat'
