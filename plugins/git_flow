@@ -24,8 +24,7 @@ __git_flow_feature_branch_name() {
 }
 
 __git_flow_hotfix_branch_name() {
-    __git_flow_branch_name "$(git config --get gitflow.prefix.hotfix)"
-    "$1"
+    __git_flow_branch_name "$(git config --get gitflow.prefix.hotfix)" "$1"
 }
 
 __git_flow_release_branch_name() {
