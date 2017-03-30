@@ -201,12 +201,17 @@ then
 
     prompt_scm_status() {
         local git_branch=$(git symbolic-ref --short HEAD 2> /dev/null)
+        local git_hash=
         if [ -z "$git_branch" ]; then
-            git_branch=$(git status 2> /dev/null | fgrep detached | perl -lpe 's/(?:\w+\W+)*(\w+)/Detached HEAD at \1/')
+            git_branch=$(git status 2> /dev/null | fgrep detached | perl -lpe 's/(?:\w+\W+)*(\w+)/Detached HEAD:\1/')
+            git_hash=${git_branch##*:}
+            git_branch=${git_branch%%:*}
+        else
+            git_hash="$(git rev-parse --short ${git_branch})"
         fi
 
         if ! [ -z "$git_branch" ]; then
-            echo -ne "${BLUE_UNESCAPED}-=(${GREEN_UNESCAPED}${git_branch}${BLUE_UNESCAPED})=-"
+            echo -ne "${BLUE_UNESCAPED}-=(${GREEN_UNESCAPED}${git_branch} ${RED_UNESCAPED}[${git_hash}]${BLUE_UNESCAPED})=-"
 
             local git_status=$(git status -sb)
             local status_counts=
