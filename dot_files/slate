@@ -67,6 +67,7 @@ bind 1:${hyper} focus '1Password 6'
 bind a:${hyper} focus 'Android Studio'
 bind b:${hyper} focus 'Brave'
 bind c:${hyper} focus ${ide_ios}
+bind e:${hyper} focus 'Messages'
 bind g:${hyper} focus 'Google Chrome'
 bind h:${hyper} focus 'HipChat'
 bind l:${hyper} focus 'Slack'
