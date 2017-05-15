@@ -1,5 +1,31 @@
 if which hub > /dev/null; then
     alias git=hub
+    alias github='hub browse'
+else
+    github() {
+        if [ ! -d .git ]; then
+            echo "ERROR: This isnt a git directory"
+            return false
+        fi
+
+        local git_url=`git ls-remote --get-url origin`
+        local git_domain=`echo $git_url | awk -v FS="(@|:)" '{print $2}'`
+        local git_branch=`git_get_branch`
+
+        if [[ $git_url == https://* ]]; then
+            url=${git_domain}/${git_url%.git}/tree/${git_branch}
+        else
+           if [[ $git_url == git@* ]]; then
+                url="https://${git_domain}/${${git_url#*:}%.git}/tree/${git_branch}"
+                echo $url
+           else
+               echo "ERROR: Remote origin is invalid"
+               return false
+           fi
+        fi
+
+        open $url
+    }
 fi
 
 git_get_config_file() {
