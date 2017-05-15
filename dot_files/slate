@@ -1,6 +1,7 @@
 # key layout (hyper + colemak)
 config keyboardLayout colemak
-alias hyper ctrl;shift;alt;cmd
+## alias hyper ctrl;shift;alt;cmd
+alias hyper ctrl;alt
 
 alias mon-iMac        5120x2880
 alias mon-laptop      1440x900
@@ -74,6 +75,7 @@ bind l:${hyper} focus 'Slack'
 bind i:${hyper} focus ${ide_java}
 bind j:${hyper} focus ${email_client}
 bind k:${hyper} focus 'Skype'
+##bind m:${hyper}  minimize window (defined where?)
 bind n:${hyper} focus 'Navicat Essentials for PostgreSQL'
 bind r:${hyper} focus 'iTerm2'
 bind s:${hyper} focus ${git_gui}
