@@ -23,6 +23,9 @@ set vb t_vb=
 
 set nocompatible        " Use Vim defaults (much better!)
 set bs=2                " backspace over newlines and all
+set scrolloff=1         " Always at least 1 line visible above or below cursor
+set sidescrolloff=5     " 5 chars before/after cursor when scrolling horizontally
+set autoread            " no more "this file has changed" dialogs
 
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.class
 
