@@ -1,0 +1,12 @@
+ios_running_simulator_id() {
+    ps -e | grep launchd_sim | fgrep CoreSimulator | egrep -o '\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'
+}
+
+ios_running_simulator_log() {
+    local running_sim_id=$(ios_running_simulator_id)
+    if [ -n "${running_sim_id}" ]; then
+        tail -F "${HOME}/Library/Logs/CoreSimulator/953150CE-FE7D-4830-96D6-0E11EA3E5053/system.log"
+    else
+        echo "No running simulator found" >&2
+    fi
+}
