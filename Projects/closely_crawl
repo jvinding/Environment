@@ -8,7 +8,7 @@ crawl() {
 }
 
 crawl_run() {
-    _crawl_cd
+    crawl
     ./grailsw run-app -reloading -Dserver.port=8099
 }
 

@@ -7,7 +7,7 @@ api() {
 }
 
 api_run() {
-    cly-cd-api
+    api
 
     local reloading=
     if [ "-r" == "$1" ]; then
