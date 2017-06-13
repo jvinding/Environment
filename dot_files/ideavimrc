@@ -3,3 +3,4 @@ nmap ; :
 
 nnoremap ,, ,
 nnoremap ;; ;
+set incsearch
