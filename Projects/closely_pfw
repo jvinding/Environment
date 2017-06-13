@@ -1,0 +1,9 @@
+pfw() {
+    cd ~/Projects/perch-web
+}
+
+pfw_run() {
+    pfw
+    gulp serve
+}
+

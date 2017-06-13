@@ -36,6 +36,7 @@ if [ "closely" == "$USER" ]; then
     safe_source ~/Environment/Projects/closely_perch
     safe_source ~/Environment/Projects/closely_crawl
     safe_source ~/Environment/Projects/closely_metadata
+    safe_source ~/Environment/Projects/closely_pfw
 
     safe_source $ENVIRONMENT_DIR/Secrets/nagios_creds
 
