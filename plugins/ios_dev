@@ -4,3 +4,6 @@ ios_running_simulator_log() {
         tail -F "${log_dir}/system.log"
     fi
 }
+
+## xcrun simctl spawn booted log stream --predicate 'processImagePath endswith "PerchQA"'
+## xcrun simctl spawn booted log stream --predicate 'eventMessage contains "error" and messageType == info'
