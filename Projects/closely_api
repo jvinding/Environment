@@ -1,13 +1,21 @@
 WORKDIR=${HOME}/.grails/2.4.4/projects/api_develop/
 
+is_api_dir() {
+    [ -d .git ] && [ "git@github.com:lomain/api.git" = "$(git config --get remote.origin.url)" ]
+}
+
 api() {
     cly-cd-api
     ## java_use 1.8
     ## sdk use grails 2.4.4
 }
 
+__conditional_api() {
+    is_api_dir || api
+}
+
 api_run() {
-    api
+    __conditional_api
 
     local reloading=
     if [ "-r" == "$1" ]; then
@@ -44,6 +52,7 @@ api_run_master() {
 }
 
 api_test_app() {
+    __conditional_api
     ./grailsw test-app -Duser.timezone=UTC \
                        -Xms700m \
                        -XX:MaxPermSize=384m \
@@ -62,14 +71,14 @@ alias api_clean="./grailsw clean -Dgrails.project.work.dir=$WORKDIR"
 alias api_clean_workspace="rm -ri ${WORKDIR%%_develop/}_*"
 
 api_db_drop() {
-  cly-cd-api
+    __conditional_api
   for s in $(api_db -c '\d' | grep table | cut -d '|' -f 2); do
     api_db -c "drop table if exists $s cascade" > /dev/null
   done
 }
 
 api_db_load() {
-  cly-cd-api
+    __conditional_api
   local branch=$(git_get_branch | tr '[:upper:]-./' '[:lower:]___')
   if [ "develop" != "$branch" ]; then
       psql -U admin -h localhost -d postgres -c"alter database directory_develop rename to directory_${branch}" || { echo "failed rename to directory_${branch}"; return 1; }
@@ -83,7 +92,7 @@ api_db_load() {
 }
 
 api_db_diff() {
-  cly-cd-api
+    __conditional_api
   ./grailsw dbm-gorm-diff -DgitBranch=develop changelog-bob.groovy --stacktrace
 }
 
