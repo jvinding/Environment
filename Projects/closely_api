@@ -32,23 +32,17 @@ api_run() {
                       -Dserver.port=8081
 }
 
-api_run_master() {
-    cly-cd-api
+api_rebuild() {
+    __conditional_api
+    ./grailsw clean && ./grailsw compile --refresh-dependencies --stacktrace
+}
 
-    local reloading=
-    if [ "-r" == "$1" ]; then
-        reloading="-reloading"
+api_super_clean() {
+    __conditional_api
+    rm -rf ~/.grails/2.* target/ submodules/closely-common/target/ .slcache/ ~/.m2/repository/com/closely/ lib/ && git co lib
+    if [ "-b" == "$1" ]; then
+        api_rebuild
     fi
-
-    ./grailsw $reloading run-app \
-                      -Duser.timezone=UTC \
-                      -Xms700m \
-                      -XX:MaxPermSize=384m \
-                      -DgitBranch=develop \
-                      -Dgrails.project.work.dir=${WORKDIR}\
-                      -Xmx2824m \
-                      -Dserver.port=8081 \
-                      -Dapi.role=MASTER
 }
 
 api_test_app() {
