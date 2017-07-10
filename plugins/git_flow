@@ -154,7 +154,7 @@ git_flow_hotfix_finish() {
   git checkout $(git config --get gitflow.prefix.hotfix)$version || return 1
   git pull --rebase || return 1
 
-  git flow hotfix finish $version
+  git flow hotfix finish $version || return 1
 
   git push --all origin
   git push --tags origin
