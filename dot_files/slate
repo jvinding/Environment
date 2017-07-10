@@ -2,8 +2,7 @@
 # General Config
 # =============================================================================
 config keyboardLayout colemak
-alias hyper ctrl;alt
-## alias hyper ctrl;shift;alt;cmd
+alias hyper ctrl;shift;alt;cmd
 
 # =============================================================================
 # Monitors
