@@ -1,0 +1,21 @@
+boost() {
+    cd $PROJECT_DIR/boost
+}
+
+boost_rebuild() {
+    boost
+    ./mvnw clean package -U
+}
+
+boost_super_clean() {
+    boost
+    rm -rf target/ ~/.m2/repository/com/closely/
+    if [ "-b" == "$1" ]; then
+        boost_rebuild
+    fi
+}
+
+boost_run() {
+    boost
+    ./mvnw spring-boot:run -Drun.jvmArguments="-Dserver.port=8070"
+}
