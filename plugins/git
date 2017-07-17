@@ -164,6 +164,7 @@ git_add() {
 }
 
 git_update() {
+    git submodule update --recursive
     local changes=`git_change_list`
     if [ -n "$changes" ]; then
         git stash save --include-untracked "git update stash"
