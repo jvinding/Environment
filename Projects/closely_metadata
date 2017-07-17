@@ -18,6 +18,9 @@ metadata_run() {
     mvn tomcat7:run -DENVIRONMENT=develop -Dmaven.tomcat.port=7373
 }
 
-alias metadata_version="$PROJECT_DIR/metadata/scripts/war_versions.sh"
+metadata_version() {
+    aws --region us-east-1 elasticbeanstalk describe-environments --query 'Environments[*].[EnvironmentName, VersionLabel]' --environment-names metadata-qa metadata-staging --output text
+    aws --region us-east-2 elasticbeanstalk describe-environments --query 'Environments[*].[EnvironmentName, VersionLabel]' --environment-names metadata-production --output text
+}
 
 alias metadata_db='psql -U metadata -h localhost -d metadata_dev'

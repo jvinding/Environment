@@ -57,7 +57,10 @@ api_test_app() {
                        "$@"
 }
 
-alias api_version="$PROJECT_DIR/api-clean/scripts/war_versions.sh"
+api_version() {
+    aws --region us-east-1 elasticbeanstalk describe-environments --query 'Environments[*].[EnvironmentName, VersionLabel]' --environment-names api-qa api-staging --output text
+    aws --region us-east-2 elasticbeanstalk describe-environments --query 'Environments[*].[EnvironmentName, VersionLabel]' --environment-names api-production --output text
+}
 
 alias api_db='psql -U directory -h localhost -d directory_develop'
 

@@ -19,3 +19,8 @@ boost_run() {
     boost
     ./mvnw spring-boot:run -Drun.jvmArguments="-Dserver.port=8070"
 }
+
+boost_version() {
+    aws --region us-east-1 elasticbeanstalk describe-environments --query 'Environments[*].[EnvironmentName, VersionLabel]' --environment-names boost-qa boost-staging --output text
+    aws --region us-east-2 elasticbeanstalk describe-environments --query 'Environments[*].[EnvironmentName, VersionLabel]' --environment-names boost-production --output text
+}

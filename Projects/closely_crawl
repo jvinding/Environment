@@ -1,4 +1,7 @@
-alias crawl_version="$PROJECT_DIR/crawl/scripts/war_versions.sh"
+crawl_version() {
+    aws --region us-east-1 elasticbeanstalk describe-environments --query 'Environments[*].[EnvironmentName, VersionLabel]' --environment-names crawl-qa1 crawl-staging --output text
+    aws --region us-east-2 elasticbeanstalk describe-environments --query 'Environments[*].[EnvironmentName, VersionLabel]' --environment-names crawl-production --output text
+}
 
 crawl() {
     export GRAILS_OPTS="-Duser.timezone=UTC"
