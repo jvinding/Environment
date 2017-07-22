@@ -1,8 +1,8 @@
 {
-    "title": "Change shift key",
+    "title": "QWERTY Dead Keys Mode (Based on https://github.com/ojbucao/Workman/blob/master/mac/screenshots/workman-dead/dead_state_layout.png)",
     "rules": [
         {
-            "description": "QWERTY Dead Keys Mode (Based on https://github.com/ojbucao/Workman/blob/master/mac/screenshots/workman-dead/dead_state_layout.png)",
+            "description": "remap the comma to enable dead keys",
             "manipulators": [
                 {
                     "type": "basic",
@@ -18,10 +18,8 @@
                     },
                     "to": [
                         {
-                            "key_code": "left_shift"
-                        }
-                    ],
-                    "to_after_key_up": [
+                            "key_code": "vk_none"
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -45,9 +43,7 @@
                     "to": [
                         {
                             "key_code": "comma"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -55,7 +51,12 @@
                             }
                         }
                     ]
-                },
+                }
+            ]
+        },
+        {
+            "description": "re-map 4,5,7,8 keys",
+            "manipulators": [
                 {
                     "type": "basic",
                     "conditions": [
@@ -74,9 +75,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -100,9 +99,7 @@
                     "to": [
                         {
                             "key_code": "grave_accent_and_tilde"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -129,9 +126,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -158,9 +153,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -168,8 +161,12 @@
                             }
                         }
                     ]
-                },
-
+                }
+            ]
+        },
+        {
+            "description": "re-map top row",
+            "manipulators": [
                 {
                     "type": "basic",
                     "conditions": [
@@ -188,9 +185,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -217,9 +212,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -246,9 +239,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -275,9 +266,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -304,9 +293,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -333,9 +320,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -362,9 +347,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -388,9 +371,7 @@
                     "to": [
                         {
                             "key_code": "open_bracket"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -414,9 +395,7 @@
                     "to": [
                         {
                             "key_code": "close_bracket"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -443,9 +422,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -453,8 +430,12 @@
                             }
                         }
                     ]
-                },
-
+                }
+            ]
+        },
+        {
+            "description": "re-map home row",
+            "manipulators": [
                 {
                     "type": "basic",
                     "conditions": [
@@ -470,9 +451,7 @@
                     "to": [
                         {
                             "key_code": "slash"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -499,9 +478,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -525,9 +502,7 @@
                     "to": [
                         {
                             "key_code": "equal_sign"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -551,9 +526,7 @@
                     "to": [
                         {
                             "key_code": "0"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -580,9 +553,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -609,9 +580,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -635,9 +604,7 @@
                     "to": [
                         {
                             "key_code": "1"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -664,9 +631,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -693,9 +658,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -719,9 +682,7 @@
                     "to": [
                         {
                             "key_code": "hyphen"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -729,8 +690,12 @@
                             }
                         }
                     ]
-                },
-
+                }
+            ]
+        },
+        {
+            "description": "re-map bottom row",
+            "manipulators": [
                 {
                     "type": "basic",
                     "conditions": [
@@ -746,9 +711,7 @@
                     "to": [
                         {
                             "key_code": "6"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -772,9 +735,7 @@
                     "to": [
                         {
                             "key_code": "7"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -798,9 +759,7 @@
                     "to": [
                         {
                             "key_code": "8"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -824,9 +783,7 @@
                     "to": [
                         {
                             "key_code": "9"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -853,9 +810,7 @@
                             "modifiers": {
                                 "mandatory": "shift"
                             }
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -879,9 +834,7 @@
                     "to": [
                         {
                             "key_code": "backslash"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -905,9 +858,7 @@
                     "to": [
                         {
                             "key_code": "2"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -931,9 +882,7 @@
                     "to": [
                         {
                             "key_code": "3"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -957,9 +906,7 @@
                     "to": [
                         {
                             "key_code": "4"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -983,9 +930,7 @@
                     "to": [
                         {
                             "key_code": "5"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
@@ -993,7 +938,12 @@
                             }
                         }
                     ]
-                },
+                }
+            ]
+        },
+        {
+            "description": "comma then space types comma then space",
+            "manipulators": [
                 {
                     "type": "basic",
                     "conditions": [
@@ -1012,9 +962,7 @@
                         },
                         {
                             "key_code": "spacebar"
-                        }
-                    ],
-                    "to_after_key_up": [
+                        },
                         {
                             "set_variable": {
                                 "name": "qwerty_dead",
