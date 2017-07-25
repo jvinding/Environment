@@ -15,7 +15,25 @@ metadata() {
 
 metadata_run() {
     metadata
-    mvn tomcat7:run -DENVIRONMENT=develop -Dmaven.tomcat.port=7373
+    mvn tomcat7:run -DENVIRONMENT=develop -Dmaven.tomcat.port=7373 -DskipTests=true
+}
+
+
+metadata_rebuild() {
+    metadata
+    local skip_tests=true
+    if [ "-t" == "$1" ]; then
+        skip_tests=false
+    fi
+    mvn clean package -U -DskipTests=${skip_tests}
+}
+
+metadata_super_clean() {
+    metadata
+    rm -rf target/ ~/.m2/repository/com/closely/
+    if [ "-b" == "$1" ]; then
+        metadata_rebuild
+    fi
 }
 
 metadata_version() {

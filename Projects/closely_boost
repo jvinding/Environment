@@ -4,7 +4,11 @@ boost() {
 
 boost_rebuild() {
     boost
-    ./mvnw clean package -U
+    local skip_tests=true
+    if [ "-t" == "$1" ]; then
+        skip_tests=false
+    fi
+    ./mvnw clean package -U -DskipTests=${skip_tests}
 }
 
 boost_super_clean() {
