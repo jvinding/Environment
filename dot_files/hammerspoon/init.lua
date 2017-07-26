@@ -7,30 +7,29 @@ local hyper = {"cmd", "alt", "ctrl", "shift"}
 -- Open Applications
 --
 local apps = {
-  { "1", "1Password 6" },
-  { "A", "Android Studio" },
-  { "B", "Brave" },
-  { "C", "AppCode" },
-  -- { "C", "AppCode-EAP" },
-  { "E", "Messages" },
-  { "G", "Google Chrome" },
-  { "I", "IntelliJ IDEA" },
-  -- { "I", "IntelliJ IDEA-EAP" },
-  { "J",  "Kiwi for Gmail" },
-  -- { "J",  "Postbox" },
-  -- { "J",  "Airmail" },
-  { "K", "Skype" },
-  { "L", "Slack" },
-  { "N", "Navicat Essentials for PostgreSQL" },
-  { "R", "iTerm" },
-  { "S", "Tower" },
-  { "T", "MacVim" },
-  { "X", "Xcode" },
-  -- { "X", "Xcode-beta" },
-  { "Z", "Zeplin" }
+    ['1'] = "1Password 6",
+    A = "Android Studio",
+    B = "Brave",
+    C = "AppCode",
+    -- C = "AppCode-EAP",
+    E = "Messages",
+    G = "Google Chrome",
+    I = "IntelliJ IDEA",
+    -- I = "IntelliJ IDEA-EAP",
+    J =  "Kiwi for Gmail",
+    -- J = "Postbox",
+    -- J = "Airmail",
+    K = "Skype",
+    N = "Navicat Essentials for PostgreSQL",
+    R = "iTerm",
+    S = "Tower",
+    T = "MacVim",
+    X = "Xcode",
+    -- X = "Xcode-beta",
+    Z = "Zeplin"
 }
-for i, app in ipairs(apps) do
-  hotkey.bind(hyper, app[1], function() application.launchOrFocus(app[2]) end)
+for key, app in pairs(apps) do
+  hotkey.bind(hyper, key, function() application.launchOrFocus(app) end)
 end
 
 --
