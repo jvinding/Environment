@@ -66,10 +66,10 @@ alias bottomright corner bottom-right resize:${halfWidth};${halfHeight}
 # =============================================================================
 # Position Binding
 # =============================================================================
-bind right:${hyper}  push right
-bind left:${hyper}   push left
-bind up:${hyper}     push up
-bind down:${hyper}   push down
+## bind right:${hyper}  push right
+## bind left:${hyper}   push left
+## bind up:${hyper}     push up
+## bind down:${hyper}   push down
 
 # window hints
 ## config windowHintsShowIcons true
