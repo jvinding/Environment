@@ -120,25 +120,25 @@ default workLayout resolutions:${mon-laptop};${mon-acd};${mon-thunderbolt}
 # =============================================================================
 # Key Bindings
 # =============================================================================
-bind 1:${hyper} focus '1Password 6'
-bind a:${hyper} focus 'Android Studio'
-bind b:${hyper} focus 'Brave'
-bind c:${hyper} focus ${ide_ios}
-bind e:${hyper} focus 'Messages'
-bind g:${hyper} focus 'Google Chrome'
-bind l:${hyper} focus ${chat}
-bind i:${hyper} focus ${ide_java}
-bind j:${hyper} focus ${email_client}
-bind k:${hyper} focus 'Skype'
+## bind 1:${hyper} focus '1Password 6'
+## bind a:${hyper} focus 'Android Studio'
+## bind b:${hyper} focus 'Brave'
+## bind c:${hyper} focus ${ide_ios}
+## bind e:${hyper} focus 'Messages'
+## bind g:${hyper} focus 'Google Chrome'
+## bind l:${hyper} focus ${chat}
+## bind i:${hyper} focus ${ide_java}
+## bind j:${hyper} focus ${email_client}
+## bind k:${hyper} focus 'Skype'
 ##bind m:${hyper}  minimize window (defined in system settings)
-bind n:${hyper} focus 'Navicat Essentials for PostgreSQL'
-bind r:${hyper} focus ${terminal}
-bind s:${hyper} focus ${git_gui}
-bind t:${hyper} focus ${text_editor}
+## bind n:${hyper} focus 'Navicat Essentials for PostgreSQL'
+## bind r:${hyper} focus ${terminal}
+## bind s:${hyper} focus ${git_gui}
+## bind t:${hyper} focus ${text_editor}
 bind w:${hyper} layout workLayout
-bind x:${hyper} focus 'Xcode'
-bind y:${hyper} focus 'You Need a Budget 4'
-bind z:${hyper} focus 'Zeplin'
+## bind x:${hyper} focus 'Xcode'
+## bind y:${hyper} focus 'You Need a Budget 4'
+## bind z:${hyper} focus 'Zeplin'
 
 #
 config defaultToCurrentScreen true
