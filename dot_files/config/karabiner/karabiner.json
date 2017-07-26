@@ -36,6 +36,12 @@
                                 "to_if_alone": [
                                     {
                                         "key_code": "escape"
+                                    },
+                                    {
+                                        "set_variable": {
+                                            "name": "qwerty_dead",
+                                            "value": 0
+                                        }
                                     }
                                 ],
                                 "type": "basic"
