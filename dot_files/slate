@@ -45,15 +45,15 @@ alias bottomright corner bottom-right resize:${halfWidth};${halfHeight}
 # =============================================================================
 # Size / Position Binding
 # =============================================================================
-bind pad1:${hyper} ${bottomleft}
-bind pad2:${hyper} ${bottomhalf}
-bind pad3:${hyper} ${bottomright}
-bind pad4:${hyper} ${lefthalf}
-bind pad5:${hyper} ${full}
-bind pad6:${hyper} ${righthalf}
-bind pad7:${hyper} ${topleft}
-bind pad8:${hyper} ${tophalf}
-bind pad9:${hyper} ${topright}
+## bind pad1:${hyper} ${bottomleft}
+## bind pad2:${hyper} ${bottomhalf}
+## bind pad3:${hyper} ${bottomright}
+## bind pad4:${hyper} ${lefthalf}
+## bind pad5:${hyper} ${full}
+## bind pad6:${hyper} ${righthalf}
+## bind pad7:${hyper} ${topleft}
+## bind pad8:${hyper} ${tophalf}
+## bind pad9:${hyper} ${topright}
 #bind left:${hyper} ${lefthalf}
 #bind right:${hyper} ${righthalf}
 #bind up:${hyper} ${tophalf}

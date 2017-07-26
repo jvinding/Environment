@@ -34,8 +34,54 @@ hotkey.bind(hyper, 'S', function() application.launchOrFocus("Tower") end)
 hotkey.bind(hyper, 'T', function() application.launchOrFocus("MacVim") end)
 hotkey.bind(hyper, 'X', function() application.launchOrFocus(appIdeApple) end)
 hotkey.bind(hyper, 'Z', function() application.launchOrFocus("Zeplin") end)
-
 --
 -- /Open Applications
 --
 
+--
+-- Window resizing
+--
+function windowResize(x, y)
+  local win = hs.window.focusedWindow()
+  local f = win:frame()
+  local screen = win:screen():frame()
+
+  -- hs.alert.show("Before: {" .. f.x .. "," .. f.y .. "," .. f.w .. "," .. f.h .. "}")
+  if -1 == x then
+      f.x = 0
+      f.w = screen.w / 2
+  elseif 0 == x then
+      f.x = 0
+      f.w = screen.w
+  else
+      f.x = screen.w / 2
+      f.w = screen.w / 2
+  end
+
+  if -1 == y then
+      f.y = 0
+      f.h = screen.h / 2
+  elseif 0 == y then
+      f.y = 0
+      f.h = screen.h
+  else
+      f.y = screen.h / 2
+      f.h = screen.h / 2
+  end
+  -- hs.alert.show("After: {" .. f.x .. "," .. f.y .. "," .. f.w .. "," .. f.h .. "}")
+
+  win:setFrame(f, 0)
+end
+
+hs.hotkey.bind(hyper, "pad1", function() windowResize(-1, 1) end)
+hs.hotkey.bind(hyper, "pad2", function() windowResize(0, 1) end)
+hs.hotkey.bind(hyper, "pad3", function() windowResize(1, 1) end)
+hs.hotkey.bind(hyper, "pad4", function() windowResize(-1, 0) end)
+hs.hotkey.bind(hyper, "pad5", function() windowResize(0, 0) end)
+hs.hotkey.bind(hyper, "pad6", function() windowResize(1, 0) end)
+hs.hotkey.bind(hyper, "pad7", function() windowResize(-1, -1) end)
+hs.hotkey.bind(hyper, "pad8", function() windowResize(0, -1) end)
+hs.hotkey.bind(hyper, "pad9", function() windowResize(1, -1) end)
+--
+-- /Window resizing
+--
