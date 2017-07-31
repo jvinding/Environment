@@ -12,6 +12,7 @@ local apps = {
     -- J = "Postbox",
     -- J = "Airmail",
     K = "Skype",
+    L = "Slack",
     N = "Navicat Essentials for PostgreSQL",
     R = "iTerm",
     S = "Tower",
