@@ -11,12 +11,16 @@ local heightHalf = -1
 local heightFull = 1
 local heightUnchanged = 0
 
+local function logFrame(f, message)
+  print(message .. ": {" .. f.x .. "," .. f.y .. "," .. f.w .. "," .. f.h .. "}")
+end
+
 local function windowResize(x, y, w, h)
   local win = hs.window.focusedWindow()
   local f = win:frame()
   local screen = win:screen():frame()
+  -- logFrame(screen, win:screen():name())
 
-  -- hs.alert.show("Before: {" .. f.x .. "," .. f.y .. "," .. f.w .. "," .. f.h .. "}")
   if -1 == w then
       f.w = screen.w / 2
   elseif 1 == w then
@@ -24,9 +28,9 @@ local function windowResize(x, y, w, h)
   end
 
   if -1 == x then
-      f.x = 0
+      f.x = screen.x
   elseif 1 == x then
-      f.x = screen.w - f.w
+      f.x = screen.x + screen.w - f.w
   end
 
   if -1 == h then
@@ -36,9 +40,9 @@ local function windowResize(x, y, w, h)
   end
 
   if -1 == y then
-      f.y = 0
+      f.y = screen.y
   elseif 1 == y then
-      f.y = screen.h - f.h
+      f.y = screen.y + screen.h - f.h
   end
   -- hs.alert.show("After: {" .. f.x .. "," .. f.y .. "," .. f.w .. "," .. f.h .. "}")
 
