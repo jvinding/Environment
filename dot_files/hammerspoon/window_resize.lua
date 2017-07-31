@@ -44,21 +44,25 @@ local function windowResize(x, y, w, h)
   elseif 1 == y then
       f.y = screen.y + screen.h - f.h
   end
-  -- hs.alert.show("After: {" .. f.x .. "," .. f.y .. "," .. f.w .. "," .. f.h .. "}")
 
   win:setFrame(f, 0)
 end
 
-hs.hotkey.bind(hyper, "pad1", function() windowResize(positionLeft, positionBottom, widthHalf, heightHalf) end)
-hs.hotkey.bind(hyper, "pad2", function() windowResize(positionLeft, positionBottom, widthFull, heightHalf) end)
-hs.hotkey.bind(hyper, "pad3", function() windowResize(positionRight, positionBottom, widthHalf, heightHalf) end)
-hs.hotkey.bind(hyper, "pad4", function() windowResize(positionLeft, positionTop, widthHalf, heightFull) end)
-hs.hotkey.bind(hyper, "pad5", function() windowResize(positionLeft, positionTop, widthFull, heightFull) end)
-hs.hotkey.bind(hyper, "pad6", function() windowResize(positionRight, positionTop, widthHalf, heightFull) end)
-hs.hotkey.bind(hyper, "pad7", function() windowResize(positionLeft, positionTop, widthHalf, heightHalf) end)
-hs.hotkey.bind(hyper, "pad8", function() windowResize(positionLeft, positionTop, widthFull, heightHalf) end)
-hs.hotkey.bind(hyper, "pad9", function() windowResize(positionRight, positionTop, widthHalf, heightHalf) end)
-hs.hotkey.bind(hyper, "Up", function() windowResize(positionUnchanged, positionTop, widthUnchanged, heightUnchanged) end)
-hs.hotkey.bind(hyper, "Right", function() windowResize(positionRight, positionUnchanged, widthUnchanged, heightUnchanged) end)
-hs.hotkey.bind(hyper, "Down", function() windowResize(positionUnchanged, positionBottom, widthUnchanged, heightUnchanged) end)
-hs.hotkey.bind(hyper, "Left", function() windowResize(positionLeft, positionUnchanged, widthUnchanged, heightUnchanged) end)
+local function bind(key, x, y, w, h)
+    hs.hotkey.bind(hyper, key, function() windowResize(x, y, w, h) end)
+end
+
+--   key      x                  y                  w               h
+bind("pad1",  positionLeft,      positionBottom,    widthHalf,      heightHalf)
+bind("pad2",  positionLeft,      positionBottom,    widthFull,      heightHalf)
+bind("pad3",  positionRight,     positionBottom,    widthHalf,      heightHalf)
+bind("pad4",  positionLeft,      positionTop,       widthHalf,      heightFull)
+bind("pad5",  positionLeft,      positionTop,       widthFull,      heightFull)
+bind("pad6",  positionRight,     positionTop,       widthHalf,      heightFull)
+bind("pad7",  positionLeft,      positionTop,       widthHalf,      heightHalf)
+bind("pad8",  positionLeft,      positionTop,       widthFull,      heightHalf)
+bind("pad9",  positionRight,     positionTop,       widthHalf,      heightHalf)
+bind("Up",    positionUnchanged, positionTop,       widthUnchanged, heightUnchanged)
+bind("Right", positionRight,     positionUnchanged, widthUnchanged, heightUnchanged)
+bind("Down",  positionUnchanged, positionBottom,    widthUnchanged, heightUnchanged)
+bind("Left",  positionLeft,      positionUnchanged, widthUnchanged, heightUnchanged)
