@@ -29,7 +29,7 @@ local function mouseHighlight()
     end
     local mousepoint = hs.mouse.getAbsolutePosition()
     for _, divisor in ipairs({1, 2, 4}) do
-        hs.timer.doAfter(.3 * divisor, function()
+        hs.timer.doAfter(.1 * divisor, function()
             local circle = drawMouseCircle(mousepoint.x, mousepoint.y, size / divisor, getColor(1, 0, 0, 1), stroke / divisor)
             local timer = hs.timer.doAfter(1, function() circle:delete(); mouseTimers.remove(circle) end)
             mouseTimers[circle] = timer
