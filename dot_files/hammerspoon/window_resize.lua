@@ -4,7 +4,9 @@ local positionLeft = -1
 local positionRight = 1
 local positionUnchanged = 0
 
-local sizeHalf = -1
+local sizeThird = 3
+local sizeHalf = 2
+local sizeTwoThirds = 6
 local sizeFull = 1
 local sizeUnchanged = 0
 
@@ -18,8 +20,12 @@ local function windowResize(x, y, w, h)
   local screen = win:screen():frame()
   -- logFrame(screen, win:screen():name())
 
-  if sizeHalf == w then
+  if sizeThird == w then
+      f.w = screen.w / 3
+  elseif sizeHalf == w then
       f.w = screen.w / 2
+  elseif sizeTwoThirds == w then
+      f.w = 2 * screen.w / 3
   elseif sizeFull == w then
       f.w = screen.w
   end
@@ -30,8 +36,16 @@ local function windowResize(x, y, w, h)
       f.x = screen.x + screen.w - f.w
   end
 
-  if sizeHalf == h then
+  if f.x2 > screen.x2 then
+      f.x = f.x - (f.x2 - screen.x2)
+  end
+
+  if sizeThird == h then
+      f.h = screen.h / 3
+  elseif sizeHalf == h then
       f.h = screen.h / 2
+  elseif sizeTwoThirds == h then
+      f.h = 2 * screen.h / 3
   elseif sizeFull == h then
       f.h = screen.h
   end
@@ -42,6 +56,10 @@ local function windowResize(x, y, w, h)
       f.y = screen.y + screen.h - f.h
   end
 
+  if f.y2 > screen.y2 then
+      f.y = f.y - (f.y2 - screen.y2)
+  end
+
   win:setFrame(f, 0)
 end
 
@@ -49,6 +67,7 @@ local function bind(key, x, y, w, h)
     hs.hotkey.bind(hyper, key, function() windowResize(x, y, w, h) end)
 end
 
+-- Do not Bind / as it does the mac os sysdiag thing -- "pad/"
 --   key      x                  y                  w               h
 bind("pad1",  positionLeft,      positionBottom,    sizeHalf,      sizeHalf)
 bind("pad2",  positionLeft,      positionBottom,    sizeFull,      sizeHalf)
@@ -63,4 +82,7 @@ bind("Up",    positionUnchanged, positionTop,       sizeUnchanged, sizeUnchanged
 bind("Right", positionRight,     positionUnchanged, sizeUnchanged, sizeUnchanged)
 bind("Down",  positionUnchanged, positionBottom,    sizeUnchanged, sizeUnchanged)
 bind("Left",  positionLeft,      positionUnchanged, sizeUnchanged, sizeUnchanged)
-bind("pad/",  positionUnchanged, positionUnchanged, sizeUnchanged, sizeUnchanged)
+bind("pad*",  positionUnchanged, positionUnchanged, sizeThird,     sizeUnchanged)
+bind("pad-",  positionUnchanged, positionUnchanged, sizeTwoThirds, sizeUnchanged)
+bind("pad+",  positionUnchanged, positionUnchanged, sizeUnchanged, sizeThird)
+bind("padenter",  positionUnchanged, positionUnchanged, sizeUnchanged, sizeTwoThirds)
