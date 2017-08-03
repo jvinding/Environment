@@ -4,12 +4,9 @@ local positionLeft = -1
 local positionRight = 1
 local positionUnchanged = 0
 
-local widthHalf = -1
-local widthFull = 1
-local widthUnchanged = 0
-local heightHalf = -1
-local heightFull = 1
-local heightUnchanged = 0
+local sizeHalf = -1
+local sizeFull = 1
+local sizeUnchanged = 0
 
 local function logFrame(f, message)
   print(message .. ": {" .. f.x .. "," .. f.y .. "," .. f.w .. "," .. f.h .. "}")
@@ -21,27 +18,27 @@ local function windowResize(x, y, w, h)
   local screen = win:screen():frame()
   -- logFrame(screen, win:screen():name())
 
-  if -1 == w then
+  if sizeHalf == w then
       f.w = screen.w / 2
-  elseif 1 == w then
+  elseif sizeFull == w then
       f.w = screen.w
   end
 
-  if -1 == x then
+  if positionLeft == x then
       f.x = screen.x
-  elseif 1 == x then
+  elseif positionRight == x then
       f.x = screen.x + screen.w - f.w
   end
 
-  if -1 == h then
+  if sizeHalf == h then
       f.h = screen.h / 2
-  elseif 1 == h then
+  elseif sizeFull == h then
       f.h = screen.h
   end
 
-  if -1 == y then
+  if positionTop == y then
       f.y = screen.y
-  elseif 1 == y then
+  elseif positionBottom == y then
       f.y = screen.y + screen.h - f.h
   end
 
@@ -53,16 +50,17 @@ local function bind(key, x, y, w, h)
 end
 
 --   key      x                  y                  w               h
-bind("pad1",  positionLeft,      positionBottom,    widthHalf,      heightHalf)
-bind("pad2",  positionLeft,      positionBottom,    widthFull,      heightHalf)
-bind("pad3",  positionRight,     positionBottom,    widthHalf,      heightHalf)
-bind("pad4",  positionLeft,      positionTop,       widthHalf,      heightFull)
-bind("pad5",  positionLeft,      positionTop,       widthFull,      heightFull)
-bind("pad6",  positionRight,     positionTop,       widthHalf,      heightFull)
-bind("pad7",  positionLeft,      positionTop,       widthHalf,      heightHalf)
-bind("pad8",  positionLeft,      positionTop,       widthFull,      heightHalf)
-bind("pad9",  positionRight,     positionTop,       widthHalf,      heightHalf)
-bind("Up",    positionUnchanged, positionTop,       widthUnchanged, heightUnchanged)
-bind("Right", positionRight,     positionUnchanged, widthUnchanged, heightUnchanged)
-bind("Down",  positionUnchanged, positionBottom,    widthUnchanged, heightUnchanged)
-bind("Left",  positionLeft,      positionUnchanged, widthUnchanged, heightUnchanged)
+bind("pad1",  positionLeft,      positionBottom,    sizeHalf,      sizeHalf)
+bind("pad2",  positionLeft,      positionBottom,    sizeFull,      sizeHalf)
+bind("pad3",  positionRight,     positionBottom,    sizeHalf,      sizeHalf)
+bind("pad4",  positionLeft,      positionTop,       sizeHalf,      sizeFull)
+bind("pad5",  positionLeft,      positionTop,       sizeFull,      sizeFull)
+bind("pad6",  positionRight,     positionTop,       sizeHalf,      sizeFull)
+bind("pad7",  positionLeft,      positionTop,       sizeHalf,      sizeHalf)
+bind("pad8",  positionLeft,      positionTop,       sizeFull,      sizeHalf)
+bind("pad9",  positionRight,     positionTop,       sizeHalf,      sizeHalf)
+bind("Up",    positionUnchanged, positionTop,       sizeUnchanged, sizeUnchanged)
+bind("Right", positionRight,     positionUnchanged, sizeUnchanged, sizeUnchanged)
+bind("Down",  positionUnchanged, positionBottom,    sizeUnchanged, sizeUnchanged)
+bind("Left",  positionLeft,      positionUnchanged, sizeUnchanged, sizeUnchanged)
+bind("pad/",  positionUnchanged, positionUnchanged, sizeUnchanged, sizeUnchanged)
