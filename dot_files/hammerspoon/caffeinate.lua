@@ -2,17 +2,27 @@
 local caffeine = hs.menubar.new()
 local caffeineTimer = nil
 
-local function updateDisplay()
+local function getStatusString()
+    local string
     if hs.caffeinate.get("displayIdle") then
-        caffeine:setIcon("caffeine-on.pdf")
         if caffeineTimer then
-            caffeine:setTooltip(os.date("Active until %X", os.time() + math.floor(caffeineTimer:nextTrigger())))
+            string = os.date("Active until %X", os.time() + math.floor(caffeineTimer:nextTrigger()))
         else
-            caffeine:setTooltip("Active until disabled")
+            string = "Active until disabled"
         end
     else
+        string = "Inactive"
+    end
+
+    return string
+end
+
+local function updateDisplay()
+    caffeine:setTooltip(getStatusString())
+    if hs.caffeinate.get("displayIdle") then
+        caffeine:setIcon("caffeine-on.pdf")
+    else
         caffeine:setIcon("caffeine-off.pdf")
-        caffeine:setTooltip("Inactive")
     end
 end
 
@@ -41,6 +51,7 @@ local function caffeineClicked(event)
     else
         caffeineTimer = nil
     end
+    hs.alert.show(getStatusString())
     updateDisplay()
 end
 
