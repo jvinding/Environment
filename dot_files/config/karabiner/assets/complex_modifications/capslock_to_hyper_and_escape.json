@@ -1,5 +1,5 @@
 {
-    "title": "caps_lock magic",
+    "title": "caps_lock to Hyper or Escape, shift+caps_lock = caps_lock",
     "rules": [
         {
             "description": "Hyper or Escape",
@@ -10,7 +10,11 @@
                         "key_code": "caps_lock",
                         "modifiers": {
                             "optional": [
-                                "any"
+                                "command",
+                                "control",
+                                "option",
+                                "fn",
+                                "caps_lock"
                             ]
                         }
                     },
@@ -29,28 +33,17 @@
                             "key_code": "escape"
                         }
                     ]
-                }
-            ]
-        },
-        {
-            "description": "Change right_shift to caps_lock if alone.",
-            "manipulators": [
+                },
                 {
                     "type": "basic",
                     "from": {
-                        "key_code": "right_shift",
+                        "key_code": "caps_lock",
                         "modifiers": {
-                            "optional": [
-                                "any"
-                            ]
+                            "mandatory": ["shift"],
+                            "optional": ["any"]
                         }
                     },
                     "to": [
-                        {
-                            "key_code": "right_shift"
-                        }
-                    ],
-                    "to_if_alone": [
                         {
                             "key_code": "caps_lock"
                         }
