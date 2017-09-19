@@ -4,6 +4,8 @@ FAILING_TEST=${1:-""}
 FILE=${2:-"target/test-reports/TESTS-TestSuites.xml"}
 GRAILSW="./grailsw"
 TEST_COMMAND="${GRAILSW} test-app -integration"
+LOGFILE="${PWD}/$(basename $0)"
+LOGFILE="${LOGFILE%%.*}.log"
 
 usage() {
     echo "Usage: $0 <Failing Test> [path/to/TESTS-TestSuites.xml]" >&2
@@ -43,12 +45,12 @@ fi
 
 log_info() {
     echo "INFO: $@"
-    echo "INFO: $@" >> "${0}.log"
+    echo "INFO: $@" >> "${LOGFILE}"
 }
 
 log_error() {
     echo "ERROR: $@" >&2
-    echo "ERROR: $@" >> "${0}.log"
+    echo "ERROR: $@" >> "${LOGFILE}"
 }
 
 is_test_failing() {
