@@ -23,6 +23,7 @@ api_run() {
     fi
 
     ./grailsw $reloading run-app \
+                      --https \
                       -Duser.timezone=UTC \
                       -Xms700m \
                       -XX:MaxPermSize=384m \
