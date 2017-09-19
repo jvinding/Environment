@@ -54,10 +54,7 @@ log_error() {
 }
 
 is_test_failing() {
-    ## TODO: determine this from the XML
-    echo -n "Did the test fail (Y/n)? "
-    read -n 1 is_failing
-    [ -z "${is_failing}" ] || [ "y" = "${is_failing}" ] || [ "Y" = "${is_failing}" ]
+    grep -e '\(errors\|failures\)="[^0]' "${FILE}" | fgrep -q name='"'"${FAILING_TEST}"'"'
 }
 
 run_tests() {
