@@ -7,6 +7,11 @@ pfw_run() {
     gulp serve
 }
 
+pfw_run_https() {
+    pfw
+    gulp serve:https
+}
+
 pfw_version() {
     aws --region us-east-1 elasticbeanstalk describe-environments --query 'Environments[*].[EnvironmentName, VersionLabel]' --environment-names perchweb-qa perchweb-staging --output text
     aws --region us-east-2 elasticbeanstalk describe-environments --query 'Environments[*].[EnvironmentName, VersionLabel]' --environment-names perchweb-production --output text
