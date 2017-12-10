@@ -78,9 +78,9 @@ alias asdf="setxkbmap us; xmodmap ~/colemak/xmodmap/xmodmap.colemak && xset r 66
 #
 # find aliases
 #
-alias ff="find . -type f -name"
+alias ff="find . -type f"
 fe() { find . -name '*'$1'*' -exec $2 {} \; ; }
-fg() { find . -type d -name '.git' -prune -o -type f -name "$1" -exec grep "$2" '{}' /dev/null \; ; }
+fg() { find . -type f -name "$1" -exec grep "$2" {} /dev/null \; ; }
 
 #
 # other aliases
@@ -100,7 +100,11 @@ skip_lines() {
 ################################# end aliases #################################
 
 #
-# run per-machine commands that must be run at the end of .bashrc (eg: for gvm)
+# run per-plugin commands that must be run at the end of .bashrc
 #
 plugin_source_post_rc
+
+#
+# run per-machine commands that must be run at the end of .bashrc (eg: for sdkman)
+#
 [ -f ~/Environment/Machines/${HOSTNAME}.post_rc ] && . ~/Environment/Machines/${HOSTNAME}.post_rc
