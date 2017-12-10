@@ -1,0 +1,56 @@
+ . ~/Environment/admin
+
+export ANDROID_HOME=/Users/Shared/android-sdk-macosx
+
+export SERVERPATH=""
+
+export JAVA_HOME=`/usr/libexec/java_home`
+
+export CDPATH=.:~:~/Projects
+
+export PGDATA=/usr/local/var/postgres
+
+export GEM_HOME=$HOME/.gem
+
+PLUGINS=(git git_flow java ssh android ssh-agent postgresql z sdkman ios_dev)
+
+safe_source ~/Environment/mac_shortcuts
+
+alias agnt="ag --ignore-dir=test"
+
+alias wifi_ip='ifconfig en0 | grep "\<inet\>" | awk "{print \$2}"'
+copy_wifi_ip() {
+    local ip=$(wifi_ip)
+    echo $ip | tr -d '[:space:]' | pbcopy
+    echo "Copied '${ip}' to the clipboard"
+}
+
+export PROJECT_DIR=$HOME/Projects
+safe_source $PROJECT_DIR/closely-common-scripts/bash/project-aliases
+safe_source $PROJECT_DIR/closely-common-scripts/bash/ssh-aliases
+safe_source $PROJECT_DIR/closely-common-scripts/bash/db-aliases
+
+safe_source ~/Environment/Projects/closely_api
+safe_source ~/Environment/Projects/closely_promote
+safe_source ~/Environment/Projects/closely_perch
+safe_source ~/Environment/Projects/closely_crawl
+safe_source ~/Environment/Projects/closely_metadata
+safe_source ~/Environment/Projects/closely_pfw
+safe_source ~/Environment/Projects/closely_boost
+
+safe_source $ENVIRONMENT_DIR/Secrets/nagios_creds
+
+pui() {
+    ssh bucket1 "jvinding/user_info.sh $@" | pbcopy
+    echo "Info copied to pastboard"
+}
+
+pwl() {
+    ssh bucket1 "jvinding/watchlist.sh $@" | pbcopy
+    echo "Info copied to pastboard"
+}
+
+psv() {
+    ssh bucket1 "jvinding/selected_venue.sh $@" | pbcopy
+    echo "Info copied to pastboard"
+}
