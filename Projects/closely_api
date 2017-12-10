@@ -20,17 +20,30 @@ api_run() {
     local reloading=
     if [ "-r" == "$1" ]; then
         reloading="-reloading"
+        shift
     fi
 
-    ./grailsw $reloading run-app \
-                      --https \
-                      -Duser.timezone=UTC \
-                      -Xms700m \
-                      -XX:MaxPermSize=384m \
-                      -DgitBranch=develop \
-                      -Dgrails.project.work.dir=${WORKDIR}\
-                      -Xmx2824m \
-                      -Dserver.port=8081
+    local environment=development
+    if [ "-e" = "$1" ] && [ -n "$2" ]; then
+        if [ "staging" = "$2" ] || [ "qa" = "$2" ] || [ "production" = "$2" ]; then
+            environment=$2
+        else
+            echo "invalid environment: '$2'" >&2
+            return 1
+        fi
+    fi
+
+    ./grailsw $reloading \
+              -Dgrails.env=${environment} \
+              run-app \
+              --https \
+              -Duser.timezone=UTC \
+              -Xms700m \
+              -XX:MaxPermSize=384m \
+              -DgitBranch=develop \
+              -Dgrails.project.work.dir=${WORKDIR}\
+              -Xmx2824m \
+              -Dserver.port=8081
 }
 
 api_rebuild() {
