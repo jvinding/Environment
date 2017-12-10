@@ -19,6 +19,10 @@ ssh_tunnel_close() {
     pkill -f "$command"
 }
 
+ssh_tunnel_close_all() {
+    pkill -f 'ssh -f -L'
+}
+
 ssh_tunnel_list() {
     IFS=$'\n'
     for proc in $(ps -afe | fgrep "ssh -f -L" | fgrep -v fgrep); do
