@@ -1,0 +1,120 @@
+{
+    "title": "Symbol mode - provides easy access to symbols frequently used in programming",
+    "rules": [
+        {
+            "description": "Enable symbols on the right hand",
+            "manipulators": [
+                {
+                    "type": "basic",
+                    "from": {
+                        "key_code": "f"
+                    },
+                    "to_if_alone":
+                    [
+                        {
+                            "key_code": "f"
+                        }
+                    ],
+                    "to": [
+                        {
+                            "key_code": "vk_none"
+                        },
+                        {
+                            "set_variable": {
+                                "name": "right_hand_symbols_enabled",
+                                "value": 1
+                            }
+                        }
+                    ],
+                    "to_after_key_up": [
+                        {
+                            "set_variable": {
+                                "name": "right_hand_symbols_enabled",
+                                "value": 0
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "right_hand_symbols_enabled",
+                            "value": 1
+                        }
+                    ],
+                    "from": {
+                        "key_code": "j"
+                    },
+                    "to": [
+                        {
+                            "key_code": "9",
+                            "modifiers": {
+                                "mandatory": "shift"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "right_hand_symbols_enabled",
+                            "value": 1
+                        }
+                    ],
+                    "from": {
+                        "key_code": "k"
+                    },
+                    "to": [
+                        {
+                            "key_code": "0",
+                            "modifiers": {
+                                "mandatory": "shift"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "right_hand_symbols_enabled",
+                            "value": 1
+                        }
+                    ],
+                    "from": {
+                        "key_code": "u"
+                    },
+                    "to": [
+                        {
+                            "key_code": "open_bracket"
+                        }
+                    ]
+                },
+                {
+                    "type": "basic",
+                    "conditions": [
+                        {
+                            "type": "variable_if",
+                            "name": "right_hand_symbols_enabled",
+                            "value": 1
+                        }
+                    ],
+                    "from": {
+                        "key_code": "i"
+                    },
+                    "to": [
+                        {
+                            "key_code": "close_bracket"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
