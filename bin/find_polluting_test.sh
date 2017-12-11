@@ -1,14 +1,9 @@
 #!/bin/bash -euo pipefail
 
-FAILING_TEST=${1:-""}
-FILE=${2:-"target/test-reports/TESTS-TestSuites.xml"}
-GRAILSW="./grailsw"
-TEST_COMMAND="${GRAILSW} test-app -integration"
-LOGFILE="${PWD}/$(basename $0)"
-LOGFILE="${LOGFILE%%.*}.log"
-
 usage() {
-    echo "Usage: $0 <Failing Test> [path/to/TESTS-TestSuites.xml]" >&2
+    echo "Usage: $0 [-u] [-i] <Failing Test> [path/to/TESTS-TestSuites.xml]" >&2
+    echo "       -u: unit tests only" >&2
+    echo "       -i: integration tests only" >&2
 }
 
 indexOf() {
@@ -25,23 +20,6 @@ indexOf() {
 
     echo -n $index
 }
-
-if [ -z "${FAILING_TEST}" ]; then
-    usage
-    exit 1
-fi
-
-if ! [ -f "${FILE}" ]; then
-    echo "Not a file: '${FILE}'" >&2
-    usage
-    exit 1
-fi
-
-if ! [ -x "${GRAILSW}" ]; then
-    echo "must be run from the grails project root: '${FILE}'" >&2
-    usage
-    exit 1
-fi
 
 log_info() {
     echo "INFO: $@"
@@ -113,6 +91,51 @@ split_then_run_tests() {
         fi
     fi
 }
+
+TEST_TYPES=""
+
+while getopts "ui?" opt; do
+    case $opt in
+        u)
+            TEST_TYPES="${TEST_TYPES} -unit"
+            ;;
+        i)
+            TEST_TYPES="${TEST_TYPES} -integration"
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+if [ -n "${TEST_TYPES}" ]; then
+    TEST_TYPES="-unit -integration"
+fi
+
+FAILING_TEST=${1:-""}
+FILE=${2:-"target/test-reports/TESTS-TestSuites.xml"}
+GRAILSW="./grailsw"
+TEST_COMMAND="${GRAILSW} test-app -integration"
+LOGFILE="${PWD}/$(basename $0)"
+LOGFILE="${LOGFILE%%.*}.log"
+
+if [ -z "${FAILING_TEST}" ]; then
+    usage
+    exit 1
+fi
+
+if ! [ -f "${FILE}" ]; then
+    echo "Not a file: '${FILE}'" >&2
+    usage
+    exit 1
+fi
+
+if ! [ -x "${GRAILSW}" ]; then
+    echo "must be run from the grails project root: '${FILE}'" >&2
+    usage
+    exit 1
+fi
 
 TESTS=($(grep -o '<testsuite .*\<name="[^"]\+"' "${FILE}" | sed -e's/.* name="\([^"]*\)".*/\1/' | tr '\n' ' '))
 echo "Tests: (${TESTS[@]})" > "${0}.log"
