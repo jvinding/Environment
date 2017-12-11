@@ -34,3 +34,6 @@
 [submodule "submodules/powerline"]
 	path = submodules/powerline
 	url = git://github.com/powerline/powerline.git
+[submodule "dot_files/vim/bundle/vim-airline-themes"]
+	path = dot_files/vim/bundle/vim-airline-themes
+	url = git://github.com/vim-airline/vim-airline-themes.git
