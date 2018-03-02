@@ -1,3 +1,7 @@
+perch() {
+    cd $PROJECT_DIR/perch-ios
+}
+
 perch_uninstall() {
   for device in $(adb_device_serial_numbers); do
     echo "$device:"
@@ -13,6 +17,14 @@ perch_db() {
   local serial_no=$1
   android_db_locked com.closely.perch perch.db $serial_no
   ## adb $* pull /data/data/com.closely.perch.debug/databases/perch.db .
+}
+
+perch_super_clean() {
+    perch
+    for s in PerchQA Perch 'Perch Staging'; do
+        xcodebuild -scheme "$s" clean
+    done
+    rm -rf "${HOME}/Library/Developer/Xcode/DerivedData/*"
 }
 
 alias perch_log_levels="android_log_level '${HOME}/Projects/perch/PerchAndroid/Perch/src/main/java/com/closely'"
