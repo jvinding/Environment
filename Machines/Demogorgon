@@ -1,4 +1,4 @@
- . ~/Environment/admin
+. ${ENVIRONMENT_DIR}/admin
 
 export ANDROID_HOME=/Users/Shared/android-sdk-macosx
 
@@ -12,9 +12,9 @@ export PGDATA=/usr/local/var/postgres
 
 export GEM_HOME=$HOME/.gem
 
-PLUGINS=(git git_flow java ssh android ssh-agent postgresql z sdkman ios_dev)
+PLUGINS=(git git_flow java ssh android ssh-agent z sdkman ios_dev)
 
-safe_source ~/Environment/mac_shortcuts
+safe_source ${ENVIRONMENT_DIR}/mac_shortcuts
 
 alias agnt="ag --ignore-dir=test"
 
@@ -30,13 +30,16 @@ safe_source $PROJECT_DIR/closely-common-scripts/bash/project-aliases
 safe_source $PROJECT_DIR/closely-common-scripts/bash/ssh-aliases
 safe_source $PROJECT_DIR/closely-common-scripts/bash/db-aliases
 
-safe_source ~/Environment/Projects/closely_api
-safe_source ~/Environment/Projects/closely_promote
-safe_source ~/Environment/Projects/closely_perch
-safe_source ~/Environment/Projects/closely_crawl
-safe_source ~/Environment/Projects/closely_metadata
-safe_source ~/Environment/Projects/closely_pfw
-safe_source ~/Environment/Projects/closely_boost
+environment_require_lib projects
+projects_load \
+    closely_api \
+    closely_promote \
+    closely_perch \
+    closely_crawl \
+    closely_metadata \
+    closely_pfw \
+    closely_boost \
+    closely_inbox
 
 safe_source $ENVIRONMENT_DIR/Secrets/nagios_creds
 

@@ -1,0 +1,8 @@
+ENVIRONMENT_PROJECTS_DIR=${ENVIRONMENT_DIR}/projects
+
+projects_load() {
+    while [ -n "$1" ]; do
+        safe_source "${ENVIRONMENT_PROJECTS_DIR}/$1"
+        shift
+    done
+}
