@@ -1,0 +1,25 @@
+inbox() {
+    cd $PROJECT_DIR/inbox
+}
+
+inbox_rebuild() {
+    inbox
+    local skip_tests=true
+    if [ "-t" == "$1" ]; then
+        skip_tests=false
+    fi
+    ./mvnw clean package -U -DskipTests=${skip_tests}
+}
+
+inbox_super_clean() {
+    inbox
+    rm -rf target/ ~/.m2/repository/com/closely/
+    if [ "-b" == "$1" ]; then
+        inbox_rebuild
+    fi
+}
+
+inbox_run() {
+    inbox
+    ./mvnw spring-boot:run -Drun.jvmArguments="-Dserver.port=8737"
+}
