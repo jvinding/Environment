@@ -7,6 +7,16 @@ export ENVIRONMENT_DIR=~/Environment
 #
 ################################## end globals #################################
 
+#################################### helpers ###################################
+#
+#
+environment_require_lib() {
+    safe_source ${ENVIRONMENT_DIR}/lib/$1
+}
+#
+#
+#################################### helpers ###################################
+
 ################################ set shell opts ################################
 #
 #
@@ -44,7 +54,8 @@ export HOSTNAME=${HOSTNAME%%.*}
 ################################ source plugins ################################
 #
 #
-source $ENVIRONMENT_DIR/lib/plugin
+
+environment_require_lib plugin
 if [ ${#PLUGINS[@]} -gt 0 ]; then
     plugin_source_all
 fi
