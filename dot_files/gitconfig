@@ -22,7 +22,7 @@
     su = stash save --include-untracked
     sl = stash list
     ss = stash show -u
-    poop = stash pop
+    spop = stash pop
     merge-no-space = merge -Xignore-space-change
     mf = merge --ff-only
     changes = whatchanged -p
