@@ -22,8 +22,10 @@ perch_db() {
 perch_super_clean() {
     perch
     for s in PerchQA Perch 'Perch Staging'; do
-        xcodebuild -scheme "$s" clean
+        xcodebuild -workspace Perch.xcworkspace -scheme "$s" clean
     done
+    ## xcodebuild -alltargets clean
+    rm -rf build
     rm -rf "${HOME}/Library/Developer/Xcode/DerivedData/*"
 }
 
