@@ -47,6 +47,7 @@
     checkout-whitespace-only-files = !"git list-whitespace-only-files | sed -e 's/\\(.*\\)/\"\\1\"/' | xargs git checkout HEAD --"
     unstage = reset HEAD
     permission-reset = !git diff -p -R | grep -E \"^(diff|(old|new) mode)\" | git apply
+    hash = rev-parse HEAD
 [core]
     excludesfile = /Users/jvinding/.gitignore
     autocrlf = input
