@@ -27,6 +27,12 @@ perch_super_clean() {
     ## xcodebuild -alltargets clean
     rm -rf build
     rm -rf "${HOME}/Library/Developer/Xcode/DerivedData/*"
+    if [ "-d" = "$1" ]; then
+        echo "Super-Duper Cleaning Mode Activated!"
+        rm -rf Pods
+        bin/setup.sh
+        pod install
+    fi
 }
 
 alias perch_log_levels="android_log_level '${HOME}/Projects/perch/PerchAndroid/Perch/src/main/java/com/closely'"
