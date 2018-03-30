@@ -7,3 +7,11 @@ ios_running_simulator_log() {
 
 ## xcrun simctl spawn booted log stream --predicate 'processImagePath endswith "PerchQA"'
 ## xcrun simctl spawn booted log stream --predicate 'eventMessage contains "error" and messageType == info'
+
+ios_stop_all_simulators() {
+    xcrun simctl shutdown all
+}
+
+ios_reset_all_simulators() {
+    ios_stop_all_simulators && xcrun simctl erase all
+}
