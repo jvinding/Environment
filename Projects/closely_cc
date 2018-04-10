@@ -1,0 +1,8 @@
+cc() {
+    cd $PROJECT_DIR/closely-common
+}
+
+cc_rebuild() {
+    cc
+    ./grailsw clean && ./grailsw compile --refresh-dependencies --stacktrace
+}

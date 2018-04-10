@@ -39,7 +39,9 @@ projects_load \
     closely_metadata \
     closely_pfw \
     closely_boost \
-    closely_inbox
+    closely_inbox \
+    closely_cc \
+    closely_mc
 
 safe_source $ENVIRONMENT_DIR/Secrets/nagios_creds
 
