@@ -1,7 +1,7 @@
-VM=default
+docker run --rm --privileged alpine hwclock -s
+
 ENV=dev && \
-DOCKER_HOME=$HOME && \
-docker rm -fv activemq_$ENV && \
+docker rm -fv activemq_$ENV
 rm -rf ${HOME}/activemq_${ENV}/data && \
 mkdir -p ${HOME}/activemq_${ENV}/data && \
 chmod 777 ${HOME}/activemq_${ENV}/data && \
@@ -10,5 +10,5 @@ docker run -d \
            --name=activemq_${ENV} \
            -p 61616:61616 \
            -p 8162:8162 \
-           -v ${DOCKER_HOME}/activemq_${ENV}/data:/opt/apache-activemq-5.10.0/data:rw \
+           -v ${HOME}/activemq_${ENV}/data:/opt/apache-activemq-5.10.0/data:rw \
            activemq
