@@ -1,51 +1,5 @@
-VM=default
-DOCKER_MACHINE=/usr/local/bin/docker-machine
-VBOXMANAGE=/Applications/VirtualBox.app/Contents/MacOS/VBoxManage
-
-docker_env() {
-    if docker_is_running; then
-        eval "$(docker-machine env --shell=bash $VM)"
-    else
-        for s in $(env | grep '^DOCKER_' | cut -d '=' -f1); do
-            unset $s
-        done
-    fi
-}
-
-__docker_create_machine() {
-    if ! $VBOXMANAGE showvminfo $VM > /dev/null; then
-        $DOCKER_MACHINE rm -f $VM > /dev/null
-        rm -rf ~/.docker/machine/machines/$VM
-        $DOCKER_MACHINE create -d virtualbox --virtualbox-memory 2048 --virtualbox-disk-size 204800 $VM
-    fi
-}
-
-__docker_start() {
-    __docker_create_machine
-    $DOCKER_MACHINE start $VM && docker_env
-    yes | $DOCKER_MACHINE regenerate-certs $VM
-}
-
-docker_stop() {
-    $DOCKER_MACHINE stop $VM && docker_env
-}
-
-__docker_update_vm_time() {
-    $DOCKER_MACHINE ssh $VM sudo ntpclient -s -h pool.ntp.org > /dev/null || echo "failed to update time in virtual machine" >&2
-}
-
-docker_ensure() {
-    if ! docker_is_running; then
-        __docker_start
-        __docker_update_vm_time
-    else
-        docker_env
-        __docker_update_vm_time
-    fi
-}
-
-docker_is_running() {
-    [ "Running" == "$($DOCKER_MACHINE status $VM 2> /dev/null)" ]
+docker_update_vm_time() {
+    docker run --rm --privileged alpine hwclock -s
 }
 
 docker_kill_all() {
@@ -67,8 +21,3 @@ docker_images_rm_all() {
 docker_images_rm_orphans() {
     docker rmi $(docker images -f "dangling=true" -q)
 }
-
-if docker_is_running; then
-    docker_env
-fi
-
