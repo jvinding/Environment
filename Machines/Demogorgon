@@ -12,7 +12,7 @@ export PGDATA=/usr/local/var/postgres
 
 export GEM_HOME=$HOME/.gem
 
-PLUGINS=(git git_flow java ssh android ssh-agent z sdkman ios_dev)
+PLUGINS=(git git_flow java ssh android ssh-agent z sdkman ios_dev docker)
 
 safe_source ${ENVIRONMENT_DIR}/mac_shortcuts
 
