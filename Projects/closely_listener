@@ -1,0 +1,29 @@
+listener() {
+    cd $PROJECT_DIR/listener
+}
+
+listener_rebuild() {
+    listener
+    local skip_tests=true
+    if [ "-t" == "$1" ]; then
+        skip_tests=false
+    fi
+    ./mvnw clean package -U -DskipTests=${skip_tests}
+}
+
+listener_super_clean() {
+    listener
+    rm -rf target/ ~/.m2/repository/com/closely/
+    if [ "-b" == "$1" ]; then
+        listener_rebuild
+    fi
+}
+
+listener_run() {
+    listener
+    if [ -z "${AMQ_PASSWORD}" ]; then
+        echo "you must set the AMQ_PASSWORD environmental variable" >&2
+    else
+        ./mvnw -Dspring.profiles.active=development spring-boot:run
+    fi
+}

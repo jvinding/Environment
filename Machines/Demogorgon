@@ -41,9 +41,8 @@ projects_load \
     closely_boost \
     closely_inbox \
     closely_cc \
-    closely_mc
-
-safe_source $ENVIRONMENT_DIR/Secrets/nagios_creds
+    closely_mc \
+    closely_listener
 
 pui() {
     ssh bucket1 "jvinding/user_info.sh $@" | pbcopy
