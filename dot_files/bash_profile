@@ -51,10 +51,20 @@ export HOSTNAME=${HOSTNAME%%.*}
 ##################### end source server specific settings  #####################
 
 
+################################ source secrets ################################
+#
+#
+environment_require_lib secrets
+if [ ${#SECRETS[@]} -gt 0 ]; then
+    secret_source_all
+fi
+#
+#
+############################## end source secrets ##############################
+
 ################################ source plugins ################################
 #
 #
-
 environment_require_lib plugin
 if [ ${#PLUGINS[@]} -gt 0 ]; then
     plugin_source_all
