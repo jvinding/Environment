@@ -13,6 +13,7 @@ local apps = {
     -- J = "Airmail",
     K = "Skype",
     L = "Slack",
+    M = "Simulator",
     N = "Navicat Essentials for PostgreSQL",
     P = "1Password 7",
     R = "iTerm",
