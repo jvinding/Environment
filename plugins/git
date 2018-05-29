@@ -198,6 +198,16 @@ git_push() {
     fi
 }
 
+git_find_unclean_repos() {
+    for s in $(find . -maxdepth 1 -type d); do
+        pushd "$s" > /dev/null
+        if [ -d .git ] && ! git_assert_clean_tree > /dev/null; then
+            pwd
+        fi
+        popd > /dev/null
+    done
+}
+
 #
 # aliases
 #
