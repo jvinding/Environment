@@ -4,6 +4,7 @@ crawl_version() {
 }
 
 crawl() {
+    secret_source facebook_tokens
     export GRAILS_OPTS="-Duser.timezone=UTC"
     _crawl_cd
     ## java_use 1.8
@@ -12,7 +13,7 @@ crawl() {
 
 crawl_run() {
     crawl
-    ./grailsw run-app -reloading -Dserver.port=8099
+    ./grailsw run-app -Dfb.tokens=${CRAWL_FACEBOOK_TOKENS} -reloading -Dserver.port=8099
 }
 
 crawl_run_master() {
