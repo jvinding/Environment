@@ -29,12 +29,11 @@ crawl_rebuild() {
 
 crawl_super_clean() {
     crawl
-    rm -rf ~/.grails/2.* target/ submodules/closely-common/target/ .slcache/ ~/.m2/repository/com/closely/
+    rm -rf ~/.grails/2.* target/ .slcache/ ~/.m2/repository/com/closely/
     if [ "-b" == "$1" ]; then
         crawl_rebuild
     fi
 }
-    
 
 _crawl_cd() {
     if [ "$(pwd)" != "$PROJECT_DIR/crawl" ]; then
