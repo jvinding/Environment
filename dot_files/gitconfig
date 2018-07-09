@@ -48,6 +48,7 @@
     unstage = reset HEAD
     permission-reset = !git diff -p -R | grep -E \"^(diff|(old|new) mode)\" | git apply
     hash = rev-parse HEAD
+    pat = !git push --all && git push --tags
 [core]
     excludesfile = /Users/jvinding/.gitignore
     autocrlf = input
