@@ -53,7 +53,7 @@ api_rebuild() {
 
 api_super_clean() {
     __conditional_api
-    rm -rf ~/.grails/2.* target/ submodules/closely-common/target/ .slcache/ ~/.m2/repository/com/closely/ lib/ && git co lib
+    rm -rf ~/.grails/2.* target/ .slcache/
     if [ "-b" == "$1" ]; then
         api_rebuild
     fi
