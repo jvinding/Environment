@@ -10,5 +10,5 @@ docker run -d \
            --name=activemq_${ENV} \
            -p 61616:61616 \
            -p 8162:8162 \
-           -v ${HOME}/activemq_${ENV}/data:/opt/apache-activemq-5.10.0/data:rw \
+           -v ${HOME}/activemq_${ENV}/data:/opt/apache-activemq-5.14.3/data:rw \
            activemq
