@@ -20,6 +20,19 @@ perch_db() {
 }
 
 perch_super_clean() {
+    local super_duper_mode=0
+    local link_sdk=0
+    while getopts "ld" opt; do
+        case $opt in
+            d)
+                super_duper_mode=1
+                ;;
+            l)
+                link_sdk=1
+                ;;
+        esac
+    done
+
     perch
     for s in PerchQA Perch 'Perch Staging'; do
         xcodebuild -workspace Perch.xcworkspace -scheme "$s" clean
@@ -27,10 +40,13 @@ perch_super_clean() {
     ## xcodebuild -alltargets clean
     rm -rf build
     rm -rf "${HOME}/Library/Developer/Xcode/DerivedData/*"
-    if [ "-d" = "$1" ]; then
-        echo "Super-Duper Cleaning Mode Activated!"
-        rm -rf Pods
+    if [ 1 -eq $super_duper_mode ]; then
+        echo "Super-Duper Cleaning Mode Activated! (re-installing pods and carts)"
+        rm -rf Pods Carthage/Checkouts
         bin/setup.sh
+        if [ 1 -eq $link_sdk ]; then
+            bin/setup.sh -l
+        fi
         pod install
     fi
 }
