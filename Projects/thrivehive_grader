@@ -1,0 +1,35 @@
+
+grader() {
+    cd $PROJECT_DIR/grader
+    export USER_TABLE=graderweb-jvinding-users
+    export CATEGORY_MAPPING_TABLE=graderweb-jvinding-categorymapping
+    export BUCKET_NAME=graderweb-dev
+    export PERCH_URL=http://dev.closely.com:8081/dir/userToken/connectPerch
+    export GITHUBOAUTHACCESSTOKEN=${GITHUB_TOKEN:-foo}
+    export REDIS_HOST=localhost
+    export AWS_PROFILE=grader
+    export SECRET_KEY=${THRIVEHIVE_GRADER_API_KEY}
+    export SEGMENT_WRITE_KEY=${THRIVEHIVE_GRADER_SEGMENT_WRITE_KEY}
+}
+
+grader_rebuild() {
+    grader
+    local skip_tests=true
+    if [ "-t" == "$1" ]; then
+        skip_tests=false
+    fi
+    ./mvnw clean package -U -DskipTests=${skip_tests}
+}
+
+grader_super_clean() {
+    grader
+    rm -rf target/ ~/.m2/repository/com/closely/
+    if [ "-b" == "$1" ]; then
+        grader_rebuild
+    fi
+}
+
+grader_run() {
+    grader
+    ./mvnw "$@" spring-boot:run
+}

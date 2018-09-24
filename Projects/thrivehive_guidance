@@ -1,0 +1,25 @@
+guidance() {
+    cd $PROJECT_DIR/guidance
+}
+
+guidance_rebuild() {
+    guidance
+    local skip_tests=true
+    if [ "-t" == "$1" ]; then
+        skip_tests=false
+    fi
+    ./mvnw clean package -U -DskipTests=${skip_tests}
+}
+
+guidance_super_clean() {
+    guidance
+    rm -rf target/ ~/.m2/repository/com/closely/
+    if [ "-b" == "$1" ]; then
+        guidance_rebuild
+    fi
+}
+
+guidance_run() {
+    guidance
+    ./mvnw "$@" spring-boot:run
+}

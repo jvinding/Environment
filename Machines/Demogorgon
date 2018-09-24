@@ -12,8 +12,8 @@ export PGDATA=/usr/local/var/postgres
 
 export GEM_HOME=$HOME/.gem
 
-SECRETS=(thrivehive_amq_creds)
 PLUGINS=(git git_flow java ssh android ssh-agent z sdkman ios_dev docker)
+SECRETS=(thrivehive_amq_creds thrivehive_grader_secrets)
 
 safe_source ${ENVIRONMENT_DIR}/mac_shortcuts
 
@@ -43,7 +43,9 @@ projects_load \
     closely_inbox \
     closely_cc \
     closely_mc \
-    closely_listener
+    closely_listener \
+    thrivehive_guidance \
+    thrivehive_grader
 
 pui() {
     ssh bucket1 "jvinding/user_info.sh $@" | pbcopy
