@@ -1,5 +1,6 @@
 pfw() {
     cd ~/Projects/perch-web
+    nvm use 10
 }
 
 pfw_run() {
@@ -17,3 +18,10 @@ pfw_version() {
     aws --region us-east-2 elasticbeanstalk describe-environments --query 'Environments[*].[EnvironmentName, VersionLabel]' --environment-names perchweb-production --output text
 }
 
+pfw_super_clean() {
+    pfw
+    rm -rf bower_components node_modules
+    bower cache clean
+    npm install
+    bower install
+}

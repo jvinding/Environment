@@ -2,6 +2,3 @@ PS1="$PS1"''
 grep -q "tmux setenv" <<< "$PROMPT_COMMAND" || {
     PROMPT_COMMAND="$PROMPT_COMMAND"$'\n''[ -n "$TMUX" ] && tmux setenv TMUXPWD_$(tmux display -p "#D" | tr -d %) "$PWD"'
 }
-
-export NVM_DIR="$HOME/.nvm"
-. "/usr/local/opt/nvm/nvm.sh"
