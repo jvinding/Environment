@@ -2,6 +2,8 @@
 alias java_ls='/usr/libexec/java_home -V 2>&1 | grep -E "\d.\d.\d[,_]" | cut -d , -f 1 | colrm 1 4 | grep -v Home'
 
 function java_use() {
+    local escaped_java_home=${JAVA_HOME//\//\\/}
+    export PATH=${PATH//${escaped_java_home}\/bin:/}
     export JAVA_HOME=$(/usr/libexec/java_home -v $1)
     export PATH=$JAVA_HOME/bin:$PATH
     java -version
