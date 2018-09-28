@@ -1,0 +1,25 @@
+communicator() {
+    cd $PROJECT_DIR/Communicator
+}
+
+communicator_rebuild() {
+    communicator
+    local skip_tests=true
+    if [ "-t" == "$1" ]; then
+        skip_tests=false
+    fi
+    ./mvnw clean package -U -DskipTests=${skip_tests}
+}
+
+communicator_super_clean() {
+    communicator
+    rm -rf target/ ~/.m2/repository/com/closely/
+    if [ "-b" == "$1" ]; then
+        communicator_rebuild
+    fi
+}
+
+communicator_run() {
+    communicator
+    ./mvnw "$@" spring-boot:run
+}

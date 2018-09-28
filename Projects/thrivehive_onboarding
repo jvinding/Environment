@@ -1,0 +1,25 @@
+onboarding() {
+    cd $PROJECT_DIR/Onboarding
+}
+
+onboarding_rebuild() {
+    onboarding
+    local skip_tests=true
+    if [ "-t" == "$1" ]; then
+        skip_tests=false
+    fi
+    ./mvnw clean package -U -DskipTests=${skip_tests}
+}
+
+onboarding_super_clean() {
+    onboarding
+    rm -rf target/ ~/.m2/repository/com/closely/
+    if [ "-b" == "$1" ]; then
+        onboarding_rebuild
+    fi
+}
+
+onboarding_run() {
+    onboarding
+    ./mvnw "$@" spring-boot:run
+}
