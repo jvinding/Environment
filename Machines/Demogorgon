@@ -4,7 +4,6 @@ export ANDROID_HOME=/Users/Shared/android-sdk-macosx
 
 export SERVERPATH=""
 
-export JAVA_HOME=`/usr/libexec/java_home`
 
 export CDPATH=.:~:~/Projects
 
