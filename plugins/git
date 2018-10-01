@@ -207,6 +207,15 @@ git_find_unclean_repos() {
     done
 }
 
+git_update_all() {
+    for s in $(find . -type d -maxdepth 1 -not -name '.*'); do
+        echo $s
+        pushd $s > /dev/null
+        git pull --rebase -q
+        popd > /dev/null
+    done
+}
+
 #
 # aliases
 #
