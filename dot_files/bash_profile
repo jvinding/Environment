@@ -213,7 +213,7 @@ then
         if [ "~" == "${last_dir}" ]; then
             front_dirs=
         fi
-        echo -ne "${BLUE_UNESCAPED}-=\(${RED_UNESCAPED}${front_dirs}${GREEN_UNESCAPED}${last_dir}${BLUE_UNESCAPED})=-"
+        echo -ne "${BLUE_UNESCAPED}-=(${RED_UNESCAPED}${front_dirs}${GREEN_UNESCAPED}${last_dir}${BLUE_UNESCAPED})=-"
     }
 
     function svn_branch {
