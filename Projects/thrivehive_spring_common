@@ -1,0 +1,8 @@
+sc() {
+    cd $PROJECT_DIR/spring-common
+}
+
+sc_rebuild() {
+    mc
+    mvn clean package -U
+}

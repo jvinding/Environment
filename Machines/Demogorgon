@@ -43,10 +43,14 @@ projects_load \
     closely_cc \
     closely_mc \
     closely_listener \
+    thrivehive_mvn \
+    thrivehive_mocker \
     thrivehive_guidance \
     thrivehive_grader \
     thrivehive_onboarding \
-    thrivehive_communicator
+    thrivehive_communicator \
+    thrivehive_spring_common \
+    thrivehive_corkboard
 
 pui() {
     ssh bucket1 "jvinding/user_info.sh $@" | pbcopy

@@ -1,0 +1,25 @@
+mocker() {
+    cd $PROJECT_DIR/ProviderMockData
+}
+
+mocker_rebuild() {
+    mocker
+    local skip_tests=true
+    if [ "-t" == "$1" ]; then
+        skip_tests=false
+    fi
+    ./mvnw clean package -U -DskipTests=${skip_tests}
+}
+
+mocker_super_clean() {
+    mocker
+    rm -rf target/ ~/.m2/repository/com/closely/
+    if [ "-b" == "$1" ]; then
+        mocker_rebuild
+    fi
+}
+
+mocker_run() {
+    mocker
+    ./mvnw "$@" spring-boot:run
+}

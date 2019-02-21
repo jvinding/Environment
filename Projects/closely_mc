@@ -4,5 +4,5 @@ mc() {
 
 mc_rebuild() {
     mc
-    mvn clean package -U -DskipTests=${skip_tests}
+    mvn clean package -U
 }

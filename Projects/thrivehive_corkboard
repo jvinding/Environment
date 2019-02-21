@@ -1,0 +1,14 @@
+cic() {
+    cd $PROJECT_DIR/corkboard-ingestion-coordinator
+}
+
+cte() {
+    export CORKBOARD_GOOGLE_CREDENTIALS=$(<${HOME}/Environment/Secrets/thrivehive_corkboard_google_vision_creds)
+    cd $PROJECT_DIR/corkboard-text-extraction
+}
+
+cte_run() {
+    cte
+    ./mvnw package && java -classpath ./target/classes:./target/:./target/corkboard-text-extraction-1.0-SNAPSHOT.jar LocalAppRunner
+    ./mvnw package && java -classpath ./target/corkboard-text-extraction-1.0-SNAPSHOT.jar LocalAppRunner
+}

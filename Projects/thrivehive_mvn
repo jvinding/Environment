@@ -1,0 +1,42 @@
+#
+# common functions for spring boot apps
+#
+th_run() {
+    __assert_mvnw_project || return 1
+    ./mvnw "$@" spring-boot:run
+}
+
+th_rebuild() {
+    __assert_mvnw_project || return 1
+    local skip_tests=true
+    if [ "-t" == "$1" ]; then
+        skip_tests=false
+    fi
+    ./mvnw clean package -U -DskipTests=${skip_tests}
+}
+
+th_super_clean() {
+    __assert_mvnw_project || return 1
+    rm -rf target/ ~/.m2/repository/com/closely/
+    if [ "-b" == "$1" ]; then
+        th_rebuild
+    fi
+}
+
+
+th_code_coverage() {
+    __assert_mvnw_project || return 1
+    ./mvnw test && ./mvnw jacoco:report && open target/site/jacoco/index.html
+}
+alias th_cc=th_code_coverage
+
+#
+#
+#
+__assert_mvnw_project() {
+    if ! [ -x mvnw ] || ! [ -d ./.mvn/wrapper ] || ! [ -f pom.xml ]; then
+        echo "This function must be run from a maven projects root folder, with the maven wrapper configured" >&2
+        return 1
+    fi
+    return 0
+}
