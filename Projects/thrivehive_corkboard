@@ -9,6 +9,16 @@ cte() {
 
 cte_run() {
     cte
-    ./mvnw package && java -classpath ./target/classes:./target/:./target/corkboard-text-extraction-1.0-SNAPSHOT.jar LocalAppRunner
-    ./mvnw package && java -classpath ./target/corkboard-text-extraction-1.0-SNAPSHOT.jar LocalAppRunner
+    th_run
+}
+
+caa() {
+    cd $PROJECT_DIR/corkboard-ad-analyzer
+}
+caa_run() {
+    caa
+    dotnet publish -c Release
+    pushd src/ad-analyzer/bin/Release/netcoreapp2.1/publish > /dev/null
+    sam local start-api
+    popd > /dev/null
 }
