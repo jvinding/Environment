@@ -56,24 +56,19 @@
     ignorecase = false
 [branch]
     autosetupmerge = true
-[difftool "sourcetree"]
-    cmd = /usr/local/bin/ksdiff -w \"$LOCAL\" \"$REMOTE\"
-    path = 
-[mergetool "sourcetree"]
-    cmd = /usr/local/bin/ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-    trustExitCode = true
 [push]
     default = current
 [mergetool]
     prompt = false
 [merge]
     conflictstyle = diff3
-    tool = vimdiff
+    tool = Kaleidoscope
 [filter "hawser"]
     clean = git hawser clean %f
     smudge = git hawser smudge %f
     required = true
 [diff]
+    tool = Kaleidoscope
     compactionHeuristic = true
 [submodule]
     fetchJobs = 4
@@ -81,5 +76,8 @@
     log = diff-so-fancy | less --tabs=4 -RFX
     show = diff-so-fancy | less --tabs=4 -RFX
     diff = diff-so-fancy | less --tabs=4 -RFX
-[interactive]
-    diffFilter = diff-so-fancy
+[mergetool "Kaleidoscope"]
+    cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+    trustexitcode = true
+[difftool "Kaleidoscope"]
+    cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
