@@ -1,7 +1,8 @@
 
 grader() {
-    cd $PROJECT_DIR/grader
+    cd $PROJECT_DIR/GMBGrader
     export USER_TABLE=graderweb-jvinding-users
+    export GMB_USER_TABLE=grader-ali-gmb-users
     export CATEGORY_MAPPING_TABLE=graderweb-jvinding-categorymapping
     export BUCKET_NAME=graderweb-dev
     export PERCH_URL=http://dev.closely.com:8081/dir/userToken/connectPerch
@@ -10,6 +11,7 @@ grader() {
     export AWS_PROFILE=grader
     export SECRET_KEY=${THRIVEHIVE_GRADER_API_KEY}
     export SEGMENT_WRITE_KEY=${THRIVEHIVE_GRADER_SEGMENT_WRITE_KEY}
+    export SPRING_PROFILES_ACTIVE=development
 }
 
 grader_rebuild() {
