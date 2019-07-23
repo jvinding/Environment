@@ -8,3 +8,5 @@ java_use 1.8 2> /dev/null
 export GOOGLE_APPLICATION_CREDENTIALS=~/Environment/Secrets/ThriveHive\ Google\ My\ Business-0828c4210f6a.json
 source ~/bin/google-cloud-sdk/completion.bash.inc
 source ~/bin/google-cloud-sdk/path.bash.inc
+
+unset GEM_HOME ## needed so rebenv can control it, not sure how it's actually getting set.
