@@ -1,0 +1,18 @@
+export NINJACAT_DIR="${PROJECT_DIR}/ninjacat"
+
+darkwing() {
+    secret_source thrivehive_darkwing
+    cd "${NINJACAT_DIR}/darkwing"
+}
+
+vault() {
+    cd "${NINJACAT_DIR}/vault"
+}
+
+portal() {
+    cd "${NINJACAT_DIR}/partner-portal"
+}
+
+arbiter() {
+    cd "${NINJACAT_DIR}/arbiter"
+}
