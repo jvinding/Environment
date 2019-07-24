@@ -64,7 +64,11 @@ local function windowResize(x, y, w, h)
 end
 
 local function bind(key, x, y, w, h)
-    hs.hotkey.bind(hyper, key, function() windowResize(x, y, w, h) end)
+    local binding = hs.hotkey.bind(hyper, key, function() windowResize(x, y, w, h) end)
+    local wf = hs.window.filter
+    screenSharingFilter = wf.new("Screen Sharing")
+    screenSharingFilter:subscribe(wf.windowFocused, function() binding:disable() end)
+    screenSharingFilter:subscribe(wf.windowUnfocused, function() binding:enable() end)
 end
 
 -- Do not Bind / as it does the mac os sysdiag thing -- "pad/"

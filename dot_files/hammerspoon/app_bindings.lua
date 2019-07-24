@@ -27,14 +27,17 @@ local apps = {
     V = "Visual Studio",
     X = "Xcode",
     -- X = "Xcode-beta",
-    Z = "Zeplin"
+    Z = "Zeplin",
+    delete = "Finder" -- I mostly use this to escape from screen sharing
 }
 
 for key, app in pairs(apps) do
     local binding = hs.hotkey.bind(hyper, key, function() hs.application.launchOrFocus(app) end)
-    local wf = hs.window.filter
-    screenSharingFilter = wf.new("Screen Sharing")
-    screenSharingFilter:subscribe(wf.windowFocused, function() binding:disable() end)
-    screenSharingFilter:subscribe(wf.windowUnfocused, function() binding:enable() end)
+    if "Finder" ~= app then
+        local wf = hs.window.filter
+        screenSharingFilter = wf.new("Screen Sharing")
+        screenSharingFilter:subscribe(wf.windowFocused, function() binding:disable() end)
+        screenSharingFilter:subscribe(wf.windowUnfocused, function() binding:enable() end)
+    end
 end
 
