@@ -60,6 +60,7 @@ locs_db() {
 
 locs_db_setup() {
     locs
+    dotnet build
     dotnet ef database update -p ./LocationService.Api/LocationService.Api.csproj
 }
 
@@ -77,7 +78,7 @@ locs_db_migration_create() {
 locs_db_migrations_run() {
     locs
     dotnet build
-    dotnet ef database update -p ./LocationService.Api/LocationService.Api.csproj 
+    dotnet ef database update -p ./LocationService.Api/LocationService.Api.csproj
 }
 
 #
@@ -97,6 +98,29 @@ ads_swagger() {
     dotnet build
     dotnet swagger tofile --output ../swagger.json ./bin/Debug/netcoreapp2.2/AdService.Api.dll v1
     cd ..
+}
+
+ads_db_setup() {
+    ads
+    dotnet build
+    dotnet ef database update -p AdService.Api/AdService.Api.csproj
+}
+
+ads_db_migration_create() {
+    local migration_name=${1:-}
+    if [ -z "$migration_name" ]; then
+        echo "Must specify a migration name" >&2
+    else
+        ads
+        cd ./AdService.Persistence
+        dotnet ef --startup-project ../AdService.Api/ migrations add "$migration_name"
+    fi
+}
+
+ads_db_migrations_run() {
+    ads
+    dotnet build
+    dotnet ef database update -p ./AdService.Api/AdService.Api.csproj
 }
 
 locs_setup() {
