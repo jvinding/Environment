@@ -130,13 +130,15 @@ locs_setup() {
     ## So, instead, do the following:
     ## docker logs mysql_dev
     ## docker exec -it mysql_dev mysql -uroot -p
-    ## set password = password('ThriveHive@2019');
+    ## set password = password('<NEW PASSWORD>');
+    ## set password for 'root'@'%' = PASSWORD('<NEW PASSWORD>');
+    ## locs_db_setup
 
 ## This stuff probably isn't needed with the above command
-    ## set password for 'root'@'%' = PASSWORD('ThriveHive@2019');
+    ## set password for 'root'@'%' = PASSWORD('<NEW PASSWORD>');
     ## get the root pw fromthe logs
     ## docker exec -it mysql_dev mysql -uroot -p
-    ## set password for 'root'@'%' = PASSWORD('ThriveHive@2019');
+    ## set password for 'root'@'%' = PASSWORD('<NEW PASSWORD>');
     ## create database location_service
     ## use location_service;
     echo
