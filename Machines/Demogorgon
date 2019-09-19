@@ -64,3 +64,21 @@ psv() {
     ssh bucket1 "jvinding/selected_venue.sh $@" | pbcopy
     echo "Info copied to pastboard"
 }
+
+if ! which dropdb > /dev/null && which pgcli > /dev/null; then
+    dropdb() {
+        local hostname=
+        while getopts "h:?" opt; do
+            case $opt in
+                h)
+                    hostname="-h ${OPTARG}"
+                    ;;
+                \?)
+                    echo "Invalid option: -$OPTARG" >&2
+                    ;;
+            esac
+        done
+        shift $(( OPTIND - 1 ))
+        pgcli ${hostname} "drop database ${dbname};"
+    }
+fi
