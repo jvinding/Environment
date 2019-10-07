@@ -23,9 +23,9 @@ copy_wifi_ip() {
 }
 
 export PROJECT_DIR=$HOME/Projects
-safe_source $PROJECT_DIR/closely-common-scripts/bash/project-aliases
-safe_source $PROJECT_DIR/closely-common-scripts/bash/ssh-aliases
-safe_source $PROJECT_DIR/closely-common-scripts/bash/db-aliases
+safe_source $PROJECT_DIR/Libraries/closely-common-scripts/bash/project-aliases
+safe_source $PROJECT_DIR/Libraries/closely-common-scripts/bash/ssh-aliases
+safe_source $PROJECT_DIR/Libraries/closely-common-scripts/bash/db-aliases
 
 environment_require_lib projects
 projects_load \

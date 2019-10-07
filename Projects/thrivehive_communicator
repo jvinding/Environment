@@ -1,5 +1,5 @@
 communicator() {
-    cd $PROJECT_DIR/Communicator
+    cd $PROJECT_DIR/Services/Communicator
 }
 
 communicator_rebuild() {

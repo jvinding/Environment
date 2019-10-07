@@ -1,5 +1,7 @@
+BASE_DIR="${PROJECT_DIR}/Corkboard"
+
 cic() {
-    cd $PROJECT_DIR/corkboard-ingestion-coordinator
+    cd $BASE_DIR/corkboard-ingestion-coordinator
 }
 
 cic_run() {
@@ -9,7 +11,7 @@ cic_run() {
 
 cte() {
     export CORKBOARD_GOOGLE_CREDENTIALS=$(<${HOME}/Environment/Secrets/thrivehive_corkboard_google_vision_creds)
-    cd $PROJECT_DIR/corkboard-text-extraction
+    cd $BASE_DIR/corkboard-text-extraction
 }
 
 cte_run() {
@@ -18,7 +20,7 @@ cte_run() {
 }
 
 caa() {
-    cd $PROJECT_DIR/corkboard-ad-analyzer
+    cd $BASE_DIR/corkboard-ad-analyzer
 }
 caa_run() {
     caa
@@ -28,65 +30,12 @@ caa_run() {
     popd > /dev/null
 }
 
-geocoder() {
-    cd $PROJECT_DIR/geocoder
-}
-
-lms() {
-    cd $PROJECT_DIR/location-match-service/
-}
-
-#
-# Location Service
-#
-locs() {
-    export ASPNETCORE_ENVIRONMENT=Development
-    cd $PROJECT_DIR/starport
-}
-locs_run() {
-    locs
-    dotnet run -p ./LocationService.Api/LocationService.Api.csproj
-}
-locs_swagger() {
-    locs
-    cd ./LocationService.Api
-    dotnet build
-    dotnet swagger tofile --output starport-swagger.json ./bin/Debug/netcoreapp2.2/LocationService.Api.dll v1
-}
-
-locs_db() {
-    docker exec -it mysql_dev -uroot -p
-}
-
-locs_db_setup() {
-    locs
-    dotnet build
-    dotnet ef database update -p ./LocationService.Api/LocationService.Api.csproj
-}
-
-locs_db_migration_create() {
-    local migration_name=${1:-}
-    if [ -z "$migration_name" ]; then
-        echo "Must specify a migration name" >&2
-    else
-        locs
-        cd ./LocationService.Persistence
-        dotnet ef --startup-project ../LocationService.Api/ migrations add "$migration_name"
-    fi
-}
-
-locs_db_migrations_run() {
-    locs
-    dotnet build
-    dotnet ef database update -p ./LocationService.Api/LocationService.Api.csproj
-}
-
 #
 # Ad Service
 #
 ads() {
     export ASPNETCORE_ENVIRONMENT=Development
-    cd $PROJECT_DIR/adservice
+    cd $BASE_DIR/adservice
 }
 ads_run() {
     ads
@@ -123,23 +72,6 @@ ads_db_migrations_run() {
     dotnet ef database update -p ./AdService.Api/AdService.Api.csproj
 }
 
-locs_setup() {
-    ## docker pull mysql/mysql-server
-    ## docker run -d --restart='always' -e "MYSQL_ROOT_HOST=%" -p 127.0.0.1:3306:3306 --name=mysql_dev mysql/mysql-server:5.7
-    ## I couldn't log in if I set the password using: -e 'MYSQL_ROOT_PASSWORD=<PASSWORD>'
-    ## So, instead, do the following:
-    ## docker logs mysql_dev
-    ## docker exec -it mysql_dev mysql -uroot -p
-    ## set password = password('<NEW PASSWORD>');
-    ## set password for 'root'@'%' = PASSWORD('<NEW PASSWORD>');
-    ## locs_db_setup
-
-## This stuff probably isn't needed with the above command
-    ## set password for 'root'@'%' = PASSWORD('<NEW PASSWORD>');
-    ## get the root pw fromthe logs
-    ## docker exec -it mysql_dev mysql -uroot -p
-    ## set password for 'root'@'%' = PASSWORD('<NEW PASSWORD>');
-    ## create database location_service
-    ## use location_service;
-    echo
+flattener() {
+    cd $BASE_DIR/pdf-flattener
 }
