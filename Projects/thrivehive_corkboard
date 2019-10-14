@@ -1,7 +1,7 @@
-BASE_DIR="${PROJECT_DIR}/Corkboard"
+CORKBOARD_BASE_DIR="${PROJECT_DIR}/Corkboard"
 
 cic() {
-    cd $BASE_DIR/corkboard-ingestion-coordinator
+    cd $CORKBOARD_BASE_DIR/corkboard-ingestion-coordinator
 }
 
 cic_run() {
@@ -11,7 +11,7 @@ cic_run() {
 
 cte() {
     export CORKBOARD_GOOGLE_CREDENTIALS=$(<${HOME}/Environment/Secrets/thrivehive_corkboard_google_vision_creds)
-    cd $BASE_DIR/corkboard-text-extraction
+    cd $CORKBOARD_BASE_DIR/corkboard-text-extraction
 }
 
 cte_run() {
@@ -20,7 +20,7 @@ cte_run() {
 }
 
 caa() {
-    cd $BASE_DIR/corkboard-ad-analyzer
+    cd $CORKBOARD_BASE_DIR/corkboard-ad-analyzer
 }
 caa_run() {
     caa
@@ -35,7 +35,7 @@ caa_run() {
 #
 ads() {
     export ASPNETCORE_ENVIRONMENT=Development
-    cd $BASE_DIR/adservice
+    cd $CORKBOARD_BASE_DIR/adservice
 }
 ads_run() {
     ads
@@ -73,5 +73,5 @@ ads_db_migrations_run() {
 }
 
 flattener() {
-    cd $BASE_DIR/pdf-flattener
+    cd $CORKBOARD_BASE_DIR/pdf-flattener
 }

@@ -48,7 +48,9 @@ projects_load \
     thrivehive_communicator \
     thrivehive_spring_common \
     thrivehive_corkboard \
-    thrivehive_ninjacat
+    thrivehive_ninjacat \
+    thrivehive_services \
+    thrivehive_billing
 
 pui() {
     ssh bucket1 "jvinding/user_info.sh $@" | pbcopy

@@ -1,11 +1,11 @@
-BASE_DIR="${PROJECT_DIR}/Services"
+SERVICES_BASE_DIR="${PROJECT_DIR}/Services"
 
 geocoder() {
-    cd $BASE_DIR/geocoder
+    cd $SERVICES_BASE_DIR/geocoder
 }
 
 lms() {
-    cd $BASE_DIR/location-match-service/
+    cd $SERVICES_BASE_DIR/location-match-service/
 }
 
 #
@@ -13,7 +13,7 @@ lms() {
 #
 locs() {
     export ASPNETCORE_ENVIRONMENT=Development
-    cd $BASE_DIR/starport
+    cd $SERVICES_BASE_DIR/starport
 }
 locs_run() {
     locs

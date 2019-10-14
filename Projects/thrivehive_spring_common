@@ -1,5 +1,5 @@
 sc() {
-    cd $PROJECT_DIR/spring-common
+    cd $PROJECT_DIR/Libraries/spring-common
 }
 
 sc_rebuild() {
