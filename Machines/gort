@@ -1,0 +1,7 @@
+ . ~/Environment/admin
+
+export SERVERPATH=""
+export JAVA_HOME=`/usr/libexec/java_home`
+PLUGINS=(git git_flow java ssh ssh-agent)
+
+safe_source ~/Environment/mac_shortcuts
