@@ -3,8 +3,10 @@ Secrets/
 .netrwhist
 dot_files/karabiner.d/log/
 dot_files/config/karabiner/automatic_backups/
+dot_files/config/wireshark/
+## C# stuff
 dot_files/config/.mono/
 dot_files/config/stetic/
 dot_files/config/NuGet/
-dot_files/config/wireshark/
 dot_files/config/xbuild/
+##
