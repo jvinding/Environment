@@ -1,0 +1,19 @@
+stripe() {
+    cd $PROJECT_DIR/Billing/stripe-payment-event-handler
+}
+stripe_build() {
+    stripe
+    ./mvnw package
+}
+stripe_run() {
+    stripe
+    if [ "${1}" == "-b" ]; then
+        stripe_build
+    fi
+    local jar=$(ls -1tr target/*.jar | tail -1)
+    if [ -n "$jar" ]; then
+        java -cp "$jar" com.thrivehive.payments.events.LocalTester
+    else
+        echo "No jar found" >&2
+    fi
+}
