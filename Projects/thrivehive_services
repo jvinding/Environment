@@ -9,34 +9,46 @@ lms() {
 }
 
 #
-# Location Service
+# New Java Location Service
 #
 locs() {
+    cd $SERVICES_BASE_DIR/location-service
+}
+
+locs_run() {
+    locs
+    th_run
+}
+
+#
+# Old C# Location Service
+#
+starport() {
     export ASPNETCORE_ENVIRONMENT=Development
     cd $SERVICES_BASE_DIR/starport
 }
-locs_run() {
-    locs
+starport_run() {
+    starport
     dotnet run -p ./LocationService.Api/LocationService.Api.csproj
 }
-locs_swagger() {
-    locs
+starport_swagger() {
+    starport
     cd ./LocationService.Api
     dotnet build
     dotnet swagger tofile --output starport-swagger.json ./bin/Debug/netcoreapp2.2/LocationService.Api.dll v1
 }
 
-locs_db() {
+starport_db() {
     docker exec -it mysql_dev -uroot -p
 }
 
-locs_db_setup() {
+starport_db_setup() {
     locs
     dotnet build
     dotnet ef database update -p ./LocationService.Api/LocationService.Api.csproj
 }
 
-locs_db_migration_create() {
+starport_db_migration_create() {
     local migration_name=${1:-}
     if [ -z "$migration_name" ]; then
         echo "Must specify a migration name" >&2
@@ -47,13 +59,13 @@ locs_db_migration_create() {
     fi
 }
 
-locs_db_migrations_run() {
+starport_db_migrations_run() {
     locs
     dotnet build
     dotnet ef database update -p ./LocationService.Api/LocationService.Api.csproj
 }
 
-locs_setup() {
+starport_setup() {
     ## docker pull mysql/mysql-server
     ## docker run -d --restart='always' -e "MYSQL_ROOT_HOST=%" -p 127.0.0.1:3306:3306 --name=mysql_dev mysql/mysql-server:5.7
     ## I couldn't log in if I set the password using: -e 'MYSQL_ROOT_PASSWORD=<PASSWORD>'
