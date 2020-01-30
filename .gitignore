@@ -10,3 +10,4 @@ dot_files/config/stetic/
 dot_files/config/NuGet/
 dot_files/config/xbuild/
 ##
+dot_files/config/configstore/
