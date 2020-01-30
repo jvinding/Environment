@@ -39,6 +39,7 @@
     ls = ls-files --exclude-standard
     lsm = ls-files --exclude-standard -m
     lso = ls-files --exclude-standard -o
+    lsi = ls-files --exclude-standard -io
     lsc = ls-files --unmerged
     lsd = ls-files --deleted
     ff = flow feature
