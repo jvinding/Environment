@@ -2,7 +2,7 @@
 
 export ANDROID_HOME=/Users/Shared/android-sdk-macosx
 
-export SERVERPATH=${HOME}/Projects/perch-devops/scripts
+export SERVERPATH="${HOME}/Projects/DevOps/perch-devops/scripts /usr/local/opt/inetutils/libexec/gnubin"
 
 export CDPATH=.:~:~/Projects
 
