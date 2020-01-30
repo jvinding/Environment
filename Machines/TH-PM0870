@@ -44,7 +44,7 @@ projects_load \
     thrivehive_mocker \
     thrivehive_guidance \
     thrivehive_grader \
-    thrivehive_onboarding \
+    thrivehive_intake \
     thrivehive_communicator \
     thrivehive_spring_common \
     thrivehive_corkboard \

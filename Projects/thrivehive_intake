@@ -1,5 +1,6 @@
+INTAKE_BASE_DIR="${PROJECT_DIR}/Intake"
 onboarding() {
-    cd $PROJECT_DIR/Onboarding
+    cd $INTAKE_BASE_DIR/Onboarding
 }
 
 onboarding_rebuild() {
@@ -22,4 +23,8 @@ onboarding_super_clean() {
 onboarding_run() {
     onboarding
     ./mvnw "$@" spring-boot:run
+}
+
+website() {
+    cd $INTAKE_BASE_DIR/websiteService
 }
