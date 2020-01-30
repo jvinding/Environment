@@ -69,7 +69,8 @@ ads_db_migration_create() {
 ads_db_migrations_run() {
     ads
     dotnet build
-    dotnet ef database update -p ./AdService.Api/AdService.Api.csproj
+    dotnet ef database update -p ./AdService.Api/AdService.Api.csproj \
+    || echo "dotnet tool install --global --version 3.0 dotnet-ef"
 }
 
 flattener() {
