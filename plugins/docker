@@ -21,3 +21,11 @@ docker_images_rm_all() {
 docker_images_rm_orphans() {
     docker rmi $(docker images -f "dangling=true" -q)
 }
+
+docker_enter_vm() {
+    if [ -z "$1" ]; then
+        echo "Usage: docker_enter_vm docker_container_name" >&2
+        return 1
+    fi
+    docker exec -it "$1" /bin/bash
+}
