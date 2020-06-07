@@ -1,10 +1,11 @@
 [user]
     name = Jeremy Vinding
-    email = jvinding@thrivehive.com
+    email = jeremy.vinding@logrhythm.com
 [color]
     diff = auto
     status = auto
     branch = auto
+	ui = true
 [alias]
     co = checkout
     conflicts = diff --name-only --diff-filter=U
@@ -55,6 +56,8 @@
     excludesfile = /Users/jvinding/.gitignore
     autocrlf = input
     ignorecase = false
+	whitespace = trailing-space,space-before-tab,tab-in-indent
+	pager = diff-so-fancy | less --tabs=4 -RFX
 [branch]
     autosetupmerge = true
 [push]
@@ -64,21 +67,25 @@
 [merge]
     conflictstyle = diff3
     tool = Kaleidoscope
-[filter "hawser"]
-    clean = git hawser clean %f
-    smudge = git hawser smudge %f
-    required = true
 [diff]
     tool = Kaleidoscope
     compactionHeuristic = true
 [submodule]
     fetchJobs = 4
-[pager]
-    log = diff-so-fancy | less --tabs=4 -RFX
-    show = diff-so-fancy | less --tabs=4 -RFX
-    diff = diff-so-fancy | less --tabs=4 -RFX
 [mergetool "Kaleidoscope"]
     cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
     trustexitcode = true
 [difftool "Kaleidoscope"]
     cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = 11
+	frag = magenta bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
