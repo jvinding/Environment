@@ -1,0 +1,3 @@
+boreas() {
+    cd $PROJECT_DIR/boreas
+}

@@ -1,0 +1,12 @@
+. ${ENVIRONMENT_DIR}/admin
+export SERVERPATH=/usr/local/opt/openjdk/bin
+export CDPATH=.:~:~/Projects
+
+SECRETS=(artifactory_key)
+PLUGINS=(git java ssh ssh-agent)
+
+safe_source ${ENVIRONMENT_DIR}/mac_shortcuts
+
+environment_require_lib projects
+export PROJECT_DIR=~/Projects
+projects_load logrhythm_boreas
