@@ -41,7 +41,7 @@
     lsm = ls-files --exclude-standard -m
     lso = ls-files --exclude-standard -o
     lsi = ls-files --exclude-standard -io
-    lsc = ls-files --unmerged
+    lsc = !"git ls-files --unmerged | awk '{print $4}' | sort -u"
     lsd = ls-files --deleted
     ff = flow feature
     ffl = flow feature list
