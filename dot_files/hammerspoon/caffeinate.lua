@@ -35,9 +35,11 @@ local function caffeineClicked(event)
         local time = 7200
         if event then
             if event["shift"] then
-                time = 18000
+                time = 18000 -- 5 hours
             elseif event["ctrl"] then
-                time = 0
+                time = 0 -- until disabled
+            elseif event["alt"] then
+                time = 1800 -- 30 minutes
             end
         end
         if 0 == time then
