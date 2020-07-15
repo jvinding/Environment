@@ -1,3 +1,46 @@
+CMS_SERVICE_NAME=content-management-svc
 boreas() {
     cd $PROJECT_DIR/boreas
+}
+
+boreas_cms() {
+    boreas
+    cd ./components/content-management-svc-parent/content-management-svc
+}
+
+boreas_stop() {
+    boreas
+    mvn clean
+}
+
+boreas_cms_verify() {
+    mvn -B -s infrastructure/maven/settings.xml -Pcontinuous-integration --also-make --also-make-dependents test verify -pl ":${CMS_SERVICE_NAME}"
+}
+
+boreas_cms_grpc_build() {
+    boreas
+    mvn compile install -pl ":${CMS_SERVICE_NAME}-grpc-client" -am
+}
+
+boreas_cms_build() {
+    boreas
+    mvn compile -pl :content-svc -am
+}
+
+boreas_cms_start() {
+    boreas
+    mvn compile quarkus:dev -pl ":${CMS_SERVICE_NAME}" -am
+}
+
+boreas_super_clean() {
+    boreas
+    mvn clean -DpurgeVolumes
+}
+
+boreas_psql() {
+    docker exec -it boreas-local_postgres_1 /usr/bin/psql -U postgres -h localhost
+}
+
+boreas_stop_all_but_postgres() {
+    docker ps -a | grep -v postgres | grep -v "CONTAINER ID" | awk '{print $1}' | xargs docker stop
 }
