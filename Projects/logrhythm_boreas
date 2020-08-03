@@ -1,11 +1,14 @@
 CMS_SERVICE_NAME=content-management-svc
 boreas() {
+    local component=${1:-}
     cd $PROJECT_DIR/boreas
+    if [ -n "$component" ]; then
+        cd "./components/${component}-parent/${component}"
+    fi
 }
 
 boreas_cms() {
-    boreas
-    cd ./components/content-management-svc-parent/content-management-svc
+    boreas "${CMS_SERVICE_NAME}"
 }
 
 boreas_stop() {
@@ -13,23 +16,55 @@ boreas_stop() {
     mvn clean
 }
 
+## Helpers
+
+boreas_grpc_build() {
+    local component=${1:-}
+    if [ -z "$component" ]; then
+        echo "must specify a component" >&2
+        exit 1
+    fi
+    boreas
+    mvn install -pl ":${component}-grpc-client" -am
+}
+
+boreas_component_test() {
+    local component=${1:-}
+    if [ -z "$component" ]; then
+        echo "must specify a component" >&2
+        exit 1
+    fi
+    mvn compile test -pl ":${component}" -am
+}
+
+### CMS
 boreas_cms_verify() {
+    boreas
     mvn -B -s infrastructure/maven/settings.xml -Pcontinuous-integration --also-make --also-make-dependents test verify -pl ":${CMS_SERVICE_NAME}"
 }
 
 boreas_cms_grpc_build() {
-    boreas
-    mvn compile install -pl ":${CMS_SERVICE_NAME}-grpc-client" -am
+    boreas_grpc_build $CMS_SERVICE_NAME
 }
 
 boreas_cms_build() {
     boreas
-    mvn compile -pl :content-svc -am
+    mvn compile -pl ":${CMS_SERVICE_NAME} -am
+}
+
+boreas_cms_test() {
+    boreas_component_test "${CMS_SERVICE_NAME}
 }
 
 boreas_cms_start() {
     boreas
     mvn compile quarkus:dev -pl ":${CMS_SERVICE_NAME}" -am
+}
+
+boreas_cms_code_coverage() {
+    boreas
+    mvn test jacoco:report -pl ":${CMS_SERVICE_NAME}" -am
+    open "components/${CMS_SERVICE_NAME}-parent/${CMS_SERVICE_NAME}/target/site/jacoco/index.html"
 }
 
 boreas_super_clean() {
