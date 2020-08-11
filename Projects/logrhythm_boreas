@@ -34,10 +34,27 @@ boreas_component_test() {
         echo "must specify a component" >&2
         exit 1
     fi
+    boreas
     mvn compile test -pl ":${component}" -am
 }
 
-### CMS
+boreas_component_code_coverage() {
+    local component=${1:-}
+    if [ -z "$component" ]; then
+        echo "must specify a component" >&2
+        exit 1
+    fi
+    boreas
+    mvn test jacoco:report -pl ":${component}" -am
+    if [ -d "components/${component}-parent" ]; then
+        open "components/${component}-parent/${component}/target/site/jacoco/index.html"
+    else
+        open "components/${component}/target/site/jacoco/index.html"
+    fi
+}
+
+## CMS
+
 boreas_cms_verify() {
     boreas
     mvn -B -s infrastructure/maven/settings.xml -Pcontinuous-integration --also-make --also-make-dependents test verify -pl ":${CMS_SERVICE_NAME}"
@@ -62,15 +79,15 @@ boreas_cms_start() {
 }
 
 boreas_cms_code_coverage() {
-    boreas
-    mvn test jacoco:report -pl ":${CMS_SERVICE_NAME}" -am
-    open "components/${CMS_SERVICE_NAME}-parent/${CMS_SERVICE_NAME}/target/site/jacoco/index.html"
+    boreas_component_code_coverage "${CMS_SERVICE_NAME}"
 }
 
 boreas_super_clean() {
     boreas
     mvn clean -DpurgeVolumes
 }
+
+## DB
 
 boreas_psql() {
     docker exec -it boreas-local_postgres_1 /usr/bin/psql -U postgres -h localhost
