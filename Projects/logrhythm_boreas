@@ -61,16 +61,16 @@ boreas_cms_verify() {
 }
 
 boreas_cms_grpc_build() {
-    boreas_grpc_build $CMS_SERVICE_NAME
+    boreas_grpc_build "${CMS_SERVICE_NAME}"
 }
 
 boreas_cms_build() {
     boreas
-    mvn compile -pl ":${CMS_SERVICE_NAME} -am
+    mvn compile -pl ":${CMS_SERVICE_NAME}" -am
 }
 
 boreas_cms_test() {
-    boreas_component_test "${CMS_SERVICE_NAME}
+    boreas_component_test "${CMS_SERVICE_NAME}"
 }
 
 boreas_cms_start() {
