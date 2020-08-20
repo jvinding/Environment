@@ -18,6 +18,19 @@ boreas_stop() {
 
 ## Helpers
 
+boreas_component_find_base_dir() {
+    local component=${1:-}
+    if [ -z "$component" ]; then
+        echo "must specify a component" >&2
+        exit 1
+    fi
+    if [ -d "components/${component}-parent" ]; then
+        echo -n "components/${component}-parent/${component}"
+    else
+        echo -n "components/${component}"
+    fi
+}
+
 boreas_grpc_build() {
     local component=${1:-}
     if [ -z "$component" ]; then
@@ -53,6 +66,25 @@ boreas_component_code_coverage() {
     fi
 }
 
+boreas_component_generate_jwt() {
+    local component=${1:-}
+    if [ -z "$component" ]; then
+        echo "must specify a component" >&2
+        exit 1
+    fi
+    local environment=${2:-}
+    if [ "$environment" != "development" ]; then
+        echo "must specify a valid environment" >&2
+        exit 1
+    fi
+    boreas
+    local base_dir="$(boreas_component_find_base_dir "$component")/src/test/resources/jwt/token-definitions/"
+
+    jq ".iss = \"logrhythm-${environment}\"" "${base_dir}/all-admin.json" > "${base_dir}/temp.json"
+    mvn -q -am -pl ":${component}" test -PskipTests -Pgenerate-token -Dexec.args="/jwt/token-definitions/temp.json" 2> /dev/null | tee | tr -d '\n' | pbcopy
+    rm "$base_dir/temp.json"
+}
+
 ## CMS
 
 boreas_cms_verify() {
@@ -85,6 +117,11 @@ boreas_cms_code_coverage() {
 boreas_super_clean() {
     boreas
     mvn clean -DpurgeVolumes
+}
+
+boreas_cms_token() {
+    boreas
+    boreas_component_generate_jwt "${CMS_SERVICE_NAME}" "development"
 }
 
 ## DB
