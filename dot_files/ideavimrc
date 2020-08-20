@@ -38,3 +38,14 @@ nnoremap <leader>fc :action GotoClass<CR>
 nnoremap <leader>fa :action GotoAction<CR>
 nnoremap <leader>fg :action FindInPath<CR>
 nnoremap <leader>fr :action ReplaceInPath<CR>
+
+nnoremap <leader>gt :action GotoTest<CR>
+nnoremap <leader>tn :action RunClass<CR>
+nnoremap <leader>tl :action Rerun<CR>
+nnoremap <leader>tf :action RerunFailedTests<CR>
+
+" Navigation
+nnoremap ]c :action GotoNextError<cr>
+nnoremap [c :action GotoPreviousError<cr>
+nnoremap ]h :action VcsShowNextChangeMarker<cr>
+nnoremap [h :action VcsShowPrevChangeMarker<cr>
