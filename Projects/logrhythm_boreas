@@ -16,6 +16,11 @@ boreas_stop() {
     mvn clean
 }
 
+boreas_simple_clean() {
+    boreas
+    find . -type d -name target | xargs rm -rf
+}
+
 ## Helpers
 
 boreas_component_find_base_dir() {
