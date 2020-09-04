@@ -53,7 +53,7 @@ boreas_component_test() {
         exit 1
     fi
     boreas
-    mvn compile test -pl ":${component}" -am
+    mvn test -pl ":${component}" -am
 }
 
 boreas_component_code_coverage() {
@@ -103,11 +103,21 @@ boreas_cms_grpc_build() {
 
 boreas_cms_build() {
     boreas
-    mvn compile -pl ":${CMS_SERVICE_NAME}" -am
+    mvn compile -pl ":${CMS_SERVICE_NAME}" -am -U
 }
 
 boreas_cms_test() {
     boreas_component_test "${CMS_SERVICE_NAME}"
+}
+
+boreas_cms_test_loop() {
+    local project="${CMS_SERVICE_NAME}"
+    for i in `seq 1 5`; do
+        echo "Starting test run ${i}"
+        boreas_simple_clean
+        boreas_cms_build > "${project}-output-${i}.txt" 2>&1 || echo "${project} compile FAILED on run ${i}"
+        boreas_cms_test >> "${project}-output-${i}.txt" 2>&1 || echo "${project} FAILED on run ${i}"
+    done
 }
 
 boreas_cms_start() {
