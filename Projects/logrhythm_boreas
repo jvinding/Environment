@@ -22,12 +22,19 @@ boreas_simple_clean() {
 }
 
 ## Helpers
+boreas_is_valid_environment() {
+    local environment=${1:-}
+    if [ "$environment" != "development" ] && [ "$environment" != "staging" ]; then
+        echo "Valid environments are: ['development', 'staging']" >&2
+        return 1
+    fi
+}
 
 boreas_component_find_base_dir() {
     local component=${1:-}
     if [ -z "$component" ]; then
         echo "must specify a component" >&2
-        exit 1
+        return 1
     fi
     if [ -d "components/${component}-parent" ]; then
         echo -n "components/${component}-parent/${component}"
@@ -40,7 +47,7 @@ boreas_grpc_build() {
     local component=${1:-}
     if [ -z "$component" ]; then
         echo "must specify a component" >&2
-        exit 1
+        return 1
     fi
     boreas
     mvn install -pl ":${component}-grpc-client" -am
@@ -50,7 +57,7 @@ boreas_component_test() {
     local component=${1:-}
     if [ -z "$component" ]; then
         echo "must specify a component" >&2
-        exit 1
+        return 1
     fi
     boreas
     mvn test -pl ":${component}" -am
@@ -60,7 +67,7 @@ boreas_component_code_coverage() {
     local component=${1:-}
     if [ -z "$component" ]; then
         echo "must specify a component" >&2
-        exit 1
+        return 1
     fi
     boreas
     mvn test jacoco:report -pl ":${component}" -am
@@ -75,13 +82,12 @@ boreas_component_generate_jwt() {
     local component=${1:-}
     if [ -z "$component" ]; then
         echo "must specify a component" >&2
-        exit 1
+        return 1
     fi
+
     local environment=${2:-}
-    if [ "$environment" != "development" ]; then
-        echo "must specify a valid environment" >&2
-        exit 1
-    fi
+    boreas_is_valid_environment "$environment" || return 1
+
     boreas
     local base_dir="$(boreas_component_find_base_dir "$component")/src/test/resources/jwt/token-definitions/"
 
