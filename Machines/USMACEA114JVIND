@@ -1,5 +1,5 @@
 . ${ENVIRONMENT_DIR}/admin
-export SERVERPATH=/usr/local/opt/openjdk/bin
+export SERVERPATH="/usr/local/opt/openjdk/bin /usr/local/opt/jbang/bin"
 export CDPATH=.:~:~/Projects
 
 SECRETS=(artifactory_key)
