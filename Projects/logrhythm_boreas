@@ -53,6 +53,16 @@ boreas_grpc_build() {
     mvn install -pl ":${component}-grpc-client" -am
 }
 
+boreas_component_start() {
+    local component=${1:-}
+    if [ -z "$component" ]; then
+        echo "must specify a component" >&2
+        return 1
+    fi
+    boreas
+    mvn compile quarkus:dev -pl ":${component}" -am
+}
+
 boreas_component_test() {
     local component=${1:-}
     if [ -z "$component" ]; then
@@ -100,7 +110,11 @@ boreas_component_generate_jwt() {
 
 boreas_cms_verify() {
     boreas
-    mvn -B -s infrastructure/maven/settings.xml -Pcontinuous-integration --also-make --also-make-dependents test verify -pl ":${CMS_SERVICE_NAME}"
+    mvn -s infrastructure/maven/settings.xml -Pcontinuous-integration --also-make --also-make-dependents test verify -pl ":${CMS_SERVICE_NAME}"
+}
+
+boreas_cms_format() {
+    mvn git-code-format:format-code -Dgcf.globPattern=**/*
 }
 
 boreas_cms_grpc_build() {
@@ -117,8 +131,9 @@ boreas_cms_test() {
 }
 
 boreas_cms_test_loop() {
+    local count=${1:-5}
     local project="${CMS_SERVICE_NAME}"
-    for i in `seq 1 5`; do
+    for i in `seq 1 $count`; do
         echo "Starting test run ${i}"
         boreas_simple_clean
         boreas_cms_build > "${project}-output-${i}.txt" 2>&1 || echo "${project} compile FAILED on run ${i}"
@@ -127,8 +142,7 @@ boreas_cms_test_loop() {
 }
 
 boreas_cms_start() {
-    boreas
-    mvn compile quarkus:dev -pl ":${CMS_SERVICE_NAME}" -am
+    boreas_component_start "${CMS_SERVICE_NAME}"
 }
 
 boreas_cms_code_coverage() {
