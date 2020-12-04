@@ -13,3 +13,13 @@ projects_load logrhythm_boreas
 
 alias bcgo=boreas_cms_start
 alias bcsc=boreas_cms_super_clean
+
+hub_sync_prune() {
+    local current_branch=$(git_get_branch)
+    for b in $(hub sync 2>&1 | grep 'was deleted on origin' | cut -d: -f2 | grep -Eo "^\s*'[^']+'" | grep -Eo "[^']+"); do
+        if [ "$current_branch" == "$b" ]; then
+            git co master
+        fi
+        git b -D "$b"
+    done
+}
