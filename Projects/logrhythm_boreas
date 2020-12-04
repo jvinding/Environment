@@ -21,6 +21,11 @@ boreas_simple_clean() {
     find . -type d -name target | xargs rm -rf
 }
 
+boreas_postgres_start() {
+    boreas
+    docker-compose -p boreas-local -f infrastructure/local/docker/docker-compose.yml up -d postgres
+}
+
 ## Helpers
 boreas_is_valid_environment() {
     local environment=${1:-}
@@ -73,6 +78,12 @@ boreas_component_test() {
     mvn test -pl ":${component}" -am
 }
 
+boreas_component_coverage_report() {
+    local component=${1:-}
+    boreas
+    open "$(boreas_component_find_base_dir "$component")/target/site/jacoco/index.html"
+}
+
 boreas_component_code_coverage() {
     local component=${1:-}
     if [ -z "$component" ]; then
@@ -108,9 +119,13 @@ boreas_component_generate_jwt() {
 
 ## CMS
 
+boreas_cms_coverage_report() {
+    boreas_component_coverage_report "${CMS_SERVICE_NAME}"
+}
+
 boreas_cms_verify() {
     boreas
-    mvn -s infrastructure/maven/settings.xml -Pcontinuous-integration --also-make --also-make-dependents test verify -pl ":${CMS_SERVICE_NAME}"
+    mvn verify -pl ":${CMS_SERVICE_NAME}" -am
 }
 
 boreas_cms_format() {
