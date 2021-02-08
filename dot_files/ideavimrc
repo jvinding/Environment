@@ -9,6 +9,8 @@ set incsearch
 " Use Idea to join lines smartly
 set ideajoin
 
+set surround
+
 nnoremap <leader>oi :action OptimizeImports<CR>
 nnoremap <leader>rn :action RenameElement<CR>
 nnoremap <leader>rf :action RenameFile<CR>
