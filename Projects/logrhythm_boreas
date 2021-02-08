@@ -15,10 +15,21 @@ boreas_stop() {
     boreas
     mvn clean
 }
+_boreas_simple_clean() {
+    find . -type d -name target | xargs rm -rf
+}
 
 boreas_simple_clean() {
     boreas
-    find . -type d -name target | xargs rm -rf
+    _boreas_simple_clean
+}
+
+boreas_cms_simple_clean() {
+    boreas_cms
+    _boreas_simple_clean
+    if [ "${1:-}" == "-r" ]; then
+        boreas_cms_build
+    fi
 }
 
 boreas_postgres_start() {
@@ -165,7 +176,7 @@ boreas_cms_code_coverage() {
 }
 
 boreas_super_clean() {
-    boreas
+    boreas_simple_clean
     mvn clean -DpurgeVolumes
 }
 
