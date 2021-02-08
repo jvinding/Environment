@@ -173,6 +173,10 @@ NORMAL="\[\033[0;0m\]"  # normal term color
 
 if [ $BASH ]
 then
+    function terminal_title {
+        export __TERMINAL_TITLE="$*"
+    }
+
     #
     # these are various ways of shortening the path for display
     #
@@ -267,7 +271,11 @@ then
         if [[ "$TERM" =~ (xterm|screen).* ]]; then
             ## echo -e "\033]0;${USER}@${HOSTNAME}:$_TMP_PWD\007"
             host=$(hostname)
-            printf "\033k${USER}@${host%%.*}\033\\"
+            local title="${USER}@${host%%.*}"
+            if [ -n "${__TERMINAL_TITLE:-}" ]; then
+                title="${__TERMINAL_TITLE} - ${title}"
+            fi
+            printf "\033k${title}\033\\"
         fi
 
         PS1="${GREEN}/$(prompt_pwd_chop_from_front)$BLUE-=($RED\$?$BLUE)=-" ## modified pwd and the return code of the last command
