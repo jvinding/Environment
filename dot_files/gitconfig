@@ -22,6 +22,7 @@
     fap = fetch --all --prune
     dc = diff --cached
     su = stash save --include-untracked
+    sk = stash save --keep-index
     sl = stash list
     ss = stash show -u
     spop = stash pop
