@@ -1,6 +1,6 @@
 [user]
     name = Jeremy Vinding
-    email = jeremy.vinding@logrhythm.com
+    email = 
 [color]
     diff = auto
     status = auto
@@ -30,7 +30,6 @@
     mf = merge --ff-only
     changes = whatchanged -p
     sup = submodule update --recursive
-    shootmenow = submodule
     l = log --color --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd) %C(bold blue)[%an]%Creset' --abbrev-commit --date=human
     lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd) %C(bold blue)[%an]%Creset' --abbrev-commit --date=human
     lol = log --graph --decorate --pretty=oneline --abbrev-commit
@@ -90,3 +89,4 @@
 	old = red bold
 	new = green bold
 	whitespace = red reverse
+
