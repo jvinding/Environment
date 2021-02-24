@@ -1,27 +1,24 @@
 
 call plug#begin('~/.vim/plugged')
 
+Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'sonph/onehalf', { 'rtp': 'vim' }
 Plug 'preservim/nerdtree'
 Plug 'tpope/vim-fugitive'
-" Plug 'rakr/vim-one'
 
 call plug#end()
 
-" let g:airline_theme='one'
-" colorscheme one
 
-" set background=dark
 
 set guifont=Source\ Code\ Pro\ For\ Powerline:h13
-colorscheme onehalfdark
+set background=dark
+colorscheme solarized
 
 set cursorline
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
-let g:airline_theme='onehalfdark'
+let g:airline_theme='solarized'
 
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_follow_symlinks = 1
