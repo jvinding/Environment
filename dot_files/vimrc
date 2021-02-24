@@ -1,175 +1,32 @@
-execute pathogen#infect()
-syntax on
-color torte
 
-" yank to the system pasteboard
-set clipboard=unnamed
+call plug#begin('~/.vim/plugged')
 
-"
-" set indentation options
-"
-set ts=4
-set shiftwidth=4
-filetype indent on
-set expandtab autoindent smartindent
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'sonph/onehalf', { 'rtp': 'vim' }
+Plug 'preservim/nerdtree'
+Plug 'tpope/vim-fugitive'
+" Plug 'rakr/vim-one'
 
-"
-"" set term=ansi
+call plug#end()
 
-set ruler showcmd wildmenu nohlsearch
-set title titlestring=
+" let g:airline_theme='one'
+" colorscheme one
 
-set vb t_vb=
+" set background=dark
 
-set nocompatible        " Use Vim defaults (much better!)
-set bs=2                " backspace over newlines and all
-set scrolloff=1         " Always at least 1 line visible above or below cursor
-set sidescrolloff=5     " 5 chars before/after cursor when scrolling horizontally
-set autoread            " no more "this file has changed" dialogs
+set guifont=Source\ Code\ Pro\ For\ Powerline:h13
+colorscheme onehalfdark
 
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.class
-
-let mapleader=","
-
-nmap Q :qa<CR>
-nmap ; :
-
-nnoremap ,, ,
-nnoremap ;; ;
-
-map <C-l> :syn sync fromstart<CR>
-map <Leader><Leader>n :set number!<CR>
-
-map! <C-s> <ESC>:w<CR> " save
-nmap <C-s> :w<CR>
-
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
-
-"
-" set up some insert mode mappings
-"
-"imap ,setmark <ESC>maa
-"imap ,gotomark <ESC>`aa
-"
-"imap ,shebang #!/home/jvinding/bin/perl<CR>use warnings;<CR>use strict;<CR><CR>
-"
-"imap ,perlif if (,setmark)<CR>{<CR>}
-"imap ,ifo ,perlif,gotomark
-"imap ,ife ,perlif<CR>else<CR>{<CR>},gotomark
-"imap ,for for (,setmark;;)<CR>{<CR>},gotomark
-"
-"imap _tclif if {,setmark} {<CR>}
-"imap _ifo _tclif,gotomark
-"imap _ife _tclif else {<CR>},gotomark
-"imap _for for {,setmark} {} {} {<CR>},gotomark
-
-"
-"
-"
-:map! <S-space><S-space> <esc>
-
-nmap <unique>	<C-/>	<Plug>FtcTc
-vmap <unique>	<C-/>	<Plug>FtcTc
-imap <unique>	<C-/>	<esc><Plug>FtcTc
-
-"
-" remove toolbar and tearoff menus in gui mode
-"
-"" let &guioptions = substitute(&guioptions, "[Tt]", "", "g")
-
-"" :if &term =~ "xterm"
-""     :if has("terminfo")
-""     :  set t_Co=16
-""     :  set t_AB=[%?%p1%{8}%<%t%p1%{40}%+%e%p1%{92}%+%;%dm
-""     :  set t_AF=[%?%p1%{8}%<%t%p1%{30}%+%e%p1%{82}%+%;%dm
-""     :endif
-"" :endif
-"map ,d :source ~/.vim/dvorak<CR>
-"map ,q :source ~/.vim/qwerty<CR>
-
-nmap <Leader>c :cclose<CR>
-
-"============[ everything below this is from http://is.gd/IBV2013 ]============"
-
-" highlight 106th column of wide lines...
-highlight ColorColumn ctermbg=magenta
-call matchadd('ColorColumn', '\%106v', 100)
-
-"====[ Make tabs, trailing whitespace, and non-breaking spaces visible ]======
-" exec "set listchars=tab:\uBB\uBB,trail:\uB7,nbsp:~"
-" set list
-set list listchars=tab:»·,trail:·,nbsp:~
-
-"===================================[ END ]===================================="
-
-"
-" Easy Motion
-"
-let g:EasyMotion_smartcase = 1
-let g:EasyMotion_enter_jump_first = 1
-let g:EasyMotion_space_jump_first = 1
-
-" map  <Leader>/ <Plug>(easymotion-sn)
-" omap <Leader>/ <Plug>(easymotion-tn)
-map  / <Plug>(easymotion-sn)
-omap / <Plug>(easymotion-tn)
-map  <Leader>n <Plug>(easymotion-next)
-map  <Leader>N <Plug>(easymotion-prev)
-
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
-map <Leader>l <Plug>(easymotion-lineforward)
-map <Leader>h <Plug>(easymotion-linebackward)
-
-"
-" Airline
-"
-set laststatus=2
+set cursorline
 let g:airline_powerline_fonts = 1
-let g:airline_theme='solarized'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_theme='onehalfdark'
 
-"
-" Bufferline
-"
-let g:bufferline_echo = 0 " only show it in airline
-
-"
-" NerdTree
-"
-map <C-t> :NERDTreeFind<CR>
-
-"
-" Ctrl-P
-" http://kien.github.io/ctrlp.vim/
-"
-let g:ctrlp_map = '<D-t>'
-nmap <Leader>t :CtrlP<CR>
+set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_follow_symlinks = 1
 let g:ctrlp_working_path_mode = 'r'
+let g:ctrlp_map = '<D-t>'
 
-"
-" Git Gutter
-"
-highlight GitGutterChange ctermfg=blue guifg=blue ctermbg=gray guibg=gray
-
-"
-" Silver Searcher
-"
-let g:ag_highlight=1
-
-
-"
-" tmux support
-"
-if exists('$ITERM_PROFILE')
-    if exists('$TMUX') 
-        let &t_SI = "\<Esc>[3 q"
-        let &t_EI = "\<Esc>[0 q"
-    else
-        let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-        let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-    endif
-end
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
