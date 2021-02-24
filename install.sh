@@ -18,11 +18,9 @@ for s in $dir/dot_files/*; do
     if [ -L $target ]; then
         rm $target
     fi
-    ln -s $s $target
+    if [ -e $target ]; then
+        echo Skipping $target
+    else
+        ln -s $s $target
+    fi
 done
-
-bash_completion_dir=.bash_completion.d
-if [ -L $bash_completion_dir ]; then
-    rm $bash_completion_dir
-fi
-ln -s $dir/bash_completion.d $bash_completion_dir
