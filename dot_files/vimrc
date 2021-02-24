@@ -9,21 +9,46 @@ Plug 'tpope/vim-fugitive'
 
 call plug#end()
 
+"
+" set indentation options
+"
+set ts=4
+set shiftwidth=4
+filetype indent on
+set expandtab autoindent smartindent
 
+let mapleader=","
+
+nmap ; :
+
+nnoremap ,, ,
+nnoremap ;; ;
+
+map <Leader><Leader>n :set number!<CR>
 
 set guifont=Source\ Code\ Pro\ For\ Powerline:h13
 set background=dark
 colorscheme solarized
 
 set cursorline
+
+"
+" Airline
+"
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_theme='solarized'
 
+"
+" Ctrl-P
+"
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_follow_symlinks = 1
 let g:ctrlp_working_path_mode = 'r'
 let g:ctrlp_map = '<D-t>'
 
+"
+" NERDTree
+"
 nnoremap <C-t> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
