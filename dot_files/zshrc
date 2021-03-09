@@ -69,6 +69,33 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # see 'man strftime' for details.
 # HIST_STAMPS="mm/dd/yyyy"
 
+# Share history between all sessions.
+setopt SHARE_HISTORY
+
+# Expire duplicate entries first when trimming history.
+setopt HIST_EXPIRE_DUPS_FIRST
+
+# Don't record an entry that was just recorded again.
+setopt HIST_IGNORE_DUPS
+
+# Delete old recorded entry if new entry is a duplicate.
+setopt HIST_IGNORE_ALL_DUPS
+
+# Do not display a line previously found.
+setopt HIST_FIND_NO_DUPS
+
+# Don't record an entry starting with a space.
+setopt HIST_IGNORE_SPACE
+
+# Don't write duplicate entries in the history file.
+setopt HIST_SAVE_NO_DUPS
+
+# Remove superfluous blanks before recording entry.
+setopt HIST_REDUCE_BLANKS
+
+# Don't execute immediately upon history expansion.
+setopt HIST_VERIFY
+
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
@@ -79,7 +106,7 @@ VI_MODE_SET_CURSOR=true
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(common-aliases vi-mode)
+plugins=(common-aliases vi-mode history-substring-search)
 
 source $ZSH/oh-my-zsh.sh
 
