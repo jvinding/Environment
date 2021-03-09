@@ -3,7 +3,7 @@ local apps = {
     B = "Brave",
     -- C = "AppCode",
     -- C = "AppCode-EAP",
-    D = "DataGrip",
+    D = "DBeaver",
     E = "Rider",
     F = "Firefox",
     -- G = "Google Chrome",
@@ -16,6 +16,7 @@ local apps = {
     L = "Slack",
     M = "Messages",
     -- N = "Navicat Essentials for PostgreSQL",
+    N = "Microsoft OneNote",
     P = "1Password 7",
     R = "iTerm",
     -- S = "GitKraken",
@@ -28,6 +29,7 @@ local apps = {
     X = "Xcode",
     -- X = "Xcode-beta",
     Z = "Zeplin",
+    space = "Todoist",
     delete = "Finder" -- I mostly use this to escape from screen sharing
 }
 
