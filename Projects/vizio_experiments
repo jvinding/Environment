@@ -1,0 +1,43 @@
+PROJECT_DIR=$HOME/Projects
+PROJECT_NAME=Vizio.Services.Experiments
+
+experiments() {
+    cd $PROJECT_DIR/vizio-services-experiments
+}
+
+experiments_data() {
+    experiments
+    cd $PROJECT_NAME.DataLayer
+}
+
+experiments_migration_create() {
+    experiments_data
+    local name=$1
+    dotnet ef migrations add "$name" -s ../$PROJECT_NAME
+} 
+
+experiments_migrations_run() {
+    experiments_data
+    dotnet ef database update -s ../$PROJECT_NAME
+}
+
+experiments_migrations_list() {
+    experiments_data
+    dotnet ef migrations list -s ../$PROJECT_NAME
+}
+
+experiments_migrations_remove() {
+    dotnet ef migrations remove
+}
+
+experiments_migrations_rollback() {
+    experiments_data
+    local target_migration=$(experiments_migrations_list | tail -2 | head -1)
+    dotnet ef database update $target_migration -s ../$PROJECT_NAME
+}
+
+experiments_migrations_sql() {
+    experiments_data
+    local target_migration=$(experiments_migrations_list | tail -1)
+    dotnet ef migrations script $target_migration --output ${target_migration%%.*}.sql -s ../$PROJECT_NAME
+}
