@@ -39,5 +39,6 @@ experiments_migrations_rollback() {
 experiments_migrations_sql() {
     experiments_data
     local target_migration=$(experiments_migrations_list | tail -1)
-    dotnet ef migrations script $target_migration --output ${target_migration%%.*}.sql -s ../$PROJECT_NAME
+    dotnet ef migrations script --idempotent --output AllMigrations.sql -s ../$PROJECT_NAME
+    ## dotnet ef migrations script $target_migration --idempotent --output ${target_migration%%.*}.sql -s ../$PROJECT_NAME
 }
