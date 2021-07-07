@@ -142,4 +142,9 @@ fi
 source ~/Environment/plugins/git
 source ~/Environment/plugins/aws_xray
 source ~/Environment/plugins/kafka
+source ~/Environment/Secrets/vizio_github_api_token
+source ~/Environment/Secrets/vizio_jfrog_api_token
+source ~/Environment/Secrets/vizio_experiments_jwt_secrets
+source ~/Environment/Secrets/vizio_amazon_creds
+source ~/Environment/Secrets/vizio_acs_ad_secrets
 source ~/Environment/Projects/vizio_experiments
