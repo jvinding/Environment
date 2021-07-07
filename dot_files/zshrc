@@ -142,6 +142,9 @@ fi
 source ~/Environment/plugins/git
 source ~/Environment/plugins/aws_xray
 source ~/Environment/plugins/kafka
+
+export CPPFLAGS=-I/usr/local/opt/openjdk/include
+
 source ~/Environment/Secrets/vizio_github_api_token
 source ~/Environment/Secrets/vizio_jfrog_api_token
 source ~/Environment/Secrets/vizio_experiments_jwt_secrets
@@ -149,3 +152,22 @@ source ~/Environment/Secrets/vizio_amazon_creds
 source ~/Environment/Secrets/vizio_acs_ad_secrets
 source ~/Environment/Projects/vizio_experiments
 source ~/Environment/Projects/vizio_voice_search
+
+export JMETER_HOME=${HOME}/bin/apache-jmeter-4.0
+
+export JAVA_HOME=$(/usr/libexec/java_home);
+## export JAVA_OPTS="-Dserver.rmi.ssl.disable=true"
+
+jdk() {
+        version=$1
+        export JAVA_HOME=$(/usr/libexec/java_home -v"$version");
+        java -version
+ }
+
+jmeter() {
+    jdk 1.8
+    ${JMETER_HOME}/bin/jmeter -Jserver.rmi.ssl.disable=true -Jmaven.wagon.http.ssl.insecure=true -Jmaven.wagon.http.ssl.allowall=true -Jmaven.wagon.http.ssl.ignore.validity.dates=true -Jjmeter.loggerpanel.display=true&
+}
+
+## export PATH="/usr/local/opt/openjdk/bin:${PATH}:/Users/jeremy.vinding/.dotnet/tools"
+export PATH="${PATH}:/Users/jeremy.vinding/.dotnet/tools"
