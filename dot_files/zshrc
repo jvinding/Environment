@@ -148,3 +148,4 @@ source ~/Environment/Secrets/vizio_experiments_jwt_secrets
 source ~/Environment/Secrets/vizio_amazon_creds
 source ~/Environment/Secrets/vizio_acs_ad_secrets
 source ~/Environment/Projects/vizio_experiments
+source ~/Environment/Projects/vizio_voice_search
