@@ -1,4 +1,4 @@
-PROJECT_DIR=$HOME/Projects
+
 PROJECT_NAME=Vizio.Services.Experiments
 
 experiments() {
@@ -38,7 +38,7 @@ experiments_migrations_remove() {
 experiments_migrations_rollback() {
     experiments_data
     local target_migration=$(experiments_migrations_list | tail -2 | head -1)
-    dotnet ef database update $target_migration -s ../$PROJECT_NAME
+    dotnet ef database update $target_migration -s ../$PROJECT_NAME -v
 }
 
 experiments_migrations_sql() {
@@ -48,7 +48,27 @@ experiments_migrations_sql() {
     ## dotnet ef migrations script $target_migration --idempotent --output ${target_migration%%.*}.sql -s ../$PROJECT_NAME
 }
 
+experiments_rebuild() {
+    experiments
+    dotnet clean ${PROJECT_NAME}.sln
+    find . -type d \( -name bin -o -name obj \) -prune -exec rm -rf '{}' \;
+    dotnet build ${PROJECT_NAME}.sln
+}
+
 experiments_test() {
     experiments
     dotnet test ${PROJECT_NAME}.sln
+}
+
+experiments_docker_build() {
+    docker build -t vizio-services-experiments:0 \
+        --no-cache \
+        --build-arg NUGET_REPOSITORY_URL=http://artifactory.vizio.com/artifactory/api/nuget/v3/nuget-all \
+        --build-arg NUGET_API_KEY=$JFROG_API_TOKEN \
+        --build-arg CODEBUILD_BUILD_URL=$CODEBUILD_BUILD_URL \
+        --build-arg CODEBUILD_RESOLVED_SOURCE_VERSION=$CODEBUILD_RESOLVED_SOURCE_VERSION \
+        --build-arg CODEBUILD_START_TIME=$CODEBUILD_START_TIME \
+        --progress plain \
+        --target test \
+        --file ./Dockerfile .
 }
