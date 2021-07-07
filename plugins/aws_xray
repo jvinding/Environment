@@ -1,0 +1,19 @@
+export AWS_XRAY_TRACING_NAME=jjv-local-traces
+export XRay__AWSXRayPlugins=
+export LogLevel__Amazon__XRay=Trace
+
+aws_xray_start() {
+    if [ -z "$AWS_SESSION_TOKEN" ]; then
+        echo "copy credentials from the SSO page" >&2
+        return
+    fi
+    docker run -it --rm \
+    --env AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+    --env AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+    --env AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN} \
+    --env AWS_REGION=us-west-2 \
+    --name xray-daemon \
+    --publish 2000:2000/udp \
+    --publish 2000:2000 \
+    amazon/aws-xray-daemon -o
+}

@@ -1,0 +1,11 @@
+# github.com/wurstmeister/kafka-docker.git
+
+kafka_up() {
+    cd $PROJECT_DIR/kafka-docker
+    docker-compose up -d
+}
+
+kafka_down() {
+    cd $PROJECT_DIR/kafka-docker
+    docker-compose down
+}
