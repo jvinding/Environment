@@ -139,6 +139,9 @@ fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+export NUGET_REPOSITORY_URL=http://artifactory.vizio.com/artifactory/api/nuget/v3/nuget-all
+export NUGET_API_KEY=$JFROG_API_TOKEN
+
 source ~/Environment/plugins/git
 source ~/Environment/plugins/aws_xray
 source ~/Environment/plugins/kafka
@@ -150,6 +153,9 @@ source ~/Environment/Secrets/vizio_jfrog_api_token
 source ~/Environment/Secrets/vizio_experiments_jwt_secrets
 source ~/Environment/Secrets/vizio_amazon_creds
 source ~/Environment/Secrets/vizio_acs_ad_secrets
+
+export PROJECT_DIR=$HOME/Projects/Vizio
+
 source ~/Environment/Projects/vizio_experiments
 source ~/Environment/Projects/vizio_voice_search
 
