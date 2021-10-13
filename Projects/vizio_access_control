@@ -1,0 +1,5 @@
+PROJECT_NAME=Vizio.Services.AccessControl
+
+acs() {
+    cd $PROJECT_DIR/vizio-services-access-control
+}

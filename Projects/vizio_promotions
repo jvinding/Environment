@@ -1,0 +1,21 @@
+PROJECT_NAME=Vizio.Services.ContentSync
+
+export PROMO_DB_CONNECTION='{"DbName":"promotions","Host":"localhost","Port":5432,"Username":"postgres"}'
+export PROMO_DEV_DB='{"DbName":"promotions","Host":"localhost","Port":5432,"Username":"postgres"}'
+
+promotions() {
+    cd $PROJECT_DIR/vizio-services-promotions
+}
+
+promotions_list(){
+    /usr/local/share/dotnet/dotnet /Users/jeremy.vinding/Projects/Vizio/vizio-services-promotions/Tools/promodb/bin/Debug/net5.0/promodb.dll list
+
+}
+
+promotions_create() {
+    /usr/local/share/dotnet/dotnet $PROJECT_DIR/vizio-services-promotions/Tools/promodb/bin/Debug/net5.0/promodb.dll create $PROJECT_DIR/vizio-services-promotions/Tools/promodb/ValidJson/CampaignDef.json 50000
+}
+promotions_add_codes() {
+    /usr/local/share/dotnet/dotnet /Users/jeremy.vinding/Projects/Vizio/vizio-services-promotions/Tools/promodb/bin/Debug/net5.0/promodb.dll addcodes 1 50
+000
+}

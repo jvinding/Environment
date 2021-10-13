@@ -153,16 +153,32 @@ source ~/Environment/Secrets/vizio_jfrog_api_token
 source ~/Environment/Secrets/vizio_experiments_jwt_secrets
 source ~/Environment/Secrets/vizio_amazon_creds
 source ~/Environment/Secrets/vizio_acs_ad_secrets
+source ~/Environment/Secrets/vizio_globaldata_connection_strings
+source ~/Environment/Secrets/vizio_mongo_connection
 
 export PROJECT_DIR=$HOME/Projects/Vizio
 
 source ~/Environment/Projects/vizio_experiments
+source ~/Environment/Projects/vizio_access_control
 source ~/Environment/Projects/vizio_voice_search
+source ~/Environment/Projects/vizio_metadata
+source ~/Environment/Projects/vizio_content_sync
+source ~/Environment/Projects/vizio_promotions
 
 export JMETER_HOME=${HOME}/bin/apache-jmeter-4.0
 
 export JAVA_HOME=$(/usr/libexec/java_home);
 ## export JAVA_OPTS="-Dserver.rmi.ssl.disable=true"
+
+hub_sync_prune() {
+    local current_branch=$(git_get_branch)
+    for b in $(hub sync --color=never 2>&1 | grep --color=never 'was deleted on origin' | cut -d: -f2 | grep --color=never -Eo "^\s*'[^']+'" | grep --color=never -Eo "[^'[:space:]]+" | grep --color=never -Ev '^[[:space:]]*$'); do
+        if [ "$current_branch" = "$b" ]; then
+            git checkout master || return 1
+        fi
+        git branch -D "$b"
+    done
+}
 
 jdk() {
         version=$1
@@ -177,3 +193,22 @@ jmeter() {
 
 ## export PATH="/usr/local/opt/openjdk/bin:${PATH}:/Users/jeremy.vinding/.dotnet/tools"
 export PATH="${PATH}:/Users/jeremy.vinding/.dotnet/tools"
+
+## https://hub.docker.com/_/mongo/
+mongo_start() {
+    docker run -d \
+        -p 27017:27017 \
+        --name mongo \
+        -e MONGO_INITDB_ROOT_USERNAME=admin \
+        -e MONGO_INITDB_ROOT_PASSWORD=password \
+        mongo
+}
+
+mongo_cli() {
+    docker exec -it mongo mongo -u admin -p password
+}
+
+
+redis_start() {
+    docker run --name redis -p 6379:6379 -d redis
+}

@@ -1,0 +1,5 @@
+export DocumentDb__TimeoutMs=60000
+export DocumentDb__CircuitBreakerOpenDurationMs=60000
+metadata() {
+    cd $PROJECT_DIR/vizio-services-metadata
+}

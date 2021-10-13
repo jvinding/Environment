@@ -1,0 +1,11 @@
+PROJECT_NAME=Vizio.Services.ContentSync
+
+## export SourceContent__ConnectionString=${DocumentDbConnectionStringLocal}
+## export SourceContent__Database=${DocumentDbDatabaseLocal}
+export SourceContent__ConnectionString=${DocumentDbConnectionStringProd}
+export SourceContent__Database=${DocumentDbDatabaseProd}
+export SourceContent__TimeoutMs=30000
+
+css() {
+    cd $PROJECT_DIR/vizio-services-content-sync
+}
