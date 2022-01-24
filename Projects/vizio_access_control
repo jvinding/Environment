@@ -1,5 +1,6 @@
 PROJECT_NAME=Vizio.Services.AccessControl
 
+export ACCESS_CONTROL_DB='{"DbName":"access_control","Host":"localhost","Port":5432,"Username":"postgres"}'
 acs() {
     cd $PROJECT_DIR/vizio-services-access-control
 }

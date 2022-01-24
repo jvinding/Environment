@@ -1,0 +1,3 @@
+common() {
+    cd $PROJECT_DIR/vizio-services-common
+}

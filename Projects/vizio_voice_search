@@ -1,11 +1,11 @@
 export Vizio__Caching__Enabled=false
 export MetaDataService__TimeoutMilliseconds=3000
 export MetaDataService__Retries=1
-export MetaDataService__BaseUrl=https://metadata-prod.smartcasttv.com/
-export LogLevel__Vizio__Services__VoiceSearch__Common__XRay=Debug
+## export MetaDataService__BaseUrl=https://metadata-prod.smartcasttv.com/
+## export LogLevel__Vizio__Services__VoiceSearch__Common__XRay=Debug
 
 hitch() {
-    cd $PROJECT_DIR/vizio-services-voice-search-tools
+    cd $PROJECT_DIR/vizio-services-admin-cms
 }
 
 hitch_build() {
@@ -15,7 +15,7 @@ hitch_build() {
 
 hitch_start() {
     hitch
-    docker run --rm -it  -p 443:443/tcp -p 80:80/tcp vizioservicesvoicesearchtools:latest
+    docker run --rm -it -p 443:443/tcp -p 80:80/tcp -e "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" -e "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" -e "AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN" vizioservicesvoicesearchtools:latest
 }
 
 voice_search() {

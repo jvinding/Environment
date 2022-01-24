@@ -1,0 +1,5 @@
+impression_proxy() {
+    cd $PROJECT_DIR/vizio-services-impression-proxy
+    source ~/python_envs/impression_proxy/bin/activate
+    source .env
+}

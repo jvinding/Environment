@@ -164,6 +164,10 @@ source ~/Environment/Projects/vizio_voice_search
 source ~/Environment/Projects/vizio_metadata
 source ~/Environment/Projects/vizio_content_sync
 source ~/Environment/Projects/vizio_promotions
+source ~/Environment/Projects/vizio_impression_proxy
+source ~/Environment/Projects/vizio_topnav
+source ~/Environment/Projects/vizio_catalog
+source ~/Environment/Projects/vizio_common
 
 export JMETER_HOME=${HOME}/bin/apache-jmeter-4.0
 
