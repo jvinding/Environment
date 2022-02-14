@@ -1,0 +1,3 @@
+cds() {
+    cd $PROJECT_DIR/vizio-services-content-details
+}

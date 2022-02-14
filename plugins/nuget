@@ -1,0 +1,7 @@
+nuget_caches_list() { 
+    nuget locals all -List
+}
+
+nuget_caches_clear() { 
+    nuget locals all -Clear
+}

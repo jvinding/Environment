@@ -145,6 +145,7 @@ export NUGET_API_KEY=$JFROG_API_TOKEN
 source ~/Environment/plugins/git
 source ~/Environment/plugins/aws_xray
 source ~/Environment/plugins/kafka
+source ~/Environment/plugins/nuget
 
 export CPPFLAGS=-I/usr/local/opt/openjdk/include
 
@@ -168,6 +169,8 @@ source ~/Environment/Projects/vizio_impression_proxy
 source ~/Environment/Projects/vizio_topnav
 source ~/Environment/Projects/vizio_catalog
 source ~/Environment/Projects/vizio_common
+source ~/Environment/Projects/vizio_content_details
+source ~/Environment/Projects/vizio_admin
 
 export JMETER_HOME=${HOME}/bin/apache-jmeter-4.0
 

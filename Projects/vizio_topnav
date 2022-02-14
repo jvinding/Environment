@@ -3,5 +3,5 @@ PROJECT_NAME=Vizio.Services.TopNav
 export TOPNAV_DB='{"DbName":"topnav","Host":"localhost","Port":5432,"Username":"postgres"}'
 
 topnav() {
-    cd $PROJECT_DIR/vizio-services-experiments
+    cd $PROJECT_DIR/vizio-services-topnav
 }

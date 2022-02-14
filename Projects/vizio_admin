@@ -1,0 +1,6 @@
+admin() {
+    cd $PROJECT_DIR/dev/VizioAdmin
+    if [ "$(git_get_branch)" != "admin-prod" ]; then
+        echo "Not on branch 'admin-prod'"
+    fi
+}
