@@ -13,7 +13,7 @@
     pf = pull --ff-only
     pull-request = !hub pull-request
     s = status -sb
-    b = branch
+    b = !git --no-pager branch
     sb = show-branch
     sbt = show-branch --topics
     d = diff
@@ -23,6 +23,7 @@
     dc = diff --cached
     su = stash save --include-untracked
     sk = stash save --keep-index
+    sku = stash save --keep-index --include-untracked
     sl = stash list
     ss = stash show -u
     spop = stash pop
@@ -57,7 +58,7 @@
     autocrlf = input
     ignorecase = false
 	whitespace = trailing-space,space-before-tab,tab-in-indent
-	pager = diff-so-fancy | less --tabs=4 -RFX
+    ; pager = diff-so-fancy | less --tabs=4 -RFX
 [branch]
     autosetupmerge = true
 [push]
