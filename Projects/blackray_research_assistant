@@ -1,0 +1,209 @@
+source ~/Environment/Secrets/blackray_aws_creds
+source ~/Environment/Secrets/blackray_secrets
+
+export ResearchAssistant__Database__Host=localhost
+export ResearchAssistant__Database__Port=5432
+export ResearchAssistant__Database__Username=postgres
+export ResearchAssistant__Database__Password=password
+export ResearchAssistant__Database__DatabaseName=research_assistant
+export ResearchAssistant__Database__Options=errorDetails,logDecorators
+
+## SQS
+export AwsSqsOptions__AccessKey=
+export AwsSqsOptions__SecretKey=
+# export AwsSqsOptions__Enabled=true
+export AwsSqsOptions__QueueSummarizeJobs=JJV-Test-Summarize-Jobs
+
+## Pinecone
+# export Pinecone__IndexName=document-contents
+# export Pinecone__ProjectId=a2444d6
+# export Pinecone__Environment=us-east4-gcp
+# export Pinecone__Dimensions=1536
+
+# Mixpanel
+# export Mixpanel__Enabled=true
+## Production
+# export Mixpanel__ProjectId=2980525
+# export Mixpanel__ServiceAccount__Username=Production.49fe09.mp-service-account
+## Dev
+export Mixpanel__ProjectId=3012313
+export Mixpanel__ServiceAccount__Username=Development.e474ff.mp-service-account
+
+# Honeycomb
+# export HoneyComb__Enabled=true
+
+## JWT
+export JWT__ValidAudience=1031993143893-p3poap4b2tk7mvl5oeie2vdticsvl5oe.apps.googleusercontent.com
+export JWT__ValidIssuer=https://accounts.google.com
+
+# dotnet7() {
+    # export PATH=$(echo $PATH | sed -e 's!/dotnet@6/!/dotnet/!')
+#     if ! brew link -n dotnet 2>&1 | grep -q "Already linked"; then
+#         brew unlink dotnet@6
+#         brew link dotnet
+#     fi
+# }
+ra() {
+    cd "${PROJECT_DIR}/research-assistant-search"
+    # export PATH=$(echo $PATH | sed -e 's!/dotnet/!/dotnet@6/!')
+    # if ! brew link -n dotnet@6 2>&1 | grep -q "Already linked"; then
+        # brew unlink dotnet
+        # brew link dotnet@6
+    # fi
+}
+raui() {
+    cd "${PROJECT_DIR}/research-assistant-ui"
+}
+ra_super_clean() {
+    ra \
+    && dotnet clean Blackray.ResearchAssistant.Search.sln \
+    && find . -type d -name infra -prune -o -type d \( -name bin -o -name obj \) -print | xargs rm -rf
+}
+ra_rebuild() {
+    ra
+    dotnet clean Blackray.ResearchAssistant.Search.sln \
+    && dotnet restore Blackray.ResearchAssistant.Search.sln \
+    && dotnet build Blackray.ResearchAssistant.Search.sln
+}
+ra_build() {
+    ra
+    dotnet build Blackray.ResearchAssistant.Search.sln
+}
+ra_migration_add() {
+    ra
+    dotnet ef migrations add -p src/Blackray.ResearchAssistant.Search.DataLayer "$1"
+}
+cs_migration_add() {
+    ra
+    dotnet ef migrations add -p src/Blackray.ResearchCallScheduler.DataLayer "$1"
+}
+ra_migration_drop() {
+    ra
+    dotnet ef migrations remove -p src/Blackray.ResearchAssistant.Search.DataLayer
+}
+ra_migration_revert() {
+    ra
+    local target_migration=$(dotnet ef migrations list -p src/Blackray.ResearchAssistant.Search.DataLayer | tail -2 | head -1)
+    echo "Revert database to '$target_migration'?"
+    read confirm
+    if [ "$confirm" = "Y" ] || [ "$confirm" = "y" ]; then
+        dotnet ef database update -p src/Blackray.ResearchAssistant.Search.DataLayer "$target_migration"
+    fi
+}
+
+ra_publish() {
+    ra
+    dotnet eb deploy-environment -pl src/Blackray.ResearchAssistant.Search --disable-interactive=true -app ResearchAssistant -env research-assistant-demo
+}
+
+ra_clean(){
+    ra && [ -f Blackray.ResearchAssistant.Search.sln ] && find . -type d \( -name obj -o -name bin \) | xargs rm -rf
+}
+
+raui_build(){
+    raui
+    [ -f package.json ] || { echo "paranoia warning: no package.json, wrong dir?"; return 1; }
+    rm -rf build/*
+    npm run build
+    aws s3 sync --delete --exclude=.DS_Store build s3://researchassistant.getblackray.com/
+}
+
+__br_get_instance_id() {
+    local environment=$1
+    local instance_id=$(aws elasticbeanstalk describe-environment-resources --environment-name=${environment} | jq -r '.EnvironmentResources.Instances[0].Id')
+    if [ -z "$instance_id" ]; then
+        echo "failed getting instance id" >&2
+        return;
+    fi
+    echo -n "$instance_id"
+}
+dev_core_instance_id() {
+    __br_get_instance_id dev-blackray-core
+}
+dev_ssh() {
+    aws ssm start-session --target $(dev_core_instance_id)
+}
+dev_ssh_tunnel() {
+    ssh -Nf -i ~/.ssh/br-dev.pem ec2-user@$(dev_core_instance_id) -L 2345:${RA_DB_HOST_DEV}:5432
+}
+dev_ssh_tunnel_close() {
+    pkill -lf "${RA_DB_HOST_DEV}"
+}
+prod_core_instance_id() {
+    __br_get_instance_id prod-blackray-core
+}
+prod_ssh() {
+    aws ssm start-session --target $(prod_core_instance_id)
+}
+prod_ssh_tunnel() {
+    ssh -Nf -i ~/.ssh/br-prod.pem ec2-user@$(prod_core_instance_id) -L 3456:${RA_DB_HOST_PROD}:5432
+}
+prod_ssh_tunnel_close() {
+    pkill -lf "${RA_DB_HOST_PROD}"
+}
+
+
+__br_update_ssh_config() {
+    local elasticbeanstalk_environment=$1
+    local ssh_hostname=$2
+
+    local instance_id=$(aws elasticbeanstalk describe-environment-resources --environment-name=${elasticbeanstalk_environment} | jq -r '.EnvironmentResources.Instances[0].Id')
+    if [ -z "$instance_id" ]; then
+        echo "failed getting instance id" >&2
+        return;
+    fi
+    echo "Instance Id: $instance_id"
+
+    local ip=$(aws ec2 describe-instances --instance-ids=$instance_id | jq -r '.Reservations[0].Instances[0].PublicIpAddress')
+    if [ -z "$ip" ]; then
+        echo "failed getting ip" >&2
+        return;
+    fi
+    echo "Ip: $ip"
+
+    local old_ip=$(grep -A 1 "Host ${ssh_hostname}" ~/.ssh/config | awk '/HostName/ {print $2}')
+    if [ -z "$old_ip" ]; then
+        echo "failed getting old ip" >&2
+        return;
+    fi
+    echo "Old Ip: $old_ip"
+
+    if [[ "$ip" == "$old_ip" ]]; then
+        echo "Ip address has not changed, not modifying"
+    else
+        sed -i '' -e "s/$old_ip/$ip/" ~/.ssh/config 
+        echo "updated $ssh_hostname $old_ip to $ip"
+    fi
+}
+br_prod_update_ssh_config(){
+    __br_update_ssh_config  research-assistant-demo br-prod
+}
+br_dev_update_ssh_config(){
+    local instance_id=$(aws elasticbeanstalk describe-environment-resources --environment-name=research-assistant-dev | jq -r '.EnvironmentResources.Instances[0].Id')
+    if [ -z "$instance_id" ]; then
+        echo "failed getting instance id" >&2
+        return;
+    fi
+    echo "Instance Id: $instance_id"
+
+    local ip=$(aws ec2 describe-instances --instance-ids=$instance_id | jq -r '.Reservations[0].Instances[0].PublicIpAddress')
+    if [ -z "$ip" ]; then
+        echo "failed getting ip" >&2
+        return;
+    fi
+    echo "Ip: $ip"
+
+    local old_ip=$(grep -A 1 'Host br-dev' ~/.ssh/config | awk '/HostName/ {print $2}')
+    if [ -z "$old_ip" ]; then
+        echo "failed getting old ip" >&2
+        return;
+    fi
+    echo "Old Ip: $old_ip"
+
+    if [[ "$ip" == "$old_ip" ]]; then
+        echo "Ip address has not changed, not modifying"
+    else
+        sed -i '' -e "s/$old_ip/$ip/" ~/.ssh/config 
+        echo "updated $old_ip to $ip"
+    fi
+}

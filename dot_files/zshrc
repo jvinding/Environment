@@ -9,7 +9,7 @@ fi
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/jeremy.vinding/.oh-my-zsh"
+export ZSH="${HOME}/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -121,7 +121,7 @@ source $ZSH/oh-my-zsh.sh
 if [[ -n $SSH_CONNECTION ]]; then
   export EDITOR='vim'
 else
-  export EDITOR='mvim'
+  export EDITOR='vim'
 fi
 
 # Compilation flags
@@ -142,40 +142,24 @@ fi
 export NUGET_REPOSITORY_URL=http://artifactory.vizio.com/artifactory/api/nuget/v3/nuget-all
 export NUGET_API_KEY=$JFROG_API_TOKEN
 
+source ~/Environment/mac_shortcuts
+
 source ~/Environment/plugins/git
+source ~/Environment/plugins/ssh
 source ~/Environment/plugins/aws_xray
 source ~/Environment/plugins/kafka
 source ~/Environment/plugins/nuget
 
 export CPPFLAGS=-I/usr/local/opt/openjdk/include
 
-source ~/Environment/Secrets/vizio_github_api_token
-source ~/Environment/Secrets/vizio_jfrog_api_token
-source ~/Environment/Secrets/vizio_experiments_jwt_secrets
-source ~/Environment/Secrets/vizio_amazon_creds
-source ~/Environment/Secrets/vizio_acs_ad_secrets
-source ~/Environment/Secrets/vizio_globaldata_connection_strings
-source ~/Environment/Secrets/vizio_mongo_connection
+export PROJECT_DIR=$HOME/Projects/Blackray
 
-export PROJECT_DIR=$HOME/Projects/Vizio
+source ~/Environment/Projects/blackray_research_assistant
 
-source ~/Environment/Projects/vizio_experiments
-source ~/Environment/Projects/vizio_access_control
-source ~/Environment/Projects/vizio_voice_search
-source ~/Environment/Projects/vizio_metadata
-source ~/Environment/Projects/vizio_content_sync
-source ~/Environment/Projects/vizio_promotions
-source ~/Environment/Projects/vizio_impression_proxy
-source ~/Environment/Projects/vizio_topnav
-source ~/Environment/Projects/vizio_catalog
-source ~/Environment/Projects/vizio_common
-source ~/Environment/Projects/vizio_content_details
-source ~/Environment/Projects/vizio_admin
-
-export JMETER_HOME=${HOME}/bin/apache-jmeter-4.0
-
-export JAVA_HOME=$(/usr/libexec/java_home);
+## export JAVA_HOME=$(/usr/libexec/java_home);
 ## export JAVA_OPTS="-Dserver.rmi.ssl.disable=true"
+
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 hub_sync_prune() {
     local current_branch=$(git_get_branch)
@@ -219,3 +203,9 @@ mongo_cli() {
 redis_start() {
     docker run --name redis -p 6379:6379 -d redis
 }
+
+httpbin_start(){
+    docker run --name httpbin -p 80:4010 -d kennethreitz/httpbin
+}
+
+source ~/Environment/plugins/nvm.post_profile
