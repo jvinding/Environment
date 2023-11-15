@@ -1,10 +1,7 @@
-local positionTop = -1
-local positionBottom = 1
-local positionLeft = -1
-local positionRight = 1
-local positionThird = 3
-local positionSixth = 6
+local positionStart = -1
+local positionEnd = 1
 local positionUnchanged = 0
+local positionCenter = 5
 
 local sizeThird = 3
 local sizeHalf = 2
@@ -16,11 +13,28 @@ local function logFrame(f, message)
   print(message .. ": {" .. f.x .. "," .. f.y .. "," .. f.w .. "," .. f.h .. "}")
 end
 
-local function windowResize(x, y, w, h)
+local function windowResize(big_axis, small_axis, big_dimension, small_dimension)
   local win = hs.window.focusedWindow()
   local f = win:frame()
   local screen = win:screen():frame()
   -- logFrame(screen, win:screen():name())
+
+  local x
+  local y
+  local w
+  local h
+
+  if screen.w > screen.h then
+    x = big_axis
+    w = big_dimension
+    y = small_axis
+    h = small_dimension
+  else
+    x = small_axis
+    w = small_dimension
+    y = big_axis
+    h = big_dimension
+  end
 
   if sizeThird == w then
       f.w = screen.w / 3
@@ -32,14 +46,12 @@ local function windowResize(x, y, w, h)
       f.w = screen.w
   end
 
-  if positionLeft == x then
+  if positionStart == x then
       f.x = screen.x
-  elseif positionRight == x then
+  elseif positionEnd == x then
       f.x = screen.x + screen.w - f.w
-  elseif positionThird == x then
-      f.x = screen.x + screen.w / 3
-  elseif positionSixth == x then
-      f.x = screen.x + screen.w / 6
+  elseif positionCenter == x then
+      f.x = (screen.x + (screen.w / 2)) - (f.w / 2)
   end
 
   if f.x2 > screen.x2 then
@@ -56,14 +68,12 @@ local function windowResize(x, y, w, h)
       f.h = screen.h
   end
 
-  if positionTop == y then
+  if positionStart == y then
       f.y = screen.y
-  elseif positionBottom == y then
+  elseif positionEnd == y then
       f.y = screen.y + screen.h - f.h
-  elseif positionThird == y then
-      f.y = screen.y + screen.h / 3
-  elseif positionSixth == y then
-      f.y = screen.y + screen.h / 6
+  elseif positionCenter == y then
+      f.y = (screen.y + (screen.h / 2)) - (f.h / 2)
   end
 
   if f.y2 > screen.y2 then
@@ -82,28 +92,30 @@ local function bind(key, x, y, w, h)
 end
 
 -- Do not Bind / as it does the mac os sysdiag thing -- "pad/"
---   key         x                  y                  w              h
-bind("pad1",     positionLeft,      positionBottom,    sizeHalf,      sizeHalf)
-bind("pad2",     positionLeft,      positionBottom,    sizeFull,      sizeHalf)
-bind("pad3",     positionRight,     positionBottom,    sizeHalf,      sizeHalf)
-bind("pad4",     positionLeft,      positionTop,       sizeHalf,      sizeFull)
-bind("pad5",     positionLeft,      positionTop,       sizeFull,      sizeFull)
-bind("pad6",     positionRight,     positionTop,       sizeHalf,      sizeFull)
-bind("pad7",     positionLeft,      positionTop,       sizeHalf,      sizeHalf)
-bind("pad8",     positionLeft,      positionTop,       sizeFull,      sizeHalf)
-bind("pad9",     positionRight,     positionTop,       sizeHalf,      sizeHalf)
-bind("Up",       positionUnchanged, positionTop,       sizeUnchanged, sizeUnchanged)
-bind("Right",    positionRight,     positionUnchanged, sizeUnchanged, sizeUnchanged)
-bind("Down",     positionUnchanged, positionBottom,    sizeUnchanged, sizeUnchanged)
-bind("Left",     positionLeft,      positionUnchanged, sizeUnchanged, sizeUnchanged)
-bind("pad*",     positionUnchanged, positionUnchanged, sizeThird,     sizeUnchanged)
-bind("pad-",     positionUnchanged, positionUnchanged, sizeTwoThirds, sizeUnchanged)
-bind("pad+",     positionUnchanged, positionUnchanged, sizeUnchanged, sizeThird)
-bind("padenter", positionUnchanged, positionUnchanged, sizeUnchanged, sizeTwoThirds)
-bind("f1",       positionLeft,      positionTop,       sizeThird,     sizeFull)
-bind("f2",       positionThird,     positionBottom,    sizeFull,      sizeThird)
-bind("f3",       positionRight,     positionTop,       sizeThird,     sizeFull)
-bind("f4",       positionLeft,      positionTop,       sizeTwoThirds, sizeFull)
-bind("f5",       positionThird,     positionThird,     sizeThird,     sizeThird)
-bind("f6",       positionRight,     positionTop,       sizeTwoThirds, sizeFull)
-bind("f8",       positionSixth,     positionTop,       sizeTwoThirds, sizeFull)
+--   key         big_axis            small_axis           big_dimension  small_dimension
+bind("pad1",     positionStart,      positionEnd,         sizeHalf,      sizeHalf)
+bind("pad2",     positionStart,      positionEnd,         sizeFull,      sizeHalf)
+bind("pad3",     positionEnd,        positionEnd,         sizeHalf,      sizeHalf)
+bind("pad4",     positionStart,      positionStart,       sizeHalf,      sizeFull)
+bind("pad5",     positionStart,      positionStart,       sizeFull,      sizeFull)
+bind("pad6",     positionEnd,        positionStart,       sizeHalf,      sizeFull)
+bind("pad7",     positionStart,      positionStart,       sizeHalf,      sizeHalf)
+bind("pad8",     positionStart,      positionStart,       sizeFull,      sizeHalf)
+bind("pad9",     positionEnd,        positionStart,       sizeHalf,      sizeHalf)
+bind("Up",       positionUnchanged,  positionStart,       sizeUnchanged, sizeUnchanged)
+bind("Right",    positionEnd,        positionUnchanged,   sizeUnchanged, sizeUnchanged)
+bind("Down",     positionUnchanged,  positionEnd,         sizeUnchanged, sizeUnchanged)
+bind("Left",     positionStart,      positionUnchanged,   sizeUnchanged, sizeUnchanged)
+bind("pad*",     positionUnchanged,  positionUnchanged,   sizeThird,     sizeUnchanged)
+bind("pad-",     positionUnchanged,  positionUnchanged,   sizeTwoThirds, sizeUnchanged)
+bind("pad+",     positionUnchanged,  positionUnchanged,   sizeUnchanged, sizeThird)
+bind("padenter", positionUnchanged,  positionUnchanged,   sizeUnchanged, sizeTwoThirds)
+bind("f1",       positionStart,      positionStart,       sizeThird,     sizeFull)
+bind("f2",       positionCenter,     positionStart,       sizeThird,     sizeFull)
+bind("f3",       positionEnd,        positionStart,       sizeThird,     sizeFull)
+bind("f4",       positionStart,      positionStart,       sizeTwoThirds, sizeFull)
+bind("f5",       positionCenter,     positionStart,       sizeTwoThirds, sizeFull)
+bind("f6",       positionEnd,        positionStart,       sizeTwoThirds, sizeFull)
+bind("f7",       positionStart,      positionStart,       sizeUnchanged, sizeFull)
+bind("f8",       positionCenter,     positionStart,       sizeUnchanged, sizeFull)
+bind("f9",       positionEnd,        positionStart,       sizeUnchanged, sizeFull)

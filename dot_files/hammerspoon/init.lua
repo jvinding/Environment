@@ -5,7 +5,7 @@ require 'window_resize'
 require 'caffeinate'
 
 hs.loadSpoon("MouseCircle")
-spoon.MouseCircle:bindHotkeys({["show"]={hyper, "f1"}})
+spoon.MouseCircle:bindHotkeys({["show"]={hyper, "`"}})
 
 hs.loadSpoon("ReloadConfiguration")
 spoon.ReloadConfiguration:start()
