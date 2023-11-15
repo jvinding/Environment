@@ -2,6 +2,8 @@ local positionTop = -1
 local positionBottom = 1
 local positionLeft = -1
 local positionRight = 1
+local positionThird = 3
+local positionSixth = 6
 local positionUnchanged = 0
 
 local sizeThird = 3
@@ -34,6 +36,10 @@ local function windowResize(x, y, w, h)
       f.x = screen.x
   elseif positionRight == x then
       f.x = screen.x + screen.w - f.w
+  elseif positionThird == x then
+      f.x = screen.x + screen.w / 3
+  elseif positionSixth == x then
+      f.x = screen.x + screen.w / 6
   end
 
   if f.x2 > screen.x2 then
@@ -54,6 +60,10 @@ local function windowResize(x, y, w, h)
       f.y = screen.y
   elseif positionBottom == y then
       f.y = screen.y + screen.h - f.h
+  elseif positionThird == y then
+      f.y = screen.y + screen.h / 3
+  elseif positionSixth == y then
+      f.y = screen.y + screen.h / 6
   end
 
   if f.y2 > screen.y2 then
@@ -90,3 +100,10 @@ bind("pad*",     positionUnchanged, positionUnchanged, sizeThird,     sizeUnchan
 bind("pad-",     positionUnchanged, positionUnchanged, sizeTwoThirds, sizeUnchanged)
 bind("pad+",     positionUnchanged, positionUnchanged, sizeUnchanged, sizeThird)
 bind("padenter", positionUnchanged, positionUnchanged, sizeUnchanged, sizeTwoThirds)
+bind("f1",       positionLeft,      positionTop,       sizeThird,     sizeFull)
+bind("f2",       positionThird,     positionBottom,    sizeFull,      sizeThird)
+bind("f3",       positionRight,     positionTop,       sizeThird,     sizeFull)
+bind("f4",       positionLeft,      positionTop,       sizeTwoThirds, sizeFull)
+bind("f5",       positionThird,     positionThird,     sizeThird,     sizeThird)
+bind("f6",       positionRight,     positionTop,       sizeTwoThirds, sizeFull)
+bind("f8",       positionSixth,     positionTop,       sizeTwoThirds, sizeFull)
