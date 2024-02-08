@@ -6,6 +6,8 @@
     status = auto
     branch = auto
 	ui = true
+[help]
+    autocorrect = prompt
 [alias]
     co = checkout
     conflicts = diff --name-only --diff-filter=U
