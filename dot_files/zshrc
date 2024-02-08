@@ -151,8 +151,14 @@ source ~/Environment/plugins/kafka
 source ~/Environment/plugins/nuget
 
 export CPPFLAGS=-I/usr/local/opt/openjdk/include
+if which eza > /dev/null; then
+  alias l="eza -la --git"
+fi
 
 export PROJECT_DIR=$HOME/Projects/Blackray
+if which bat > /dev/null; then
+  alias cat="bat"
+fi
 
 source ~/Environment/Projects/blackray_research_assistant
 
