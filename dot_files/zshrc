@@ -144,7 +144,6 @@ export ENVIRONMENT_DIR=~/Environment
 HOSTNAME=`uname -n`
 export HOSTNAME=${HOSTNAME%%.*}
 [ -f $ENVIRONMENT_DIR/Machines/$HOSTNAME ] && . $ENVIRONMENT_DIR/Machines/$HOSTNAME
-echo "HOSTNAME: $HOSTNAME"
 
 export NUGET_REPOSITORY_URL=http://artifactory.vizio.com/artifactory/api/nuget/v3/nuget-all
 export NUGET_API_KEY=$JFROG_API_TOKEN
