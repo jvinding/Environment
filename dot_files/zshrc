@@ -139,6 +139,13 @@ fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+export ENVIRONMENT_DIR=~/Environment
+
+HOSTNAME=`uname -n`
+export HOSTNAME=${HOSTNAME%%.*}
+[ -f $ENVIRONMENT_DIR/Machines/$HOSTNAME ] && . $ENVIRONMENT_DIR/Machines/$HOSTNAME
+echo "HOSTNAME: $HOSTNAME"
+
 export NUGET_REPOSITORY_URL=http://artifactory.vizio.com/artifactory/api/nuget/v3/nuget-all
 export NUGET_API_KEY=$JFROG_API_TOKEN
 
@@ -214,4 +221,4 @@ httpbin_start(){
     docker run --name httpbin -p 80:4010 -d kennethreitz/httpbin
 }
 
-source ~/Environment/plugins/nvm.post_profile
+[ -f $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile ] && . $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile
