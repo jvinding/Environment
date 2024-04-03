@@ -1,0 +1,86 @@
+{
+    "workbench.colorTheme": "Solarized Dark",
+    "[ruby]": {
+        "editor.defaultFormatter": "Shopify.ruby-lsp",
+        "editor.formatOnType": true,
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true,
+        "files.trimFinalNewlines": true,
+        "editor.rulers": [
+            120
+        ],
+        "editor.semanticHighlighting.enabled": true,
+        "editor.formatOnSave": true
+    },
+    "editor.fontFamily": "'Source Code Pro', Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontSize": 13,
+    "window.zoomLevel": 1,
+    "window.closeWhenEmpty": true,
+    "window.openFilesInNewWindow": "on",
+    "window.openFoldersInNewWindow": "on",
+    "window.openWithoutArgumentsInNewWindow": "on",
+    "plantuml.render": "PlantUMLServer",
+    "plantuml.server": "https://www.plantuml.com/plantuml",
+    "editor.guides.bracketPairs": true,
+    "workbench.colorCustomizations": {
+        "editorBracketHighlight.foreground1": "#B48EAD",
+        "editorBracketHighlight.foreground2": "#A3BE8C",
+        "editorBracketHighlight.foreground3": "#EBCB8B",
+        "editorBracketHighlight.foreground4": "#D08770",
+        "editorBracketHighlight.foreground5": "#BF616A",
+        "editorBracketHighlight.foreground6": "#abb2c0",
+        "editorBracketHighlight.unexpectedBracket.foreground": "#db6165"
+    },
+    "rubyTestRunner.specCommand": "/Users/jvinding/bin/run_spec.sh",
+    "aws.suppressPrompts": {
+        "codeWhispererNewWelcomeMessage": true
+    },
+    "aws.telemetry": false,
+    "git.openRepositoryInParentFolders": "always",
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "keyword.other.dotenv",
+                "settings": {
+                    "foreground": "#FF000000"
+                }
+            }
+        ]
+    },
+    "vim.leader": "<space>",
+    "vim.normalModeKeyBindings": [
+        {
+            "before": [
+                "<leader>",
+                "s",
+                "d"
+            ],
+            "commands": [
+                "editor.action.goToImplementation"
+            ],
+        },
+        {
+            "before": [
+                "<leader>",
+                "s",
+                "f"
+            ],
+            "commands": [
+                "workbench.action.quickOpen",
+            ],
+        },
+        {
+            "before": [
+                "<leader>",
+                "s",
+                "g"
+            ],
+            "commands": [
+                "workbench.action.findInFiles",
+            ],
+        }
+    ],
+    "vim.smartRelativeLine": true
+}
