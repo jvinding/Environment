@@ -119,3 +119,13 @@ bind("f6",       positionEnd,        positionStart,       sizeTwoThirds, sizeFul
 bind("f7",       positionStart,      positionStart,       sizeUnchanged, sizeFull)
 bind("f8",       positionCenter,     positionStart,       sizeUnchanged, sizeFull)
 bind("f9",       positionEnd,        positionStart,       sizeUnchanged, sizeFull)
+
+hs.hotkey.bind(hyper, "f10", function()
+    local win = hs.window.focusedWindow()
+    win:moveOneScreenWest(false, true, 0.0)
+end)
+  
+hs.hotkey.bind(hyper, "f12", function()
+    local win = hs.window.focusedWindow()
+    win:moveOneScreenEast(false, true, 0.0)
+end)
