@@ -1,4 +1,4 @@
-let mapleader=","
+let mapleader=" "
 " nmap Q :qa<CR>
 nmap ; :
 
@@ -10,6 +10,9 @@ set incsearch
 set ideajoin
 
 set surround
+
+map <Leader>sf <action>(com.mituuz.fuzzier.Fuzzier)
+map <Leader>mf <action>(com.mituuz.fuzzier.FuzzyMover)
 
 nnoremap <leader>oi :action OptimizeImports<CR>
 nnoremap <leader>rn :action RenameElement<CR>
