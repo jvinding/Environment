@@ -1,5 +1,7 @@
  . ~/Environment/admin
 
+alias fm='cd "/Users/jvinding/Documents/2. Areas/Happy Driver LLC/happy-fleet-manager"'
+
 brew() {
   echo su - admin to use homebrew
 }
