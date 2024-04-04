@@ -59,37 +59,19 @@
     excludesfile = /Users/jvinding/.gitignore
     autocrlf = input
     ignorecase = false
-	whitespace = trailing-space,space-before-tab,tab-in-indent
-    ; pager = diff-so-fancy | less --tabs=4 -RFX
+    pager = delta
+[delta]
+    navigate = true
 [branch]
     autosetupmerge = true
 [push]
     default = current
-[mergetool]
-    prompt = false
 [merge]
     conflictstyle = diff3
-    tool = Kaleidoscope
 [diff]
-    tool = Kaleidoscope
-    compactionHeuristic = true
+    colorMoved = default
 [submodule]
     fetchJobs = 4
-[mergetool "Kaleidoscope"]
-    cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
-    trustexitcode = true
-[difftool "Kaleidoscope"]
-    cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
-[color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = red bold 52
-	newNormal = green bold
-	newHighlight = green bold 22
-[color "diff"]
-	meta = 11
-	frag = magenta bold
-	commit = yellow bold
-	old = red bold
-	new = green bold
-	whitespace = red reverse
+[interactive]
+    diffFilter = delta --color-only
 
