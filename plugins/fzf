@@ -1,0 +1,14 @@
+if which fzf > /dev/null; then
+  fb(){
+    local branch=$(git branch | cut -c3- | fzf +m)
+    if [ -n "$branch" ]; then
+      git checkout $branch
+    fi
+  }
+  fcd(){
+    local dir=$(find ${1:-.} -type d -not -path '*/.*' | fzf +m)
+    if [ -n "$dir" ]; then
+      cd $dir
+    fi
+  }
+fi

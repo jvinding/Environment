@@ -106,7 +106,7 @@ VI_MODE_SET_CURSOR=true
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(common-aliases vi-mode history-substring-search zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(common-aliases vi-mode history-substring-search)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -152,6 +152,7 @@ source ~/Environment/mac_shortcuts
 
 source ~/Environment/plugins/git
 source ~/Environment/plugins/ssh
+source ~/Environment/plugins/fzf
 
 if which eza > /dev/null; then
   alias l="eza -la --git"
@@ -159,20 +160,6 @@ fi
 
 if which bat > /dev/null; then
   alias cat="bat"
-fi
-if which fzf > /dev/null; then
-  fb(){
-    local branch=$(git branch | cut -c3- | fzf +m)
-    if [ -n "$branch" ]; then
-      git checkout $branch
-    fi
-  }
-  fcd(){
-    local dir=$(find ${1:-.} -type d -not -path '*/.*' | fzf +m)
-    if [ -n "$dir" ]; then
-      cd $dir
-    fi
-  }
 fi
 
 if which nvim > /dev/null; then
@@ -197,8 +184,6 @@ if which nvim > /dev/null; then
 fi
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
-
-
 
 jmeter() {
     jdk 1.8
@@ -232,4 +217,5 @@ httpbin_start(){
 }
 
 [ -f $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile ] && . $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+source ~/Environment/plugins/fzf.post_profile
