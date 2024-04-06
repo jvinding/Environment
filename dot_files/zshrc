@@ -152,42 +152,53 @@ source ~/Environment/mac_shortcuts
 
 source ~/Environment/plugins/git
 source ~/Environment/plugins/ssh
-source ~/Environment/plugins/aws_xray
-source ~/Environment/plugins/kafka
-source ~/Environment/plugins/nuget
 
-export CPPFLAGS=-I/usr/local/opt/openjdk/include
 if which eza > /dev/null; then
   alias l="eza -la --git"
 fi
 
-export PROJECT_DIR=$HOME/Projects/Blackray
 if which bat > /dev/null; then
   alias cat="bat"
 fi
+if which fzf > /dev/null; then
+  fb(){
+    local branch=$(git branch | cut -c3- | fzf +m)
+    if [ -n "$branch" ]; then
+      git checkout $branch
+    fi
+  }
+  fcd(){
+    local dir=$(find ${1:-.} -type d -not -path '*/.*' | fzf +m)
+    if [ -n "$dir" ]; then
+      cd $dir
+    fi
+  }
+fi
 
-source ~/Environment/Projects/blackray_research_assistant
-
-## export JAVA_HOME=$(/usr/libexec/java_home);
-## export JAVA_OPTS="-Dserver.rmi.ssl.disable=true"
+if which nvim > /dev/null; then
+  alias vim="nvim"
+  alias vi="nvim"
+  vim() {
+    if [ -n "$1" ] && [ -d "$1" ]; then
+      nvim --cmd "cd ${1:-.}" "$*"
+    else
+      nvim "$*"
+    fi
+  }
+  if which neovide > /dev/null; then
+    gvim() {
+        if [ -n "$1" ] && [ -d "$1" ]; then
+          neovide "$*" -- --cmd "cd ${1:-.}"
+        else
+          neovide "$*"
+        fi
+    }
+  fi
+fi
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-hub_sync_prune() {
-    local current_branch=$(git_get_branch)
-    for b in $(hub sync --color=never 2>&1 | grep --color=never 'was deleted on origin' | cut -d: -f2 | grep --color=never -Eo "^\s*'[^']+'" | grep --color=never -Eo "[^'[:space:]]+" | grep --color=never -Ev '^[[:space:]]*$'); do
-        if [ "$current_branch" = "$b" ]; then
-            git checkout master || return 1
-        fi
-        git branch -D "$b"
-    done
-}
 
-jdk() {
-        version=$1
-        export JAVA_HOME=$(/usr/libexec/java_home -v"$version");
-        java -version
- }
 
 jmeter() {
     jdk 1.8
@@ -221,3 +232,4 @@ httpbin_start(){
 }
 
 [ -f $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile ] && . $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
