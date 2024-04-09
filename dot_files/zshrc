@@ -140,19 +140,15 @@ fi
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 export ENVIRONMENT_DIR=~/Environment
+. $ENVIRONMENT_DIR/lib/plugin
 
 HOSTNAME=`uname -n`
 export HOSTNAME=${HOSTNAME%%.*}
 [ -f $ENVIRONMENT_DIR/Machines/$HOSTNAME ] && . $ENVIRONMENT_DIR/Machines/$HOSTNAME
 
-export NUGET_REPOSITORY_URL=http://artifactory.vizio.com/artifactory/api/nuget/v3/nuget-all
-export NUGET_API_KEY=$JFROG_API_TOKEN
-
 source ~/Environment/mac_shortcuts
 
-source ~/Environment/plugins/git
-source ~/Environment/plugins/ssh
-source ~/Environment/plugins/fzf
+plugin_source_all
 
 if which eza > /dev/null; then
   alias l="eza -la --git"
@@ -216,6 +212,6 @@ httpbin_start(){
     docker run --name httpbin -p 80:4010 -d kennethreitz/httpbin
 }
 
-[ -f $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile ] && . $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile
 
-source ~/Environment/plugins/fzf.post_profile
+[ -f $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile ] && . $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile
+plugin_source_post_profile
