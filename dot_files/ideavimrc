@@ -4,8 +4,11 @@ nmap ; :
 
 nnoremap ,, ,
 nnoremap ;; ;
+
 set incsearch
 
+:set relativenumber
+:set number
 " Use Idea to join lines smartly
 set ideajoin
 
@@ -27,7 +30,7 @@ nnoremap <leader>om :action OverrideMethods<CR>nnoremap <leader>y :action PasteM
 
 nnoremap <leader>y :action PasteMultiple<CR>
 
-nnoremap <leader>F :action ReformatCode<CR>
+nnoremap <leader>f :action ReformatCode<CR>
 
 nnoremap gd :action GotoDeclaration<CR>
 nnoremap gr :action FindUsages<CR>
@@ -37,11 +40,12 @@ nnoremap <leader>sp :action ParameterInfo<CR>
 nnoremap <leader>si :action Scala.ShowImplicitArguments<CR>
 nnoremap <leader>sd :action QuickImplementations<CR>
 
-nnoremap <leader>fs :action GotoSymbol<CR>
-nnoremap <leader>ff :action GotoFile<CR>
-nnoremap <leader>fc :action GotoClass<CR>
-nnoremap <leader>fa :action GotoAction<CR>
-nnoremap <leader>fg :action FindInPath<CR>
+nnoremap <leader>ss :action GotoSymbol<CR>
+" nnoremap <leader>ff :action GotoFile<CR>
+nnoremap <leader>sf :action GotoFile<CR>
+nnoremap <leader>sc :action GotoClass<CR>
+" nnoremap <leader>fa :action GotoAction<CR>
+nnoremap <leader>sg :action FindInPath<CR>
 nnoremap <leader>fr :action ReplaceInPath<CR>
 
 nnoremap <leader>gt :action GotoTest<CR>
