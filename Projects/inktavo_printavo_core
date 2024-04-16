@@ -1,0 +1,64 @@
+# export DOCKER_API_VERSION=1.43
+
+eval "$(rbenv init - zsh)"
+eval "$(dip console)"
+export DIP_DNS=$(dip dns ip)
+
+alias pc="cd '$HOME/Documents/2. Areas/Printavo Core/core-repo'"
+
+alias staging_run='heroku run --size=standard-1x -a $APP_NAME_STAGING -- '
+alias staging_console='staging_run rails console'
+alias staging_run_m='heroku run --size=standard-2x -a $APP_NAME_STAGING -- '
+alias staging_console_m='staging_run rails console'
+alias prod_run='heroku run --size=standard-1x -a $APP_NAME_PROD -- '
+alias prod_run_m='heroku run --size=standard-2x -a $APP_NAME_PROD -- '
+alias prod_run_l='heroku run --size=performance-l -a $APP_NAME_PROD -- '
+alias prod_console='prod_run rails console'
+alias prod_console_m='prod_run_m rails console'
+alias prod_console_l='prod_run_l rails console'
+
+__safe_to_run_db_command() {
+  if rg --pcre2 '^\s*(?<!#)\s*DATABASE_URL\b' docker-compose.override.yml; then
+    echo "aborting"
+    return 1
+  fi
+}
+
+rmdown() {
+  pc
+
+  if __safe_to_run_db_command; then
+    if [ -z "$1" ]
+    then
+      bundle exec rake db:rollback STEP=1 RAILS_ENV=development
+    else
+      bundle exec rake db:migrate:down VERSION=$1
+    fi
+  fi
+}
+
+rmup() {
+  pc
+
+  if __safe_to_run_db_command; then
+    if [ -z "$1" ]; then
+      bundle exec rake db:migrate STEP=1 RAILS_ENV=development
+    else
+      bundle exec rake db:migrate:up VERSION=$1
+    fi
+  fi
+}
+
+alias quit_ruby_mine='pkill -f rubymine > /dev/null'
+
+alias dip:restart='dip down && docker volume rm printavo_code && dip up web -d'
+alias dip:rebuild='dip build && dip:restart && dip bundle install'
+alias dip:setup='__safe_to_run_db_command && dip bash -c bin/setup && dip:restart'
+alias dip:rebuild_all='quit_ruby_mine; dip:killRuby; dip build && dip bundle install && dip:setup'
+
+alias pc:update='pc && merge_branch && dip:rebuild'
+alias pc:rebase='pc && rebase_branch && dip:rebuild'
+
+alias dip:killRuby='docker rm -fv $(docker ps -a -q -f 'name=ruby')'
+alias dip:killChrome='docker rm -fv $(docker ps -a -q -f 'name=chrome')'
+alias dip:fixTests='docker rm -fv $(docker ps -a -q -f 'name=ruby' -f 'name=chrome') && dip up web -d'
