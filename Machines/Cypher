@@ -1,0 +1,3 @@
+safe_source $ENVIRONMENT_DIR/Secrets/hdllc_supabase_creds
+
+alias fm='cd "/Users/jvinding/Documents/2. Areas/Happy Driver LLC/happy-fleet-manager"'
