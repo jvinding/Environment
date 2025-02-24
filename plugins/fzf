@@ -1,4 +1,8 @@
 if which fzf > /dev/null; then
+  if which bat > /dev/null; then
+    export FZF_DEFAULT_OPTS="--preview 'bat --color=always {}'"
+  fi
+
   fb(){
     local branch=$(git branch | cut -c3- | fzf +m)
     if [ -n "$branch" ]; then
@@ -9,6 +13,15 @@ if which fzf > /dev/null; then
     local dir=$(find ${1:-.} -type d -not -path '*/.*' | fzf +m)
     if [ -n "$dir" ]; then
       cd $dir
+    fi
+  }
+
+  fh(){
+    local command=$(history | fzf --preview '' | awk '{$1=$1};1' | cut -d' ' -f2-)
+    if [ -n "$command" ]; then
+      echo $command
+      print -S $command
+      eval $command
     fi
   }
 fi
