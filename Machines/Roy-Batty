@@ -3,4 +3,8 @@ JJV_PLUGINS=(git ssh nvm fzf)
 source ~/Environment/Secrets/inktavo_printavo_secrets
 source ~/Environment/Projects/inktavo_printavo_core
 
-alias pds="cd '$PROJECT_DIR/product_service'"
+source ~/Environment/Secrets/inktavo_product_service_secrets
+source ~/Environment/Projects/inktavo_product_service
+
+alias asap='cd "/Users/jvinding/Documents/2. Areas/Asap/platform-asap"'
+alias sso='cd "/Users/jvinding/Documents/2. Areas/SSO/inktavo-sso"'

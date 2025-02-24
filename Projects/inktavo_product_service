@@ -1,0 +1,50 @@
+alias ips="cd '$HOME/Documents/2. Areas/Product Service/product_service'"
+
+export REDIS_URL=redis://localhost:6380
+
+alias ips:prod_run='heroku run -a $IPS_APP_NAME_PROD -- '
+alias ips:prod_console='ips:prod_run rails console'
+alias ips:prod_logs='heroku logs -a $IPS_APP_NAME_PROD --tail --dyno web'
+alias ips:prod_logs_sidekiq='heroku logs -a $IPS_APP_NAME_PROD --tail --dyno queues'
+alias ips:prod_psql='heroku psql -a $IPS_APP_NAME_PROD'
+
+alias ips:staging_run='heroku run -a $IPS_APP_NAME_STAGING -- '
+alias ips:staging_console='ips:staging_run rails console'
+alias ips:staging_logs='heroku logs -a $IPS_APP_NAME_STAGING --tail --dyno web'
+alias ips:staging_psql='heroku psql -a $IPS_APP_NAME_STAGING'
+
+alias ips:update='ips && merge_branch && dip:rebuild'
+alias ips:rebase='ips && rebase_branch && dip:rebuild'
+
+ips:console_with_new_relic() {
+  ips
+
+  export NEW_RELIC_LICENSE_KEY=${__NEW_RELIC_LICENSE_KEY}
+  export NEW_RELIC_APP_NAME=${__NEW_RELIC_APP_NAME}
+  # export RAILS_ENV=production
+  bundle exec rails console
+}
+
+ips:db_down() {
+  ips
+
+  if __safe_to_run_db_command; then
+    if [ -z "$1" ]; then
+      bundle exec rake db:rollback STEP=1 RAILS_ENV=development
+    else
+      bundle exec rake db:migrate:down VERSION=$1
+    fi
+  fi
+}
+
+ips:db_up() {
+  ips
+
+  if __safe_to_run_db_command; then
+    if [ -z "$1" ]; then
+      bundle exec rake db:migrate STEP=1 RAILS_ENV=development
+    else
+      bundle exec rake db:migrate:up VERSION=$1
+    fi
+  fi
+}
