@@ -55,6 +55,7 @@
     permission-reset = !git diff -p -R | grep -E \"^(diff|(old|new) mode)\" | git apply
     hash = rev-parse HEAD
     pat = !git push --all && git push --tags
+    rl = reflog --color --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd) %C(bold blue)[%an]%Creset' --abbrev-commit --date=human
 [core]
     excludesfile = /Users/jvinding/.gitignore
     autocrlf = input
