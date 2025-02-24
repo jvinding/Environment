@@ -7,7 +7,7 @@ nnoremap ;; ;
 
 set incsearch
 
-:set relativenumber
+" :set relativenumber
 :set number
 " Use Idea to join lines smartly
 set ideajoin
