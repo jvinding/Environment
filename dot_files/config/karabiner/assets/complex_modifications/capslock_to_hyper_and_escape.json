@@ -5,6 +5,16 @@
             "description": "Hyper or Escape",
             "manipulators": [
                 {
+                    "conditions": [
+                        {
+                            "identifiers": [
+                                {
+                                    "vendor_id": 1452
+                                }
+                            ],
+                            "type": "device_if"
+                        }
+                    ],
                     "type": "basic",
                     "from": {
                         "key_code": "caps_lock",
