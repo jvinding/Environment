@@ -48,3 +48,56 @@ ips:db_up() {
     fi
   fi
 }
+
+
+awseb:instance_id() {
+  local env=$1
+  if [ -n "$1" ]; then
+    aws --profile=staging_services elasticbeanstalk describe-environment-resources --environment-name=$env | jq -r '.EnvironmentResources.Instances[0].Id'
+  fi
+}
+awseb:instance_ip() {
+  local instance_id=$1
+  if [ -n "$1" ]; then
+    aws --profile=staging_services ec2 describe-instances --instance-ids "$instance_id" | jq -r '.Reservations[0].Instances[0].PublicIpAddress'
+  fi
+}
+awseb:instance_dns() {
+  local instance_id=$1
+  if [ -n "$1" ]; then
+    aws --profile=staging_services ec2 describe-instances --instance-ids "$instance_id" | jq -r '.Reservations[0].Instances[0].PublicDnsName'
+  fi
+}
+awseb:ssh() {
+  local profile=$1
+  local env=$2
+  if [ -n "$env" ] && [ -n "$profile" ]; then
+    local instance_id=$(awseb:instance_id "$env")
+    if [ -n "$instance_id" ]; then
+      aws --profile "$profile" ssm start-session --target "$instance_id"
+    fi
+  fi
+}
+
+ips:performance_web_instance_id() {
+  awseb:instance_id ips-performance-web
+}
+ips:performance_web_instance_ip() {
+  awseb:instance_ip "$(ips:performance_web_instance_id)"
+}
+ips:performance_web_instance_dns() {
+  awseb:instance_dns "$(ips:performance_web_instance_id)"
+}
+ips:performance_web_ssh() {
+  awseb:ssh staging_services ips-performance-web
+}
+ips:performance_worker_ssh() {
+  awseb:ssh staging_services ips-performance-worker
+}
+
+ips:staging_web_ssh() {
+  awseb:ssh staging_services ips-staging-web
+}
+ips:staging_worker_ssh() {
+  awseb:ssh staging_services ips-staging-worker
+}
