@@ -78,6 +78,19 @@ awseb:ssh() {
     fi
   fi
 }
+awseb:db_ssh_tunnel() {
+  local identity=$1
+  local env=$2
+  local db_hostname=$3
+  local db_port=${4:-5432}
+  local local_port=${5:-5432}
+  if [ -n "$identity" ] && [ -n "$db_hostname" ] && [ -n "$env" ]; then
+    local instance_id=$(awseb:instance_id "$env")
+    if [ -n "$instance_id" ]; then
+      ssh -i "~/.ssh/$identity" -Nf "ec2-user@$instance_id" -L ${local_port}:${db_hostname}:${db_port}
+    fi
+  fi
+}
 
 ips:performance_web_instance_id() {
   awseb:instance_id ips-performance-web
@@ -100,4 +113,11 @@ ips:staging_web_ssh() {
 }
 ips:staging_worker_ssh() {
   awseb:ssh staging_services ips-staging-worker
+}
+
+ips:staging_tunnel() {
+  awseb:db_ssh_tunnel ips-staging ips-staging-web ${__IPS_STAGING_DB_HOSTNAME} 5432 6543
+}
+ips:staging_tunnel_close() {
+    pkill -lf "${__IPS_STAGING_DB_HOSTNAME}"
 }
