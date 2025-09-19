@@ -8,11 +8,6 @@ alias ips:prod_logs='heroku logs -a $IPS_APP_NAME_PROD --tail --dyno web'
 alias ips:prod_logs_sidekiq='heroku logs -a $IPS_APP_NAME_PROD --tail --dyno queues'
 alias ips:prod_psql='heroku psql -a $IPS_APP_NAME_PROD'
 
-alias ips:staging_run='heroku run -a $IPS_APP_NAME_STAGING -- '
-alias ips:staging_console='ips:staging_run rails console'
-alias ips:staging_logs='heroku logs -a $IPS_APP_NAME_STAGING --tail --dyno web'
-alias ips:staging_psql='heroku psql -a $IPS_APP_NAME_STAGING'
-
 alias ips:update='ips && merge_branch && dip:rebuild'
 alias ips:rebase='ips && rebase_branch && dip:rebuild'
 
@@ -49,36 +44,60 @@ ips:db_up() {
   fi
 }
 
+aws:sso:is_logged_in() {
+  local profile=$1
+  if [ -n "$1" ]; then
+    aws sts get-caller-identity --no-cli-pager --query Account --profile "$profile" > /dev/null 2>&1
+  else
+    return 1
+  fi
+}
 
-awseb:instance_id() {
+aws:sso:login() {
+  local profile=$1
+  if [ -n "$1" ]; then
+    aws sso login --profile "$profile"
+  fi
+}
+
+aws:sso:login_if_needed() {
+  local profile=$1
+  if [ -n "$1" ]; then
+    if ! aws:sso:is_logged_in "$profile"; then
+      aws:sso:login "$profile"
+    fi
+  fi
+}
+
+aws:eb:instance_id() {
   local env=$1
   if [ -n "$1" ]; then
     aws --profile=staging_services elasticbeanstalk describe-environment-resources --environment-name=$env | jq -r '.EnvironmentResources.Instances[0].Id'
   fi
 }
-awseb:instance_ip() {
+aws:eb:instance_ip() {
   local instance_id=$1
   if [ -n "$1" ]; then
     aws --profile=staging_services ec2 describe-instances --instance-ids "$instance_id" | jq -r '.Reservations[0].Instances[0].PublicIpAddress'
   fi
 }
-awseb:instance_dns() {
+aws:eb:instance_dns() {
   local instance_id=$1
   if [ -n "$1" ]; then
     aws --profile=staging_services ec2 describe-instances --instance-ids "$instance_id" | jq -r '.Reservations[0].Instances[0].PublicDnsName'
   fi
 }
-awseb:ssh() {
+aws:eb:ssh() {
   local profile=$1
   local env=$2
   if [ -n "$env" ] && [ -n "$profile" ]; then
-    local instance_id=$(awseb:instance_id "$env")
+    local instance_id=$(aws:eb:instance_id "$env")
     if [ -n "$instance_id" ]; then
       aws --profile "$profile" ssm start-session --target "$instance_id"
     fi
   fi
 }
-awseb:db_ssh_tunnel() {
+aws:eb:db_ssh_tunnel() {
   local identity=$1
   local instance_id=$2
   local db_hostname=$3
@@ -90,42 +109,56 @@ awseb:db_ssh_tunnel() {
 }
 
 ips:performance_web_instance_id() {
-  awseb:instance_id ips-performance-web
+  aws:eb:instance_id ips-performance-web
 }
 ips:performance_web_instance_ip() {
-  awseb:instance_ip "$(ips:performance_web_instance_id)"
+  aws:eb:instance_ip "$(ips:performance_web_instance_id)"
 }
 ips:performance_web_instance_dns() {
-  awseb:instance_dns "$(ips:performance_web_instance_id)"
+  aws:eb:instance_dns "$(ips:performance_web_instance_id)"
 }
 ips:performance_web_ssh() {
-  awseb:ssh staging_services ips-performance-web
+  aws:sso:login_if_needed staging_services
+  aws:eb:ssh staging_services ips-performance-web
 }
 ips:performance_worker_ssh() {
-  awseb:ssh staging_services ips-performance-worker
+  aws:sso:login_if_needed staging_services
+  aws:eb:ssh staging_services ips-performance-worker
 }
 ips:staging_web_instance_id() {
-  awseb:instance_id ips-staging-web
+  aws:eb:instance_id ips-staging-web
 }
 ips:staging_worker_instance_id() {
-  awseb:instance_id ips-staging-worker
+  aws:eb:instance_id ips-staging-worker
 }
 ips:staging_web_ssh() {
-  awseb:ssh staging_services ips-staging-web
+  aws:sso:login_if_needed staging_services
+  aws:eb:ssh staging_services ips-staging-web
 }
 ips:staging_worker_ssh() {
-  awseb:ssh staging_services ips-staging-worker
+  aws:sso:login_if_needed staging_services
+  aws:eb:ssh staging_services ips-staging-worker
 }
 
 ips:production_tunnel() {
-  awseb:db_ssh_tunnel pds-ips-staging.pem "prod-$(ips:production_worker_instance_id)" ${__IPS_PRODUCTION_DB_HOSTNAME} 5432 6542
+  aws:sso:login_if_needed production_services
+  aws:eb:db_ssh_tunnel pds-ips-staging.pem "prod-$(ips:production_worker_instance_id)" ${__IPS_PRODUCTION_DB_HOSTNAME} 5432 6542
 }
 ips:staging_tunnel() {
-  awseb:db_ssh_tunnel pds-ips-staging.pem $(ips:staging_worker_instance_id) ${__IPS_STAGING_DB_HOSTNAME} 5432 6543
+  aws:sso:login_if_needed staging_services
+  aws:eb:db_ssh_tunnel pds-ips-staging.pem $(ips:staging_worker_instance_id) ${__IPS_STAGING_DB_HOSTNAME} 5432 6543
 }
 ips:production_tunnel_close() {
     pkill -lf "${__IPS_PRODUCTION_DB_HOSTNAME}"
 }
 ips:staging_tunnel_close() {
     pkill -lf "${__IPS_STAGING_DB_HOSTNAME}"
+}
+ips:staging_console() {
+  aws:sso:login_if_needed staging_services
+  echo "Opening staging console..."
+  echo "Run the following commands to open the Rails console"
+  echo '$(/opt/elasticbeanstalk/bin/get-config environment | jq -r '\''to_entries | .[] | "export \\(.key)=\\(.value)"'\'')'
+  echo "/var/app/current/bin/rails c"
+  ips:staging_worker_ssh
 }
