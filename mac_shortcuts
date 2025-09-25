@@ -141,7 +141,8 @@ mac_disable_dashboard() {
 # DNS
 #
 mac_flush_dns() {
-    dscacheutil -flushcache
+    sudo dscacheutil -flushcache
+    sudo killall -HUP mDNSResponder
 }
 
 #
