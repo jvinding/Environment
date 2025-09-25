@@ -140,20 +140,36 @@ ips:staging_worker_ssh() {
   aws:eb:ssh staging_services ips-staging-worker
 }
 
-ips:production_tunnel() {
+ips:db:production_tunnel() {
   aws:sso:login_if_needed production_services
   aws:eb:db_ssh_tunnel pds-ips-staging.pem "prod-$(ips:production_worker_instance_id)" ${__IPS_PRODUCTION_DB_HOSTNAME} 5432 6542
 }
-ips:staging_tunnel() {
+ips:db:staging_tunnel() {
   aws:sso:login_if_needed staging_services
   aws:eb:db_ssh_tunnel pds-ips-staging.pem $(ips:staging_worker_instance_id) ${__IPS_STAGING_DB_HOSTNAME} 5432 6543
 }
-ips:production_tunnel_close() {
+ips:db:production_tunnel_close() {
     pkill -lf "${__IPS_PRODUCTION_DB_HOSTNAME}"
 }
-ips:staging_tunnel_close() {
+ips:db:staging_tunnel_close() {
     pkill -lf "${__IPS_STAGING_DB_HOSTNAME}"
 }
+
+ips:os:production_tunnel() {
+  aws:sso:login_if_needed production_services
+  aws:eb:db_ssh_tunnel pds-ips-staging.pem "prod-$(ips:production_worker_instance_id)" ${__IPS_PRODUCTION_OS_HOSTNAME} 443 443
+}
+ips:os:staging_tunnel() {
+  aws:sso:login_if_needed staging_services
+  aws:eb:db_ssh_tunnel pds-ips-staging.pem $(ips:staging_worker_instance_id) ${__IPS_STAGING_OS_HOSTNAME} 443 6444
+}
+ips:os:production_tunnel_close() {
+    pkill -lf "${__IPS_PRODUCTION_OS_HOSTNAME}"
+}
+ips:db:staging_tunnel_close() {
+    pkill -lf "${__IPS_STAGING_OS_HOSTNAME}"
+}
+
 ips:staging_console() {
   aws:sso:login_if_needed staging_services
   echo "Opening staging console..."
