@@ -13,6 +13,8 @@
     conflicts = diff --name-only --diff-filter=U
     pr = pull --rebase --autostash
     pf = pull --ff-only
+    pu = push --follow-tags
+    puff = push --force-with-lease --follow-tags
     pull-request = !hub pull-request
     s = status -sb
     b = !git --no-pager branch
@@ -76,3 +78,5 @@
 [interactive]
     diffFilter = delta --color-only
 
+[init]
+	defaultBranch = main
