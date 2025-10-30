@@ -217,6 +217,89 @@ git_update_all() {
 }
 
 #
+# worktrees
+#
+__git_find_bare_repo_root() {
+    local is_worktree=$(git rev-parse --is-inside-work-tree)
+    if $is_worktree; then        
+        cd "$(git rev-parse --show-toplevel)/.."
+    fi
+
+    if ! [ -d .bare ]; then
+        echo "This is not a bare repository"
+        return 1
+    fi
+}
+git_clone_bare() {
+    local repo_url=$1
+    local basename=${repo_url##*/}
+    local name=${2:-${basename%.*}}
+
+    if [ -z "$repo_url" ] || [ -z "$name" ]; then
+        echo "Usage: git_clone_bare <repo_url> [<directory name>]"
+        echo "$0 / $1 / $2 / $name"
+        return 1
+    fi
+
+    mkdir "$name"
+    cd "$name"
+
+    git clone --bare "$repo_url" .bare
+    echo "gitdir: ./.bare" > .git
+    git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+    git fetch origin
+
+    local default_branch_name=$(git rev-parse --abbrev-ref origin/HEAD)
+    git_worktree_add "${default_branch_name:#origin/}" "${default_branch_name}"
+}
+git_worktree_add() {
+    local worktree_name=$1
+    
+    __git_find_bare_repo_root || return 1
+
+    if [ -z "$worktree_name" ]; then
+        echo "Worktree path required"
+        return 1
+    fi
+
+    local clean_worktree_name=$(echo -n $worktree_name | tr -c '[:alnum:]' '-')
+    if [ -d "$clean_worktree_name" ]; then
+        echo "Worktree already exists at $clean_worktree_name"
+        builtin cd "$clean_worktree_name"
+        return
+    fi
+
+    if git b | grep -E "^\\s*${worktree_name}\$" > /dev/null; then
+        echo "Branch ${worktree_name} already exists."
+        git worktree add "$clean_worktree_name" "$worktree_name"
+    elif git b -a | grep -E "^\\s*remotes/[^/]*/${worktree_name}" > /dev/null; then
+        echo "Branch ${worktree_name} already exists remotely."
+        git worktree add --track "$clean_worktree_name" "$worktree_name"
+    else
+        echo "Branch ${worktree_name} does not exist. Creating new branch."
+        git worktree add --no-track -b "$worktree_name" "$clean_worktree_name" origin/HEAD
+    fi
+
+    if ! [ -d main ]; then
+        echo "There is no main worktree to copy files from"
+        return 1
+    fi
+
+    local base_branch_name=$(git rev-parse --abbrev-ref origin/HEAD)
+    base_branch_name=${base_branch_name#origin/}
+    if [ -d "$clean_worktree_name" ]; then
+        for s in .claude .env node_modules .vscode; do
+            if [ -e "${base_branch_name}/${s}" ] && ! [ -e "${clean_worktree_name}/${s}" ]; then
+                cp -Rc "${base_branch_name}/${s}" "${clean_worktree_name}/${s}"
+            fi
+        done
+        # sed -i '' "s|/main\b|/$clean_worktree_name|g" "$clean_worktree_name/.claude/settings.local.json"  # macOS
+    fi
+    
+    builtin cd "$clean_worktree_name"
+    git submodule update --init --recursive
+}
+#
 # aliases
 #
 alias abandon=git_abandon_branch
@@ -226,6 +309,10 @@ alias add=git_add
 alias pr=git_update
 alias push=git_push
 alias gup=git_cdup
+alias gw=git_worktree_add
+alias gclone=git_clone_bare
+alias gwl='git worktree list'
+alias gwp='git worktree prune'
 
 #
 # Completion -- requires git-completion.bash
