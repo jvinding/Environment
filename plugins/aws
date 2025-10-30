@@ -1,0 +1,72 @@
+aws:sso:is_logged_in() {
+  local profile=$1
+  if [ -n "$1" ]; then
+    aws sts get-caller-identity --no-cli-pager --query Account --profile "$profile" > /dev/null 2>&1
+  else
+    return 1
+  fi
+}
+aws:sso:login() {
+  local profile=$1
+  if [ -n "$1" ]; then
+    aws sso login --profile "$profile"
+  fi
+}
+aws:sso:login_if_needed() {
+  local profile=$1
+  if [ -n "$1" ]; then
+    if ! aws:sso:is_logged_in "$profile"; then
+      aws:sso:login "$profile"
+    fi
+  fi
+}
+
+aws:eb:instance_id() {
+  local profile=$1
+  local env=$2
+  if [ -n "$profile" ] && [ -n "$env" ]; then
+    aws --profile="$profile" elasticbeanstalk describe-environment-resources --environment-name=$env | jq -r '.EnvironmentResources.Instances[0].Id'
+  else
+    echo "profile or env missing: $profile/$env" >&2
+  fi
+}
+aws:eb:instance_ip() {
+  local instance_id=$1
+  if [ -n "$instance_id" ]; then
+    aws --profile=staging_services ec2 describe-instances --instance-ids "$instance_id" | jq -r '.Reservations[0].Instances[0].PublicIpAddress'
+  fi
+}
+aws:eb:instance_dns() {
+  local instance_id=$1
+  if [ -n "$instance_id" ]; then
+    aws --profile=staging_services ec2 describe-instances --instance-ids "$instance_id" | jq -r '.Reservations[0].Instances[0].PublicDnsName'
+  fi
+}
+aws:eb:ssh() {
+  local profile=$1
+  local env=$2
+  if [ -n "$profile" ] && [ -n "$env" ]; then
+    local instance_id=$(aws:eb:instance_id $profile $env)
+    if [ -n "$instance_id" ]; then
+      aws --profile=$profile ssm start-session --target "$instance_id"
+    else
+      echo "No instance found for environment: $profile/$env/$instance_id" >&2
+    fi
+  fi
+}
+aws:eb:db_ssh_tunnel() {
+  local identity=$1
+  local instance_id=$2
+  local db_hostname=$3
+  local db_port=${4:-5432}
+  local local_port=${5:-5432}
+  if [ -n "$identity" ] && [ -n "$db_hostname" ] && [ -n "$instance_id" ]; then
+    ssh -i "~/.ssh/$identity" -Nf "ec2-user@$instance_id" -L ${local_port}:${db_hostname}:${db_port}
+  fi
+}
+aws:eb:db_ssh_tunnel_close() {
+  local db_hostname=$1
+  if [ -n "$db_hostname" ]; then
+    pkill -lf "${db_hostname}"
+  fi
+}

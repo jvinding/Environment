@@ -1,0 +1,13 @@
+rec:ssh:staging() {
+  aws:sso:login_if_needed staging_ai
+  aws:eb:ssh staging_ai recommendation-validator-staging
+}
+ 
+rec:eb:staging_instance_id() {
+  aws:eb:instance_id staging_ai recommendation-validator-staging
+}
+
+rec:db:staging_tunnel() {
+  aws:sso:login_if_needed staging_ai
+  aws:eb:db_ssh_tunnel pds-ips-ai-staging.pem "staging-ai-$(rec:eb:staging_instance_id)" ${__REC_STAGING_DB_HOSTNAME} 5432 7654
+}

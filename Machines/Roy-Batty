@@ -1,10 +1,13 @@
-JJV_PLUGINS=(git ssh nvm fzf)
+JJV_PLUGINS=(git ssh nvm fzf aws)
 
 source ~/Environment/Secrets/inktavo_printavo_secrets
 source ~/Environment/Projects/inktavo_printavo_core
 
 source ~/Environment/Secrets/inktavo_product_service_secrets
 source ~/Environment/Projects/inktavo_product_service
+
+source ~/Environment/Secrets/inktavo_recommendations_validation_secrets
+source ~/Environment/Projects/inktavo_recommendations_validation
 
 alias asap='cd "/Users/jvinding/Documents/2. Areas/Asap/platform-asap"'
 alias sso='cd "/Users/jvinding/Documents/2. Areas/SSO/inktavo-sso"'
