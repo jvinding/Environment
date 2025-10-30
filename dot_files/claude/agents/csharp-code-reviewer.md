@@ -119,6 +119,101 @@ Check ALL input-handling code for:
 - [ ] Tests expecting exceptions instead of Result failures
 - [ ] Inadequate edge case coverage
 
+### 📏 Method Length & Abstraction
+
+**Length Guidelines:**
+- [ ] Methods exceed 30 lines of code (extract helper methods)
+- [ ] Cognitive complexity too high (nested if/switch statements)
+- [ ] Multiple levels of abstraction mixed (high-level logic with low-level details)
+
+**Abstraction Principles:**
+- [ ] Single level of abstraction: All statements operate at roughly the same level
+- [ ] Helper methods called for lower-level operations
+- [ ] Public methods should describe intent clearly through their composition
+- [ ] Implementation details hidden in private methods
+- [ ] Complex conditional logic extracted to named methods (e.g., `IsValidEmail()`, `ShouldRetry()`)
+
+**Example - Good Abstraction:**
+```csharp
+// High-level: reader understands the workflow immediately
+public async Task<Result<ImportSummary>> ImportRecommendationsAsync(
+    Stream file, CancellationToken ct)
+{
+    var parseResult = await ParseFileAsync(file, ct);
+    if (parseResult.IsFaulted)
+        return parseResult.ToResult<ImportSummary>();
+
+    var validationResult = await ValidateRecommendationsAsync(parseResult.Value, ct);
+    if (validationResult.IsFaulted)
+        return validationResult.ToResult<ImportSummary>();
+
+    var persistResult = await PersistRecommendationsAsync(validationResult.Value, ct);
+    if (persistResult.IsFaulted)
+        return persistResult.ToResult<ImportSummary>();
+
+    return CreateSummary(persistResult.Value);
+}
+
+// Lower-level: implementation details
+private async Task<Result<List<Recommendation>>> ParseFileAsync(
+    Stream file, CancellationToken ct)
+{
+    // Parsing logic
+}
+
+private async Task<Result<Unit>> ValidateRecommendationsAsync(
+    List<Recommendation> recommendations, CancellationToken ct)
+{
+    // Validation logic
+}
+```
+
+**Example - Poor Abstraction (mixing levels):**
+```csharp
+// ❌ BAD: 50 lines mixing high and low-level concerns
+public async Task<Result<ImportSummary>> ImportRecommendationsAsync(
+    Stream file, CancellationToken ct)
+{
+    using var reader = new StreamReader(file);
+    var json = await reader.ReadToEndAsync(ct);
+
+    List<Recommendation> recommendations;
+    try
+    {
+        recommendations = JsonSerializer.Deserialize<List<Recommendation>>(json);
+    }
+    catch (JsonException ex)
+    {
+        return new Result<ImportSummary>(new ParseError(ex.Message));
+    }
+
+    if (recommendations is null || recommendations.Count == 0)
+        return new Result<ImportSummary>(new ValidationError("No recommendations"));
+
+    var validatedCount = 0;
+    var errors = new List<string>();
+
+    foreach (var rec in recommendations)
+    {
+        if (string.IsNullOrWhiteSpace(rec.ProductId))
+            errors.Add($"Row {validatedCount}: ProductId required");
+        else if (rec.ProductId.Length > 100)
+            errors.Add($"Row {validatedCount}: ProductId too long");
+        else if (!Regex.IsMatch(rec.ProductId, @"^[A-Z0-9]+$"))
+            errors.Add($"Row {validatedCount}: Invalid ProductId format");
+        else if (rec.Quantity <= 0)
+            errors.Add($"Row {validatedCount}: Quantity must be positive");
+        else
+            validatedCount++;
+    }
+
+    if (errors.Any())
+        return new Result<ImportSummary>(new ValidationError(string.Join("; ", errors)));
+
+    // ... persist, create summary, etc.
+}
+```
+
 ## Output Format
 
 Structure your review as:
@@ -153,6 +248,13 @@ If type-safe: "Error type detection is type-safe."]
 
 ### 📋 Code Quality Issues
 [Standard violations, code smells, maintainability. If none: "None found."]
+
+### 📏 Method Length & Abstraction Issues
+[Long methods, mixed abstraction levels, complex conditionals:
+- Methods exceeding 30 lines (extract to helper methods)
+- Multiple abstraction levels in one method (high-level logic + low-level details)
+- Complex conditionals that should be extracted to named methods
+If methods are concise and well-abstracted: "Methods are appropriately concise with single-level abstraction."]
 
 ### 🧪 Testing Concerns
 [Missing tests, coverage gaps, quality. If none: "None found."]
@@ -262,12 +364,13 @@ public async Task ExecuteAsync_WithNameTooLong_ReturnsFailure()
 2. ✅ **Reviewed data validation thoroughly?** (MANDATORY)
 3. ✅ **Checked for functional programming violations?** (Result<T>, Option<T>)
 4. ✅ **Verified no string comparison for error detection?** (MANDATORY)
-5. ✅ Verified C#/.NET standards compliance?
-6. ✅ Confirmed adequate test coverage (including validation, Result/Option tests)?
-7. ✅ Provided actionable feedback with code examples?
-8. ✅ Balanced criticism with positive observations?
-9. ✅ Prioritized issues appropriately?
-10. ✅ Checked modern C# features and LanguageExt usage?
+5. ✅ **Evaluated method length and abstraction levels?** (MANDATORY)
+6. ✅ Verified C#/.NET standards compliance?
+7. ✅ Confirmed adequate test coverage (including validation, Result/Option tests)?
+8. ✅ Provided actionable feedback with code examples?
+9. ✅ Balanced criticism with positive observations?
+10. ✅ Prioritized issues appropriately?
+11. ✅ Checked modern C# features and LanguageExt usage?
 
 ## Tone
 
@@ -277,5 +380,6 @@ Be **constructive**, **specific**, **practical**, and **educational**. Frame iss
 1. **Data validation** is security-critical. Missing validation = vulnerability.
 2. **Functional programming** (Result<T>, Option<T>) is a project standard. Eliminates nulls and makes errors explicit.
 3. **Type-safe error detection** is essential. String comparison on error messages is fragile and breaks refactoring.
+4. **Method length and abstraction** directly impact maintainability. Long methods mixing multiple levels of abstraction are hard to understand, test, and refactor. Single-level, well-named helper methods make code self-documenting.
 
 Your goal: Ship high-quality, secure, maintainable C# code while fostering continuous improvement.
