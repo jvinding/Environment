@@ -269,6 +269,8 @@ git_worktree_add() {
         return
     fi
 
+
+## TODO: abort if the worktree already exists
     if git b | grep -E "^\\s*${worktree_name}\$" > /dev/null; then
         echo "Branch ${worktree_name} already exists."
         git worktree add "$clean_worktree_name" "$worktree_name"
@@ -280,21 +282,24 @@ git_worktree_add() {
         git worktree add --no-track -b "$worktree_name" "$clean_worktree_name" origin/HEAD
     fi
 
-    if ! [ -d main ]; then
-        echo "There is no main worktree to copy files from"
+    local base_branch_name=$(git rev-parse --abbrev-ref origin/HEAD)
+    base_branch_name=${base_branch_name#origin/}
+
+    if ! [ -d "$base_branch_name" ]; then
+        echo "There is no '$base_branch_name' worktree to copy files from"
         return 1
     fi
 
-    local base_branch_name=$(git rev-parse --abbrev-ref origin/HEAD)
-    base_branch_name=${base_branch_name#origin/}
-    if [ -d "$clean_worktree_name" ]; then
-        for s in .claude .env node_modules .vscode; do
-            if [ -e "${base_branch_name}/${s}" ] && ! [ -e "${clean_worktree_name}/${s}" ]; then
-                cp -Rc "${base_branch_name}/${s}" "${clean_worktree_name}/${s}"
-            fi
-        done
-        # sed -i '' "s|/main\b|/$clean_worktree_name|g" "$clean_worktree_name/.claude/settings.local.json"  # macOS
+    if ! [ -d "$clean_worktree_name" ]; then
+        echo "There is no '$clean_worktree_name' worktree to copy files to"
+        return 1
     fi
+    for s in .claude .env node_modules .vscode .specify specs config/master.key .dockerdev/compose.override.yml; do
+        if [ -e "${base_branch_name}/${s}" ] && ! [ -e "${clean_worktree_name}/${s}" ]; then
+            cp -Rc "${base_branch_name}/${s}" "${clean_worktree_name}/${s}"
+        fi
+    done
+    # sed -i '' "s|/main\b|/$clean_worktree_name|g" "$clean_worktree_name/.claude/settings.local.json"  # macOS
     
     builtin cd "$clean_worktree_name"
     git submodule update --init --recursive
@@ -317,5 +322,5 @@ alias gwp='git worktree prune'
 #
 # Completion -- requires git-completion.bash
 #
-complete -o nospace -F _git_checkout git_branch
-complete -o nospace -F _git_checkout branch
+## complete -o nospace -F _git_checkout git_branch
+## complete -o nospace -F _git_checkout branch
