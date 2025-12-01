@@ -58,6 +58,7 @@
     hash = rev-parse HEAD
     pat = !git push --all && git push --tags
     rl = reflog --color --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cd) %C(bold blue)[%an]%Creset' --abbrev-commit --date=human
+    gwl = worktree list
 [core]
     excludesfile = /Users/jvinding/.gitignore
     autocrlf = input
@@ -68,7 +69,7 @@
 [branch]
     autosetupmerge = true
 [push]
-    default = current
+	default = upstream
 [merge]
     conflictstyle = diff3
 [diff]
