@@ -4,12 +4,20 @@ format = """
 [](red)\
 $os\
 $username\
+$hostname\
 [](bg:peach fg:red)\
 $directory\
 [](bg:yellow fg:peach)\
 $git_branch\
 $git_status\
-[](fg:yellow bg:green)\
+[](fg:yellow)\
+$line_break\
+$character"""
+
+right_format = """
+$status\
+$cmd_duration\
+[](fg:green)\
 $c\
 $rust\
 $golang\
@@ -21,17 +29,22 @@ $haskell\
 $python\
 $ruby\
 $dotnet\
-[](fg:green bg:sapphire)\
+[ ](fg:sapphire bg:green)\
 $conda\
-[](fg:sapphire bg:lavender)\
+[ ](fg:red bg:sapphire)\
+[ ](fg:lavender bg:red)\
 $time\
-[ ](fg:lavender)\
-$cmd_duration\
-$line_break\
-$character"""
+[](fg:lavender)\
+$line_break"""
 
-right_format = "$all"
 palette = 'catppuccin_mocha'
+
+[status]
+disabled = false
+format = '[$symbol$status ]($style)'
+symbol = '✘ '
+success_symbol = '✓ '
+style = 'fg:red'
 
 [os]
 disabled = false
@@ -41,7 +54,7 @@ style = "bg:red fg:crust"
 show_always = true
 style_user = "bg:red fg:crust"
 style_root = "bg:red fg:crust"
-format = '[ $user]($style)'
+format = '[$user]($style)'
 
 [directory]
 style = "bg:peach fg:crust"
@@ -320,6 +333,9 @@ symbol = " "
 
 [hostname]
 ssh_symbol = " "
+ssh_only = false
+style = "bg:red fg:crust"
+format = '[@$hostname ]($style)'
 
 [julia]
 symbol = " "
