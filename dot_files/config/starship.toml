@@ -1,18 +1,21 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 format = """
-[](red)\
+[](fg:sky)\
+$git_branch\
+[](bg:sapphire fg:sky)\
+$git_status\
+[](fg:sapphire)\
+$status\
+$line_break\
+[](fg:blue)\
 $os\
 $username\
 $hostname\
-[](bg:peach fg:red)\
+[](bg:lavender fg:blue)\
 $directory\
-[](bg:yellow fg:peach)\
-$git_branch\
-$git_status\
-[](fg:yellow)\
+[](fg:lavender)\
 $fill\
-$status\
 $cmd_duration\
 [](fg:green)\
 $c\
@@ -42,23 +45,30 @@ symbol = ' '
 
 [status]
 disabled = false
-format = '[$symbol$status ]($style)'
-symbol = '✘ '
-success_symbol = '✓ '
-style = 'fg:red'
+format = '[ $symbol$status ]($style)'
+symbol = '[❌ ](bold red)'
+success_symbol = '[✓ ](bold green)'
+style = 'fg:text'
+failure_style = 'fg:red bold'
 
 [os]
 disabled = false
-style = "bg:red fg:crust"
+style = "bg:blue fg:crust"
 
 [username]
 show_always = true
-style_user = "bg:red fg:crust"
-style_root = "bg:red fg:crust"
+style_user = "bg:blue fg:crust"
+style_root = "bg:blue fg:crust"
 format = '[$user]($style)'
 
+[hostname]
+ssh_symbol = " "
+ssh_only = false
+style = "bg:blue fg:crust"
+format = '[@$hostname ]($style)'
+
 [directory]
-style = "bg:peach fg:crust"
+style = "bg:lavender fg:crust"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
@@ -72,13 +82,13 @@ read_only = " 󰌾"
 "Developer" = "󰲋 "
 
 [git_branch]
-symbol = " "
-style = "bg:yellow"
-format = '[[ $symbol $branch ](fg:crust bg:yellow)]($style)'
+symbol = ""
+style = "bg:sky"
+format = '[[ $symbol $branch ](fg:crust bg:sky)]($style)'
 
 [git_status]
-style = "bg:yellow"
-format = '[[($all_status$ahead_behind )](fg:crust bg:yellow)]($style)'
+style = "bg:sapphire"
+format = '[[( $all_status$ahead_behind)](fg:crust bg:sapphire)]($style)'
 
 [nodejs]
 symbol = " "
@@ -331,12 +341,6 @@ symbol = " "
 
 [hg_branch]
 symbol = " "
-
-[hostname]
-ssh_symbol = " "
-ssh_only = false
-style = "bg:red fg:crust"
-format = '[@$hostname ]($style)'
 
 [julia]
 symbol = " "
