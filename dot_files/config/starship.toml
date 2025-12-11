@@ -11,10 +11,7 @@ $directory\
 $git_branch\
 $git_status\
 [](fg:yellow)\
-$line_break\
-$character"""
-
-right_format = """
+$fill\
 $status\
 $cmd_duration\
 [](fg:green)\
@@ -35,9 +32,13 @@ $conda\
 [ ](fg:lavender bg:red)\
 $time\
 [](fg:lavender)\
-$line_break"""
+$line_break\
+$character"""
 
 palette = 'catppuccin_mocha'
+
+[fill]
+symbol = ' '
 
 [status]
 disabled = false
