@@ -8,7 +8,9 @@ input=$(cat)
 
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // ""')
 model=$(echo "$input" | jq -r '.model.display_name // "Claude"')
-context_used=$(echo "$input" | jq -r '.context_window.total_input_tokens // 0')
+input_tokens=$(echo "$input" | jq -r '.context_window.total_input_tokens // 0')
+output_tokens=$(echo "$input" | jq -r '.context_window.total_output_tokens // 0')
+context_used=$((input_tokens + output_tokens))
 context_max=$(echo "$input" | jq -r '.context_window.context_window_size // 0')
 cost=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
 
