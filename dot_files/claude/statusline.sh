@@ -66,8 +66,9 @@ if [[ "$dir" == "$HOME"* ]]; then
     dir="~${dir#$HOME}"
 fi
 IFS='/' read -ra PARTS <<< "$dir"
-if [ ${#PARTS[@]} -gt 4 ]; then
-    dir="…/${PARTS[-3]}/${PARTS[-2]}/${PARTS[-1]}"
+len=${#PARTS[@]}
+if [ "$len" -gt 4 ]; then
+    dir="…/${PARTS[$((len-3))]}/${PARTS[$((len-2))]}/${PARTS[$((len-1))]}"
 fi
 
 # Git information
@@ -81,7 +82,7 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
         # Uncommitted changes
         git_porcelain=$(git -C "$cwd" status --porcelain 2>/dev/null)
         if [ -n "$git_porcelain" ]; then
-            git_status="${git_status}${icon_uncommitted}"
+            git_status="${git_status}${icon_uncommited}"
         fi
 
         # Ahead/behind tracking branch
@@ -118,11 +119,11 @@ fi
 output=""
 
 # Segment 1: Time (blue)
-output="${output}${fg_blue}${left_cap}${bg_blue}${fg} ${current_time} "
+output="${output}${fg_blue}${left_cap}${bg_blue}${fg}  ${current_time} "
 output="${output}${reset}${fg_blue}${bg_sapphire}${left_segment_end}${reset}"
 
 # Segment 2: Directory (sapphire)
-output="${output}${bg_sapphire}${fg}  ${dir} "
+output="${output}${bg_sapphire}${fg}  ${dir} "
 output="${output}${reset}${fg_sapphire}${bg_sky}${left_segment_end}${reset}"
 
 # Segment 3: Git (sky) - only if in git repo
@@ -134,7 +135,7 @@ if [ -n "$git_branch_name" ]; then
     fi
     output="${output}${reset}${bg_sky}${fg_green}${right_segment_start}${reset}"
 else
-    output="${output}${bg_sky}${fg}  "
+    output="${output}${bg_sky}${fg} "
     output="${output}${reset}${bg_sky}${fg_green}${right_segment_start}${reset}"
 fi
 
@@ -143,11 +144,11 @@ output="${output}${bg_green}${fg} 󰧑 ${model} "
 output="${output}${reset}${bg_green}${fg_yellow}${right_segment_start}${reset}"
 
 # Segment 5: Context (yellow)
-output="${output}${bg_yellow}${fg} ${context_display} "
+output="${output}${bg_yellow}${fg} 󰍛 ${context_display} "
 output="${output}${reset}${bg_yellow}${fg_peach}${right_segment_start}${reset}"
 
 # Segment 6: Cost (peach)
-output="${output}${bg_peach}${fg} ${cost_display} "
+output="${output}${bg_peach}${fg}  ${cost_display} "
 output="${output}${reset}${fg_peach}${right_cap}${reset}"
 
 printf "%s\n" "$output"
