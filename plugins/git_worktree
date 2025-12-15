@@ -1,0 +1,355 @@
+#
+# Git Worktree Plugin
+# Utilities for managing git worktrees with bare repositories
+#
+
+#
+# Internal Helpers
+#
+
+__git_get_base_branch_name() {
+    local branch=$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null)
+    echo "${branch#origin/}"
+}
+
+__git_sanitize_worktree_name() {
+    echo -n "$1" | tr -c '[:alnum:]' '-'
+}
+
+__git_find_bare_repo_root() {
+    local is_worktree=$(git rev-parse --is-inside-work-tree 2>/dev/null)
+    if [[ "$is_worktree" == "true" ]]; then
+        cd "$(git rev-parse --show-toplevel)/.."
+    fi
+
+    if [[ ! -d .bare ]]; then
+        echo "Error: This is not a bare repository" >&2
+        return 1
+    fi
+}
+
+__git_copy_to_worktree() {
+    local source_base="$1"
+    local target_base="$2"
+    local path="$3"
+
+    [[ -e "${source_base}/${path}" ]] || return 0
+
+    if [[ -d "${source_base}/${path}" ]]; then
+        mkdir -p "${target_base}/${path}"
+        cp -Rc "${source_base}/${path}/." "${target_base}/${path}/"
+    elif [[ ! -e "${target_base}/${path}" ]]; then
+        local parent=$(dirname "${target_base}/${path}")
+        [[ -d "$parent" ]] || mkdir -p "$parent"
+        cp -c "${source_base}/${path}" "${target_base}/${path}"
+    fi
+}
+
+__git_merge_claude_settings() {
+    local source_file="$1"
+    local target_file="$2"
+
+    if [[ -f "$source_file" ]] && [[ -f "$target_file" ]]; then
+        local merged=$(jq -s '
+            .[0].permissions.allow = ([.[0].permissions.allow // [], .[1].permissions.allow // []] | add | unique) |
+            .[0].permissions.deny = ([.[0].permissions.deny // [], .[1].permissions.deny // []] | add | unique) |
+            .[0].permissions.ask = ([.[0].permissions.ask // [], .[1].permissions.ask // []] | add | unique) |
+            .[0]
+        ' "$target_file" "$source_file")
+        echo "$merged" > "$target_file"
+        return 0
+    elif [[ -f "$source_file" ]]; then
+        mkdir -p "$(dirname "$target_file")"
+        cp "$source_file" "$target_file"
+        return 0
+    fi
+    return 1
+}
+
+# Validates we're in a proper worktree context for cleanup
+# Sets: worktree_root, bare_repo, current_branch, remote_ref
+__git_worktree_validate() {
+    # Check if we're in a git repository at all
+    if ! git rev-parse --git-dir &>/dev/null; then
+        echo "Error: Not in a git repository" >&2
+        return 1
+    fi
+
+    # Check if we're in a worktree (not the main working tree)
+    local git_dir=$(git rev-parse --git-dir)
+    if [[ ! "$git_dir" =~ \.bare/worktrees/ ]]; then
+        echo "Error: Not in a git worktree" >&2
+        return 1
+    fi
+
+    # Get the worktree root directory
+    worktree_root=$(git rev-parse --show-toplevel)
+    local worktree_parent=$(dirname "$worktree_root")
+
+    # Check if parent is a bare git repo
+    if ! git -C "$worktree_parent" rev-parse --is-bare-repository &>/dev/null; then
+        echo "Error: Parent directory is not a git repository" >&2
+        return 1
+    fi
+
+    local is_bare=$(git -C "$worktree_parent" rev-parse --is-bare-repository)
+    if [[ "$is_bare" != "true" ]]; then
+        echo "Error: Parent directory is not a bare git repository" >&2
+        return 1
+    fi
+
+    bare_repo="$worktree_parent"
+
+    # Get the current branch name
+    current_branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+    if [[ -z "$current_branch" ]]; then
+        echo "Error: Not on a branch (detached HEAD?)" >&2
+        return 1
+    fi
+
+    # Check if there's a tracking branch configured for origin
+    local tracking_remote=$(git config --get "branch.${current_branch}.remote")
+    if [[ "$tracking_remote" != "origin" ]]; then
+        echo "Error: Branch '$current_branch' is not tracking origin (tracking: ${tracking_remote:-none})" >&2
+        return 1
+    fi
+
+    local remote_branch=$(git config --get "branch.${current_branch}.merge" | sed 's|refs/heads/||')
+    if [[ -z "$remote_branch" ]]; then
+        echo "Error: No upstream branch configured for '$current_branch'" >&2
+        return 1
+    fi
+
+    remote_ref="origin/${remote_branch}"
+}
+
+# Verifies that a branch has been merged (checks remote deletion and PR status)
+# Args: $1 = remote_ref, $2 = force flag
+# Returns: 0 if verified, 1 if not
+__git_worktree_verify_merged() {
+    local remote_ref="$1"
+    local force="$2"
+    local remote_branch="${remote_ref#origin/}"
+
+    # Fetch with prune to get current state
+    echo "Fetching from origin..."
+    git fetch origin --prune --quiet
+
+    # Check if the remote branch still exists
+    if git show-ref --verify --quiet "refs/remotes/${remote_ref}"; then
+        echo "Error: Remote branch '${remote_ref}' still exists (not yet merged/deleted)" >&2
+        return 1
+    fi
+
+    echo "  ✓ Remote branch '${remote_ref}' has been deleted"
+
+    # For squash merges, check if the PR was merged using GitHub CLI if available
+    local merge_verified=false
+
+    if command -v gh &>/dev/null; then
+        echo "Checking PR merge status via GitHub CLI..."
+        local pr_state=$(gh pr view "$remote_branch" --json state --jq '.state' 2>/dev/null)
+        if [[ "$pr_state" == "MERGED" ]]; then
+            echo "  ✓ PR for '${remote_branch}' was merged (verified via gh)"
+            merge_verified=true
+        elif [[ "$pr_state" == "CLOSED" ]]; then
+            echo "Error: PR for '${remote_branch}' was closed without merging" >&2
+            return 1
+        elif [[ -n "$pr_state" ]]; then
+            echo "Error: PR for '${remote_branch}' is still ${pr_state}" >&2
+            return 1
+        fi
+    fi
+
+    # Fallback: search for squash commit in main's history by branch name
+    if ! $merge_verified; then
+        echo "Searching for squash merge commit in origin/main..."
+        local squash_commit=$(git log origin/main --oneline --grep="$remote_branch" -n 1 2>/dev/null)
+        if [[ -n "$squash_commit" ]]; then
+            echo "  ✓ Found likely squash commit: $squash_commit"
+            merge_verified=true
+        fi
+    fi
+
+    if ! $merge_verified; then
+        if [[ "$force" == "true" ]]; then
+            echo "  ⚠ Could not verify merge, but --force specified"
+        else
+            echo "Error: Could not verify that '${remote_branch}' was merged into main" >&2
+            echo "       (Remote branch is deleted, but squash commit not found)" >&2
+            echo "       Use --force to proceed anyway, or install 'gh' CLI for reliable verification" >&2
+            return 1
+        fi
+    fi
+
+    return 0
+}
+
+#
+# Public Functions
+#
+
+git_clone_bare() {
+    local repo_url=$1
+    local basename=${repo_url##*/}
+    local name=${2:-${basename%.*}}
+
+    if [[ -z "$repo_url" ]] || [[ -z "$name" ]]; then
+        echo "Usage: git_clone_bare <repo_url> [<directory name>]"
+        return 1
+    fi
+
+    mkdir "$name"
+    cd "$name"
+
+    git clone --bare "$repo_url" .bare
+    echo "gitdir: ./.bare" > .git
+    git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+    git fetch origin
+
+    local default_branch_name=$(__git_get_base_branch_name)
+    git_worktree_add "$default_branch_name"
+}
+
+git_worktree_add() {
+    local worktree_name=$1
+
+    __git_find_bare_repo_root || return 1
+
+    if [[ -z "$worktree_name" ]]; then
+        echo "Error: Worktree path required" >&2
+        return 1
+    fi
+
+    local clean_worktree_name=$(__git_sanitize_worktree_name "$worktree_name")
+    if [[ -d "$clean_worktree_name" ]]; then
+        echo "Worktree already exists at $clean_worktree_name"
+        builtin cd "$clean_worktree_name"
+        return
+    fi
+
+    # Create the worktree
+    if git branch --list "$worktree_name" | grep -q .; then
+        echo "Branch ${worktree_name} already exists."
+        git worktree add "$clean_worktree_name" "$worktree_name"
+    elif git branch -a --list "remotes/*/${worktree_name}" | grep -q .; then
+        echo "Branch ${worktree_name} already exists remotely."
+        git worktree add "$clean_worktree_name" "$worktree_name"
+    else
+        echo "Branch ${worktree_name} does not exist. Creating new branch."
+        git worktree add --no-track -b "$worktree_name" "$clean_worktree_name" origin/HEAD
+    fi
+
+    local base_branch_name=$(__git_get_base_branch_name)
+
+    if [[ ! -d "$base_branch_name" ]]; then
+        echo "Error: There is no '$base_branch_name' worktree to copy files from" >&2
+        return 1
+    fi
+
+    if [[ ! -d "$clean_worktree_name" ]]; then
+        echo "Error: There is no '$clean_worktree_name' worktree to copy files to" >&2
+        return 1
+    fi
+
+    # Copy common files from base worktree
+    local files_to_copy=(
+        .claude
+        .env
+        node_modules
+        .vscode
+        .specify
+        specs
+        config/master.key
+        .dockerdev/compose.override.yml
+    )
+
+    for path in "${files_to_copy[@]}"; do
+        __git_copy_to_worktree "$base_branch_name" "$clean_worktree_name" "$path"
+    done
+
+    builtin cd "$clean_worktree_name"
+    git submodule update --init --recursive
+}
+
+# Clean up a merged git worktree and its associated branch
+# Usage: git_worktree_cleanup [--dry-run] [--force]
+git_worktree_cleanup() {
+    local dry_run=false
+    local force=false
+    for arg in "$@"; do
+        case "$arg" in
+            --dry-run) dry_run=true ;;
+            --force) force=true ;;
+        esac
+    done
+
+    # Declare variables that __git_worktree_validate will set
+    local worktree_root bare_repo current_branch remote_ref
+
+    __git_worktree_validate || return 1
+    __git_worktree_verify_merged "$remote_ref" "$force" || return 1
+
+    # All checks passed - proceed with cleanup
+    echo ""
+    echo "All checks passed:"
+    echo "  ✓ In worktree: $worktree_root"
+    echo "  ✓ Parent is bare repo: $bare_repo"
+    echo "  ✓ Branch '$current_branch' tracked ${remote_ref}"
+    echo "  ✓ ${remote_ref} has been deleted from remote"
+    echo ""
+
+    # Prepare Claude settings merge paths
+    local base_branch_name=$(__git_get_base_branch_name)
+    local worktree_settings="${worktree_root}/.claude/settings.local.json"
+    local main_settings="${bare_repo}/${base_branch_name}/.claude/settings.local.json"
+
+    if $dry_run; then
+        echo "[DRY RUN] Would execute:"
+        [[ -f "$worktree_settings" ]] && echo "  0. Merge Claude permissions into ${main_settings}"
+        echo "  1. cd $bare_repo"
+        echo "  2. git worktree remove $worktree_root"
+        echo "  3. git branch -D $current_branch"
+        echo "  4. git fetch --all --prune"
+        return 0
+    fi
+
+    # Merge Claude settings from worktree into main before cleanup
+    if [[ -f "$worktree_settings" ]]; then
+        echo "Merging Claude permissions into main worktree..."
+        if __git_merge_claude_settings "$worktree_settings" "$main_settings"; then
+            echo "  ✓ Merged permissions from worktree into ${base_branch_name}"
+        fi
+    fi
+
+    # Change to bare repo before removing worktree
+    cd "$bare_repo" || { echo "Error: Failed to cd to $bare_repo" >&2; return 1; }
+
+    # Remove the worktree
+    echo "Removing worktree..."
+    if ! git worktree remove "$worktree_root"; then
+        echo "Error: Failed to remove worktree" >&2
+        return 1
+    fi
+
+    # Delete the local branch (use -D since squash merge breaks ancestry)
+    echo "Deleting local branch '$current_branch'..."
+    git branch -D "$current_branch"
+
+    # Fetch from all remotes with prune
+    echo "Fetching from all remotes..."
+    git fetch --all --prune
+
+    echo ""
+    echo "✓ Cleanup complete! Now in: $(pwd)"
+}
+
+#
+# Aliases
+#
+
+alias gclone='git_clone_bare'
+alias gwa='git_worktree_add'
+alias gwl='git worktree list'
+alias gwp='git worktree prune'
+alias gwc='git_worktree_cleanup'

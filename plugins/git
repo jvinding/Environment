@@ -1,29 +1,71 @@
+#
+# Git Plugin
+# General git utilities and helpers
+#
+
+#
+# Internal Helpers
+#
+
+__git_confirm() {
+    local prompt="${1:-Continue?}"
+    read -p "$prompt " -n1 response
+    echo
+    [[ "$response" =~ ^[Yy]$ ]]
+}
+
+__git_with_stash() {
+    local stash_msg="${1:-auto stash}"
+    shift
+    local had_changes=false
+
+    if [[ -n "$(git_change_list)" ]]; then
+        git stash save --include-untracked "$stash_msg" || return 1
+        had_changes=true
+    fi
+
+    if [[ -n "$(git_change_list)" ]]; then
+        echo "Unstashable changes" >&2
+        return 1
+    fi
+
+    "$@"
+    local result=$?
+
+    if $had_changes; then
+        git stash pop
+    fi
+
+    return $result
+}
+
+#
+# Core Utilities
+#
+
 if which hub > /dev/null; then
     alias github='hub browse'
 else
     github() {
-        if [ ! -d .git ]; then
-            echo "ERROR: This isnt a git directory"
-            return false
+        if [[ ! -d .git ]]; then
+            echo "Error: This isn't a git directory" >&2
+            return 1
         fi
 
-        local git_url=`git ls-remote --get-url origin`
-        local git_domain=`echo $git_url | awk -v FS="(@|:)" '{print $2}'`
-        local git_branch=`git_get_branch`
+        local git_url=$(git ls-remote --get-url origin)
+        local git_domain=$(echo "$git_url" | awk -v FS="(@|:)" '{print $2}')
+        local git_branch=$(git_get_branch)
 
         if [[ $git_url == https://* ]]; then
-            url=${git_domain}/${git_url%.git}/tree/${git_branch}
+            url="${git_domain}/${git_url%.git}/tree/${git_branch}"
+        elif [[ $git_url == git@* ]]; then
+            url="https://${git_domain}/${${git_url#*:}%.git}/tree/${git_branch}"
         else
-           if [[ $git_url == git@* ]]; then
-                url="https://${git_domain}/${${git_url#*:}%.git}/tree/${git_branch}"
-                echo $url
-           else
-               echo "ERROR: Remote origin is invalid"
-               return false
-           fi
+            echo "Error: Remote origin is invalid" >&2
+            return 1
         fi
 
-        open $url
+        open "$url"
     }
 fi
 
@@ -31,14 +73,14 @@ git_get_config_file() {
     local done=0
     local file=
     local gitdir=.git
-    while [ 0 -eq $done ]; do
-        if [ -d "$gitdir" ]; then
-            if [ -f "${gitdir}/config" ]; then
+    while [[ $done -eq 0 ]]; do
+        if [[ -d "$gitdir" ]]; then
+            if [[ -f "${gitdir}/config" ]]; then
                 file="${gitdir}/config"
             fi
             done=1
-        elif [ -f "$gitdir" ]; then
-            gitdir="$(cat "$gitdir" | grep gitdir | awk '{print $2}')"
+        elif [[ -f "$gitdir" ]]; then
+            gitdir=$(grep gitdir "$gitdir" | awk '{print $2}')
         else
             done=1
         fi
@@ -48,11 +90,11 @@ git_get_config_file() {
 }
 
 git_assert_clean_tree() {
-  local changes=`git_change_list`
-  if ! [ -z "$changes" ]; then
-    echo "Uncommited changes. Stash them then try again."
-    return 1
-  fi
+    local changes=$(git_change_list)
+    if [[ -n "$changes" ]]; then
+        echo "Uncommitted changes. Stash them then try again."
+        return 1
+    fi
 }
 
 git_cdup() {
@@ -65,20 +107,24 @@ git_get_branch() {
 }
 
 git_get_tracked_branch() {
-    git config --get branch.$(git_get_branch).merge
+    git config --get "branch.$(git_get_branch).merge"
 }
 
 git_has_branch() {
-    git b | grep "\<${1}\$" > /dev/null
+    git branch --list "$1" | grep -q .
 }
 
 git_is_on_branch() {
-    [ "$(git_get_branch)" == "$1" ]
+    [[ "$(git_get_branch)" == "$1" ]]
 }
 
 git_change_list() {
     git ls-files -cdmosuk --exclude-standard | awk '{print $NF}'
 }
+
+#
+# Branch Operations
+#
 
 git_branch() {
     local branch=$1
@@ -89,61 +135,62 @@ git_branch() {
         git merge master
     else
         if ! git_is_on_branch master; then
-            git checkout master || { echo "Failed to check out master"; return 1; }
+            git checkout master || { echo "Failed to check out master" >&2; return 1; }
         fi
-        git pull || { echo "failed to pull"; return 1; }
-        git co -b "$branch" || { echo "Failed to create branch $branch"; return 1; }
+        git pull || { echo "Failed to pull" >&2; return 1; }
+        git co -b "$branch" || { echo "Failed to create branch $branch" >&2; return 1; }
     fi
 }
 
 git_abandon_branch() {
-    if ! git_is_on_branch master; then
-        local changes=`git_change_list`
-        if ! [ -z "$changes" ]; then
-            git_change_list
-            read -p "Abandon changes to the above files? y/N " -n1 delete
-            if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
-                git checkout . || { echo "failed to checkout"; return 1; }
-            else
-                return 0
-            fi
-        fi
-
-        local branch=`git_get_branch`
-        git checkout master || { echo "Failed to check out master"; return 1; }
-        git branch -d "$branch" || {
-            read -p "Do you want to force deletion of the branch ${branch}? y/N " -n1 delete
-            echo
-
-            if [ "$delete" == "Y" ] || [ "$delete" == "y" ]; then
-                git branch -D $branch
-            fi
-        }
+    if git_is_on_branch master; then
+        return 0
     fi
+
+    local changes=$(git_change_list)
+    if [[ -n "$changes" ]]; then
+        git_change_list
+        if __git_confirm "Abandon changes to the above files? y/N"; then
+            git checkout . || { echo "Failed to checkout" >&2; return 1; }
+        else
+            return 0
+        fi
+    fi
+
+    local branch=$(git_get_branch)
+    git checkout master || { echo "Failed to check out master" >&2; return 1; }
+    git branch -d "$branch" || {
+        if __git_confirm "Do you want to force deletion of the branch ${branch}? y/N"; then
+            git branch -D "$branch"
+        fi
+    }
 }
+
+#
+# Staging Operations
+#
 
 git_prompt_stage() {
     local file="$1"
-    local ignore_white_space=${2:=false}
-    if [ true == $ignore_white_space ]; then
-        git diff -w -- $file
+    local ignore_white_space=${2:-false}
+
+    if [[ "$ignore_white_space" == "true" ]]; then
+        git diff -w -- "$file"
     else
-        git diff -- $file
+        git diff -- "$file"
     fi
+
     read -p "Stage the above file? y/p/w/N " -n1 stage
     echo
-    if [ "$stage" == "Y" ] || [ "$stage" == "y" ]; then
-        git add -- $file || { echo "failed to stage"; return 1; }
-    elif [ "$stage" == "P" ] || [ "$stage" == "p" ]; then
-        git add --patch -- $file || { echo "failed to stage"; return 1; }
-    elif [ "$stage" == "W" ] || [ "$stage" == "w" ]; then
-        git_prompt_stage $file true
-    fi
+
+    case "$stage" in
+        [Yy]) git add -- "$file" || { echo "Failed to stage" >&2; return 1; } ;;
+        [Pp]) git add --patch -- "$file" || { echo "Failed to stage" >&2; return 1; } ;;
+        [Ww]) git_prompt_stage "$file" true ;;
+    esac
 }
 
 git_stage() {
-    ## TODO: support removed files
-    ## TODO: add ability to revert a file
     for s in $(git_change_list); do
         git_prompt_stage "$s" false
     done
@@ -151,56 +198,41 @@ git_stage() {
 
 git_add() {
     for s in $(git ls-files -o --exclude-standard); do
-        echo $s
+        echo "$s"
         read -p "Stage the above file? y/N/q " -n1 stage
-        if [ "$stage" == "Y" ] || [ "$stage" == "y" ]; then
-            git add $s || { echo "failed to stage"; return 1; }
-        elif [ "$stage" == "Q" ] || [ "$stage" == "q" ]; then
-            return 0
-        fi
         echo
+
+        case "$stage" in
+            [Yy]) git add "$s" || { echo "Failed to stage" >&2; return 1; } ;;
+            [Qq]) return 0 ;;
+        esac
     done
 }
 
+#
+# Sync Operations
+#
+
 git_update() {
     git submodule update --recursive
-    local changes=`git_change_list`
-    if [ -n "$changes" ]; then
-        git stash save --include-untracked "git update stash"
-    fi
 
-    if [ -n "$(git_change_list)" ]; then
-        echo "Unstashable changes" >&2
-        return 1
-    fi
-
-    git pull --rebase || return 1
-
-    if ! [ -z "$changes" ]; then
-        git stash pop
-    fi
+    __git_with_stash "git update stash" git pull --rebase || return 1
 
     git submodule update --recursive
 }
 
 git_push() {
-    local changes=`git_change_list`
-    if ! [ -z "$changes" ]; then
-        git stash save --include-untracked "[$(date +"%Y-%d-%m")] git update stash"
-    fi
-
-    git pull --rebase || return 1
-    git push
-
-    if ! [ -z "$changes" ]; then
-        git stash pop
-    fi
+    __git_with_stash "[$(date +"%Y-%m-%d")] git push stash" bash -c 'git pull --rebase && git push'
 }
+
+#
+# Repository Utilities
+#
 
 git_find_unclean_repos() {
     for s in $(find . -maxdepth 1 -type d); do
         pushd "$s" > /dev/null
-        if [ -d .git ] && ! git_assert_clean_tree > /dev/null; then
+        if [[ -d .git ]] && ! git_assert_clean_tree > /dev/null; then
             pwd
         fi
         popd > /dev/null
@@ -209,104 +241,17 @@ git_find_unclean_repos() {
 
 git_update_all() {
     for s in $(find . -type d -maxdepth 1 -not -name '.*'); do
-        echo $s
-        pushd $s > /dev/null
+        echo "$s"
+        pushd "$s" > /dev/null
         git pull --rebase -q
         popd > /dev/null
     done
 }
 
 #
-# worktrees
+# Aliases
 #
-__git_find_bare_repo_root() {
-    local is_worktree=$(git rev-parse --is-inside-work-tree)
-    if $is_worktree; then        
-        cd "$(git rev-parse --show-toplevel)/.."
-    fi
 
-    if ! [ -d .bare ]; then
-        echo "This is not a bare repository"
-        return 1
-    fi
-}
-git_clone_bare() {
-    local repo_url=$1
-    local basename=${repo_url##*/}
-    local name=${2:-${basename%.*}}
-
-    if [ -z "$repo_url" ] || [ -z "$name" ]; then
-        echo "Usage: git_clone_bare <repo_url> [<directory name>]"
-        echo "$0 / $1 / $2 / $name"
-        return 1
-    fi
-
-    mkdir "$name"
-    cd "$name"
-
-    git clone --bare "$repo_url" .bare
-    echo "gitdir: ./.bare" > .git
-    git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-    git fetch origin
-
-    local default_branch_name=$(git rev-parse --abbrev-ref origin/HEAD)
-    git_worktree_add "${default_branch_name:#origin/}" "${default_branch_name}"
-}
-git_worktree_add() {
-    local worktree_name=$1
-    
-    __git_find_bare_repo_root || return 1
-
-    if [ -z "$worktree_name" ]; then
-        echo "Worktree path required"
-        return 1
-    fi
-
-    local clean_worktree_name=$(echo -n $worktree_name | tr -c '[:alnum:]' '-')
-    if [ -d "$clean_worktree_name" ]; then
-        echo "Worktree already exists at $clean_worktree_name"
-        builtin cd "$clean_worktree_name"
-        return
-    fi
-
-
-## TODO: abort if the worktree already exists
-    if git b | grep -E "^\\s*${worktree_name}\$" > /dev/null; then
-        echo "Branch ${worktree_name} already exists."
-        git worktree add "$clean_worktree_name" "$worktree_name"
-    elif git b -a | grep -E "^\\s*remotes/[^/]*/${worktree_name}" > /dev/null; then
-        echo "Branch ${worktree_name} already exists remotely."
-        git worktree add --track "$clean_worktree_name" "$worktree_name"
-    else
-        echo "Branch ${worktree_name} does not exist. Creating new branch."
-        git worktree add --no-track -b "$worktree_name" "$clean_worktree_name" origin/HEAD
-    fi
-
-    local base_branch_name=$(git rev-parse --abbrev-ref origin/HEAD)
-    base_branch_name=${base_branch_name#origin/}
-
-    if ! [ -d "$base_branch_name" ]; then
-        echo "There is no '$base_branch_name' worktree to copy files from"
-        return 1
-    fi
-
-    if ! [ -d "$clean_worktree_name" ]; then
-        echo "There is no '$clean_worktree_name' worktree to copy files to"
-        return 1
-    fi
-    for s in .claude .env node_modules .vscode .specify specs config/master.key .dockerdev/compose.override.yml; do
-        if [ -e "${base_branch_name}/${s}" ] && ! [ -e "${clean_worktree_name}/${s}" ]; then
-            cp -Rc "${base_branch_name}/${s}" "${clean_worktree_name}/${s}"
-        fi
-    done
-    # sed -i '' "s|/main\b|/$clean_worktree_name|g" "$clean_worktree_name/.claude/settings.local.json"  # macOS
-    
-    builtin cd "$clean_worktree_name"
-    git submodule update --init --recursive
-}
-#
-# aliases
-#
 alias abandon=git_abandon_branch
 alias branch=git_branch
 alias stage=git_stage
@@ -314,13 +259,3 @@ alias add=git_add
 alias pr=git_update
 alias push=git_push
 alias gup=git_cdup
-alias gw=git_worktree_add
-alias gclone=git_clone_bare
-alias gwl='git worktree list'
-alias gwp='git worktree prune'
-
-#
-# Completion -- requires git-completion.bash
-#
-## complete -o nospace -F _git_checkout git_branch
-## complete -o nospace -F _git_checkout branch
