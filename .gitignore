@@ -19,3 +19,12 @@ dot_files/config/iterm2/AppSupport
 dot_files/config/yarn
 .DS_Store
 dot_files/config/github-copilot/
+dot_files/claude/debug/
+dot_files/claude/file-history/
+dot_files/claude/ide/
+dot_files/claude/projects/
+dot_files/claude/shell-snapshots/
+dot_files/claude/todos/
+dot_files/claude/statsig/
+dot_files/claude/history.jsonl
+dot_files/claude/plans
