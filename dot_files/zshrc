@@ -100,6 +100,7 @@ setopt HIST_VERIFY
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
 VI_MODE_SET_CURSOR=true
+VI_MODE_DISABLE_CLIPBOARD=true
 
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
@@ -219,9 +220,5 @@ httpbin_start(){
 
 [ -f $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile ] && . $ENVIRONMENT_DIR/Machines/${HOSTNAME}.post_profile
 plugin_source_post_profile
-export XDG_CONFIG_HOME="$HOME/.config"
-export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
-zstyle ':completion:*' format $'\e[38;2;186;194;222mCompleting %d\e[m'
-source <(carapace _carapace)
 
 eval "$(starship init zsh)"
