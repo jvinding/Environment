@@ -36,12 +36,12 @@ __git_copy_to_worktree() {
     [[ -e "${source_base}/${path}" ]] || return 0
 
     if [[ -d "${source_base}/${path}" ]]; then
-        mkdir -p "${target_base}/${path}"
-        cp -Rc "${source_base}/${path}/." "${target_base}/${path}/"
+        /bin/mkdir -p "${target_base}/${path}"
+        /bin/cp -Rc "${source_base}/${path}/." "${target_base}/${path}/"
     elif [[ ! -e "${target_base}/${path}" ]]; then
-        local parent=$(dirname "${target_base}/${path}")
-        [[ -d "$parent" ]] || mkdir -p "$parent"
-        cp -c "${source_base}/${path}" "${target_base}/${path}"
+        local parent=$(/usr/bin/dirname "${target_base}/${path}")
+        [[ -d "$parent" ]] || /bin/mkdir -p "$parent"
+        /bin/cp -c "${source_base}/${path}" "${target_base}/${path}"
     fi
 }
 
