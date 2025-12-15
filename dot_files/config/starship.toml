@@ -91,56 +91,56 @@ style = "bg:sapphire"
 format = '[[( $all_status$ahead_behind)](fg:crust bg:sapphire)]($style)'
 
 [nodejs]
-symbol = " "
+symbol = ""
 style = "bg:green"
-format = '[[ $symbol( $version) ](fg:crust bg:green)]($style)'
+format = '[[ $symbol( $version)](fg:crust bg:green)]($style)'
 
 [c]
-symbol = " "
+symbol = ""
 style = "bg:green"
-format = '[[ $symbol( $version) ](fg:crust bg:green)]($style)'
+format = '[[ $symbol( $version)](fg:crust bg:green)]($style)'
 
 [dotnet]
 style = "bg:green"
-format = '[[ $symbol( $version) ](fg:crust bg:green)]($style)'
+format = '[[ $symbol( $version)](fg:crust bg:green)]($style)'
 
 [ruby]
-symbol = " "
+symbol = ""
 style = "bg:green"
-format = '[[ $symbol( $version) ](fg:crust bg:green)]($style)'
+format = '[[ $symbol( $version)](fg:crust bg:green)]($style)'
 
 [rust]
-symbol = "󱘗 "
+symbol = "󱘗"
 style = "bg:green"
-format = '[[ $symbol( $version) ](fg:crust bg:green)]($style)'
+format = '[[ $symbol( $version)](fg:crust bg:green)]($style)'
 
 [golang]
-symbol = " "
+symbol = ""
 style = "bg:green"
-format = '[[ $symbol( $version) ](fg:crust bg:green)]($style)'
+format = '[[ $symbol( $version)](fg:crust bg:green)]($style)'
 
 [php]
-symbol = " "
+symbol = ""
 style = "bg:green"
 format = '[[ $symbol( $version) ](fg:crust bg:green)]($style)'
 
 [java]
-symbol = " "
+symbol = ""
 style = "bg:green"
-format = '[[ $symbol( $version) ](fg:crust bg:green)]($style)'
+format = '[[ $symbol( $version)](fg:crust bg:green)]($style)'
 
 [kotlin]
-symbol = " "
+symbol = ""
 style = "bg:green"
-format = '[[ $symbol( $version) ](fg:crust bg:green)]($style)'
+format = '[[ $symbol( $version)](fg:crust bg:green)]($style)'
 
 [haskell]
-symbol = " "
+symbol = ""
 style = "bg:green"
-format = '[[ $symbol( $version) ](fg:crust bg:green)]($style)'
+format = '[[ $symbol( $version)](fg:crust bg:green)]($style)'
 
 [python]
-symbol = " "
+symbol = ""
 style = "bg:green"
 format = '[[ $symbol( $version)(\(#$virtualenv\)) ](fg:crust bg:green)]($style)'
 
