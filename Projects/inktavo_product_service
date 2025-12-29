@@ -2,12 +2,6 @@ alias ips="cd '$HOME/Documents/2. Areas/Product Service/product_service'"
 
 export REDIS_URL=redis://localhost:6380
 
-alias ips:prod_run='heroku run -a $IPS_APP_NAME_PROD -- '
-alias ips:prod_console='ips:prod_run rails console'
-alias ips:prod_logs='heroku logs -a $IPS_APP_NAME_PROD --tail --dyno web'
-alias ips:prod_logs_sidekiq='heroku logs -a $IPS_APP_NAME_PROD --tail --dyno queues'
-alias ips:prod_psql='heroku psql -a $IPS_APP_NAME_PROD'
-
 alias ips:update='ips && merge_branch && dip:rebuild'
 alias ips:rebase='ips && rebase_branch && dip:rebuild'
 
@@ -77,7 +71,10 @@ ips:staging_worker_ssh() {
   aws:sso:login_if_needed staging_services
   aws:eb:ssh staging_services ips-staging-worker
 }
-
+ips:ssh:production:worker() {
+  aws:sso:login_if_needed production_services
+  aws:eb:ssh production_services ips-production-worker
+}
 ips:production_worker_instance_id() {
   aws:eb:instance_id production_services ips-production-worker
 }
@@ -88,6 +85,10 @@ ips:ai_staging_worker_instance_id() {
 ips:ai_staging_worker_ssh() {
   aws:sso:login_if_needed staging_ai
   aws:eb:ssh staging_ai ips-staging-worker
+}
+ips:db:production_writable_tunnel() {
+  aws:sso:login_if_needed production_services
+  aws:eb:db_ssh_tunnel pds-ips-production.pem "prod-$(ips:production_worker_instance_id)" ${__IPS_PRODUCTION_DB_HOSTNAME_WRITABLE} 5432 6541
 }
 ips:db:production_tunnel() {
   aws:sso:login_if_needed production_services
@@ -102,6 +103,9 @@ ips:db:ai_staging_tunnel() {
   aws:eb:db_ssh_tunnel pds-ips-ai-staging.pem "staging-ai-$(ips:ai_staging_worker_instance_id)" ${__IPS_AI_STAGING_DB_HOSTNAME} 5432 6541
 }
 
+ips:db:production_writable_tunnel_close() {
+  aws:eb:db_ssh_tunnel_close "${__IPS_PRODUCTION_DB_HOSTNAME_WRITABLE}"
+}
 ips:db:production_tunnel_close() {
   aws:eb:db_ssh_tunnel_close "${__IPS_PRODUCTION_DB_HOSTNAME}"
 }
@@ -128,20 +132,24 @@ ips:os:staging_tunnel_close() {
 }
   # sudo ssh -i "~jvinding/.ssh/pds-ips-staging.pem" -Nf "ec2-user@$(ips:staging_worker_instance_id)" -L 443:${__IPS_STAGING_OS_HOSTNAME}:443
 
-ips:ai_staging_console() {
-  aws:sso:login_if_needed staging_ai
-  echo "Opening staging console..."
+__ips:console:prep() {
+  local environment=${1}
+  aws:sso:login_if_needed $environment
+
+  echo "Opening ${environment} console..."
   echo "Run the following commands to open the Rails console"
   echo '$(/opt/elasticbeanstalk/bin/get-config environment | jq -r '\''to_entries | .[] | "export \\(.key)=\\(.value)"'\'')'
   echo "/var/app/current/bin/rails c"
+}
+ips:console:production() {
+  __ips:console:prep production_services
+  ips:ssh:production:worker
+}
+ips:console:ai_staging() {
+  __ips:console:prep staging_ai
   ips:ai_staging_worker_ssh
 }
-
-ips:staging_console() {
-  aws:sso:login_if_needed staging_services
-  echo "Opening staging console..."
-  echo "Run the following commands to open the Rails console"
-  echo '$(/opt/elasticbeanstalk/bin/get-config environment | jq -r '\''to_entries | .[] | "export \\(.key)=\\(.value)"'\'')'
-  echo "/var/app/current/bin/rails c"
+ips:console:staging() {
+  __ips:console:prep staging_services
   ips:staging_worker_ssh
 }
