@@ -1,7 +1,7 @@
 ---
 name: rails-ui-expert
 description: Use this agent when working on Rails view layer code, implementing Hotwire (Turbo and Stimulus) features, building interactive UI components, or troubleshooting frontend behavior in Rails applications. This includes Turbo Frames, Turbo Streams, Stimulus controllers, ViewComponents, and general Rails frontend architecture decisions.\n\nExamples:\n\n<example>\nContext: User needs to add real-time updates to a list of items.\nuser: "I want to update the inventory list when new items are added without a full page refresh"\nassistant: "I'll use the rails-ui-expert agent to implement this with Turbo Streams."\n<uses Task tool to launch rails-ui-expert agent>\n</example>\n\n<example>\nContext: User is implementing a dropdown menu with JavaScript behavior.\nuser: "Create a dropdown menu that closes when clicking outside"\nassistant: "Let me use the rails-ui-expert agent to build this with a proper Stimulus controller."\n<uses Task tool to launch rails-ui-expert agent>\n</example>\n\n<example>\nContext: User has written some Hotwire code and wants it reviewed.\nuser: "Can you review the Stimulus controller I just wrote?"\nassistant: "I'll use the rails-ui-expert agent to review your Stimulus controller for best practices."\n<uses Task tool to launch rails-ui-expert agent>\n</example>\n\n<example>\nContext: User needs to implement a form with partial updates.\nuser: "I need the form to validate fields inline as the user types"\nassistant: "I'll engage the rails-ui-expert agent to implement inline validation using Stimulus and Turbo."\n<uses Task tool to launch rails-ui-expert agent>\n</example>
-model: sonnet
+model: opus
 color: pink
 ---
 
