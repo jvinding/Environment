@@ -36,8 +36,8 @@ __git_copy_to_worktree() {
     [[ -e "${source_base}/${path}" ]] || return 0
 
     if [[ -d "${source_base}/${path}" ]]; then
-        /bin/mkdir -p "${target_base}/${path}"
-        /bin/cp -Rc "${source_base}/${path}/." "${target_base}/${path}/"
+        # Use ditto for directory copying - it handles merging correctly on macOS
+        /usr/bin/ditto "${source_base}/${path}" "${target_base}/${path}"
     elif [[ ! -e "${target_base}/${path}" ]]; then
         local parent=$(/usr/bin/dirname "${target_base}/${path}")
         [[ -d "$parent" ]] || /bin/mkdir -p "$parent"
@@ -213,6 +213,7 @@ git_clone_bare() {
 
 git_worktree_add() {
     local worktree_name=$1
+    local _saved_path="$PATH"
 
     __git_find_bare_repo_root || return 1
 
@@ -252,6 +253,9 @@ git_worktree_add() {
         return 1
     fi
 
+    # Restore PATH before file operations (directory hooks may have corrupted it)
+    PATH="$_saved_path"
+
     # Copy common files from base worktree
     local files_to_copy=(
         .claude
@@ -268,6 +272,8 @@ git_worktree_add() {
         __git_copy_to_worktree "$base_branch_name" "$clean_worktree_name" "$path"
     done
 
+    # Restore PATH again before final cd (copy operations may trigger hooks)
+    PATH="$_saved_path"
     builtin cd "$clean_worktree_name"
     git submodule update --init --recursive
 }
@@ -357,10 +363,11 @@ git_worktree_cleanup() {
     # Change to bare repo before removing worktree
     cd "$bare_repo" || { echo "Error: Failed to cd to $bare_repo" >&2; return 1; }
 
-    # Remove the worktree
+    # Remove the worktree (--force handles untracked files since we verified merge)
     echo "Removing worktree..."
-    if ! git worktree remove "$worktree_root"; then
+    if ! git worktree remove --force "$worktree_root"; then
         echo "Error: Failed to remove worktree" >&2
+        echo "       Try closing any editors/terminals using this directory" >&2
         return 1
     fi
 
