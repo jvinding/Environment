@@ -41,7 +41,15 @@ All documentation will be placed in the `docs/exploration/` directory within the
    - Look for inline documentation patterns
 
 4. **Configuration Discovery**
-   - Find all configuration file formats (.env, .yaml, .json, .toml, .ini, etc.)
+   - Find all configuration files using glob patterns:
+     - `**/*.yaml`, `**/*.yml` - YAML config files
+     - `**/*.json` (excluding package-lock.json, node_modules) - JSON config files
+     - `**/*.toml` - TOML config files
+     - `**/*.ini`, `**/*.cfg` - INI/CFG config files
+     - `**/*.env*` - Environment files (.env, .env.local, .env.example, etc.)
+     - `**/*.config.{js,ts,mjs,cjs}` - JavaScript/TypeScript config files
+     - `**/config/**/*`, `**/configs/**/*` - Files in config directories
+     - `**/settings/**/*` - Files in settings directories
    - Identify environment variable usage (search for `os.environ`, `process.env`, `ENV[]`, etc.)
    - Locate CLI argument parsing (argparse, commander, clap, etc.)
    - Find configuration loading code to understand precedence
