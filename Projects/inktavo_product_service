@@ -1,22 +1,24 @@
 alias ips="cd '$HOME/Documents/2. Areas/Product Service/product_service'"
 
 export REDIS_URL=redis://localhost:6380
+# export RAILS_ENV=development
 
 alias ips:update='ips && merge_branch && dip:rebuild'
 alias ips:rebase='ips && rebase_branch && dip:rebuild'
 
-ips:console_with_new_relic() {
-  ips
+# ------------------------------------------------------------------------------
+# Local Development
+# ------------------------------------------------------------------------------
 
+ips:console:local:newrelic() {
+  ips
   export NEW_RELIC_LICENSE_KEY=${__NEW_RELIC_LICENSE_KEY}
   export NEW_RELIC_APP_NAME=${__NEW_RELIC_APP_NAME}
-  # export RAILS_ENV=production
   bundle exec rails console
 }
 
-ips:db_down() {
+ips:db:local:down() {
   ips
-
   if __safe_to_run_db_command; then
     if [ -z "$1" ]; then
       bundle exec rake db:rollback STEP=1 RAILS_ENV=development
@@ -26,9 +28,16 @@ ips:db_down() {
   fi
 }
 
-ips:db_up() {
-  ips
+ips:db:local:hero() {
+  docker run -ti \
+    -e DATABASE_URL=postgres://user:password@hostname:5432/dbname \
+    -e PGHERO_STATS_DATABASE_URL=... \
+    -p 8080:8080 \
+    ankane/pghero
+}
 
+ips:db:local:up() {
+  ips
   if __safe_to_run_db_command; then
     if [ -z "$1" ]; then
       bundle exec rake db:migrate STEP=1 RAILS_ENV=development
@@ -38,99 +47,191 @@ ips:db_up() {
   fi
 }
 
+# ------------------------------------------------------------------------------
+# Performance Environment
+# ------------------------------------------------------------------------------
 
-ips:performance_web_instance_id() {
+ips:instance:performance:web:dns() {
+  aws:eb:instance_dns "$(ips:instance:performance:web:id)"
+}
+
+ips:instance:performance:web:id() {
   aws:eb:instance_id staging_services ips-performance-web
 }
-ips:performance_web_instance_ip() {
-  aws:eb:instance_ip "$(ips:performance_web_instance_id)"
+
+ips:instance:performance:web:ip() {
+  aws:eb:instance_ip "$(ips:instance:performance:web:id)"
 }
-ips:performance_web_instance_dns() {
-  aws:eb:instance_dns "$(ips:performance_web_instance_id)"
-}
-ips:performance_web_ssh() {
+
+ips:ssh:performance:web() {
   aws:sso:login_if_needed staging_services
   aws:eb:ssh staging_services ips-performance-web
 }
-ips:performance_worker_ssh() {
+
+ips:ssh:performance:worker() {
   aws:sso:login_if_needed staging_services
   aws:eb:ssh staging_services ips-performance-worker
 }
 
-ips:staging_web_instance_id() {
+# ------------------------------------------------------------------------------
+# Staging Environment
+# ------------------------------------------------------------------------------
+
+ips:console:staging() {
+  __ips:console:prep staging_services
+  ips:ssh:staging:worker
+}
+
+ips:db:staging:tunnel() {
+  aws:sso:login_if_needed staging_services
+  aws:eb:db_ssh_tunnel pds-ips-staging.pem $(ips:instance:staging:worker:id) ${__IPS_STAGING_DB_HOSTNAME} 5432 6543
+}
+
+ips:db:staging:tunnel:close() {
+  aws:eb:db_ssh_tunnel_close "${__IPS_STAGING_DB_HOSTNAME}"
+}
+
+ips:instance:staging:web:id() {
   aws:eb:instance_id staging_services ips-staging-web
 }
-ips:staging_worker_instance_id() {
+
+ips:instance:staging:worker:id() {
   aws:eb:instance_id staging_services ips-staging-worker
 }
-ips:staging_web_ssh() {
+
+ips:os:staging:tunnel() {
+  aws:sso:login_if_needed staging_services
+  aws:eb:db_ssh_tunnel pds-ips-staging.pem "$(ips:instance:staging:worker:id)" ${__IPS_STAGING_OS_HOSTNAME} 443 6444
+}
+
+ips:os:staging:tunnel:close() {
+  pkill -lf "${__IPS_STAGING_OS_HOSTNAME}"
+}
+
+ips:ssh:staging:web() {
   aws:sso:login_if_needed staging_services
   aws:eb:ssh staging_services ips-staging-web
 }
-ips:staging_worker_ssh() {
+
+ips:ssh:staging:worker() {
   aws:sso:login_if_needed staging_services
   aws:eb:ssh staging_services ips-staging-worker
 }
+
+# ------------------------------------------------------------------------------
+# AI Staging Environment
+# ------------------------------------------------------------------------------
+
+ips:console:ai_staging() {
+  __ips:console:prep staging_ai
+  ips:ssh:ai_staging:web
+}
+
+ips:db:ai_staging:dumps:list() {
+  aws:sso:login_if_needed staging_ai
+  aws --profile staging_ai \
+    s3api list-objects-v2 \
+    --bucket product-service-anonymized-dumps-aiml \
+    --query "Contents[?contains(Key, 'anon-dump')].Key" \
+    --output json \
+    | jq -r '.[]'
+}
+
+ips:db:ai_staging:tunnel() {
+  aws:sso:login_if_needed staging_ai
+  aws:eb:db_ssh_tunnel pds-ips-ai-staging.pem "staging-ai-$(ips:instance:ai_staging:worker:id)" ${__IPS_AI_STAGING_DB_HOSTNAME} 5432 6541
+}
+
+ips:db:ai_staging:tunnel:close() {
+  aws:eb:db_ssh_tunnel_close "${__IPS_AI_STAGING_DB_HOSTNAME}"
+}
+
+ips:instance:ai_staging:worker:id() {
+  aws:eb:instance_id staging_ai ips-staging-worker
+}
+
+ips:ssh:ai_staging:web() {
+  aws:sso:login_if_needed staging_ai
+  aws:eb:ssh staging_ai ips-staging-web
+}
+
+ips:ssh:ai_staging:worker() {
+  aws:sso:login_if_needed staging_ai
+  aws:eb:ssh staging_ai ips-staging-worker
+}
+
+# ------------------------------------------------------------------------------
+# Production Environment
+# ------------------------------------------------------------------------------
+
+ips:console:production() {
+  __ips:console:prep production_services
+  ips:ssh:production:worker
+}
+
+ips:db:production:dumps:fetch() {
+  aws:sso:login_if_needed production_services
+  local most_recent_backup=$(aws --profile production_services \
+    s3api list-objects-v2 \
+    --bucket product-service-shared-bucket \
+    --query "Contents[?contains(Key, 'anon-dump')].Key" \
+    --output json \
+    | jq -r '.[]' \
+    | tail -1)
+  aws --profile production_services \
+    s3 cp \
+    "s3://product-service-shared-bucket/${most_recent_backup}" ~/Downloads
+}
+
+ips:db:production:dumps:list() {
+  aws:sso:login_if_needed production_services
+  aws --profile production_services \
+    s3api list-objects-v2 \
+    --bucket product-service-shared-bucket \
+    --query "Contents[?contains(Key, 'anon-dump')].Key" \
+    --output json \
+    | jq -r '.[]'
+}
+
+ips:db:production:tunnel() {
+  aws:sso:login_if_needed production_services
+  aws:eb:db_ssh_tunnel pds-ips-production.pem "prod-$(ips:instance:production:worker:id)" ${__IPS_PRODUCTION_DB_HOSTNAME} 5432 6542
+}
+
+ips:db:production:tunnel:close() {
+  aws:eb:db_ssh_tunnel_close "${__IPS_PRODUCTION_DB_HOSTNAME}"
+}
+
+ips:db:production:tunnel_writable() {
+  aws:sso:login_if_needed production_services
+  aws:eb:db_ssh_tunnel pds-ips-production.pem "prod-$(ips:instance:production:worker:id)" ${__IPS_PRODUCTION_DB_HOSTNAME_WRITABLE} 5432 6541
+}
+
+ips:db:production:tunnel_writable:close() {
+  aws:eb:db_ssh_tunnel_close "${__IPS_PRODUCTION_DB_HOSTNAME_WRITABLE}"
+}
+
+ips:instance:production:worker:id() {
+  aws:eb:instance_id production_services ips-production-worker
+}
+
+ips:os:production:tunnel() {
+  aws:sso:login_if_needed production_services
+  aws:eb:db_ssh_tunnel pds-ips-production.pem "prod-$(ips:instance:production:worker:id)" ${__IPS_PRODUCTION_OS_HOSTNAME} 443 6443
+}
+
+ips:os:production:tunnel:close() {
+  pkill -lf "${__IPS_PRODUCTION_OS_HOSTNAME}"
+}
+
 ips:ssh:production:worker() {
   aws:sso:login_if_needed production_services
   aws:eb:ssh production_services ips-production-worker
 }
-ips:production_worker_instance_id() {
-  aws:eb:instance_id production_services ips-production-worker
-}
 
-ips:ai_staging_worker_instance_id() {
-  aws:eb:instance_id staging_ai ips-staging-worker
-}
-ips:ai_staging_worker_ssh() {
-  aws:sso:login_if_needed staging_ai
-  aws:eb:ssh staging_ai ips-staging-worker
-}
-ips:db:production_writable_tunnel() {
-  aws:sso:login_if_needed production_services
-  aws:eb:db_ssh_tunnel pds-ips-production.pem "prod-$(ips:production_worker_instance_id)" ${__IPS_PRODUCTION_DB_HOSTNAME_WRITABLE} 5432 6541
-}
-ips:db:production_tunnel() {
-  aws:sso:login_if_needed production_services
-  aws:eb:db_ssh_tunnel pds-ips-production.pem "prod-$(ips:production_worker_instance_id)" ${__IPS_PRODUCTION_DB_HOSTNAME} 5432 6542
-}
-ips:db:staging_tunnel() {
-  aws:sso:login_if_needed staging_services
-  aws:eb:db_ssh_tunnel pds-ips-staging.pem $(ips:staging_worker_instance_id) ${__IPS_STAGING_DB_HOSTNAME} 5432 6543
-}
-ips:db:ai_staging_tunnel() {
-  aws:sso:login_if_needed staging_ai
-  aws:eb:db_ssh_tunnel pds-ips-ai-staging.pem "staging-ai-$(ips:ai_staging_worker_instance_id)" ${__IPS_AI_STAGING_DB_HOSTNAME} 5432 6541
-}
-
-ips:db:production_writable_tunnel_close() {
-  aws:eb:db_ssh_tunnel_close "${__IPS_PRODUCTION_DB_HOSTNAME_WRITABLE}"
-}
-ips:db:production_tunnel_close() {
-  aws:eb:db_ssh_tunnel_close "${__IPS_PRODUCTION_DB_HOSTNAME}"
-}
-ips:db:staging_tunnel_close() {
-  aws:eb:db_ssh_tunnel_close "${__IPS_STAGING_DB_HOSTNAME}"
-}
-ips:db:ai_staging_tunnel_close() {
-  aws:eb:db_ssh_tunnel_close "${__IPS_AI_STAGING_DB_HOSTNAME}"
-}
-
-ips:os:production_tunnel() {
-  aws:sso:login_if_needed production_services
-  aws:eb:db_ssh_tunnel pds-ips-production.pem "prod-$(ips:production_worker_instance_id)" ${__IPS_PRODUCTION_OS_HOSTNAME} 443 6443
-}
-ips:os:staging_tunnel() {
-  aws:sso:login_if_needed staging_services
-  aws:eb:db_ssh_tunnel pds-ips-staging.pem "$(ips:staging_worker_instance_id)" ${__IPS_STAGING_OS_HOSTNAME} 443 6444
-}
-ips:os:production_tunnel_close() {
-    pkill -lf "${__IPS_PRODUCTION_OS_HOSTNAME}"
-}
-ips:os:staging_tunnel_close() {
-    pkill -lf "${__IPS_STAGING_OS_HOSTNAME}"
-}
-  # sudo ssh -i "~jvinding/.ssh/pds-ips-staging.pem" -Nf "ec2-user@$(ips:staging_worker_instance_id)" -L 443:${__IPS_STAGING_OS_HOSTNAME}:443
+# ------------------------------------------------------------------------------
+# Private Helpers
+# ------------------------------------------------------------------------------
 
 __ips:console:prep() {
   local environment=${1}
@@ -140,16 +241,4 @@ __ips:console:prep() {
   echo "Run the following commands to open the Rails console"
   echo '$(/opt/elasticbeanstalk/bin/get-config environment | jq -r '\''to_entries | .[] | "export \\(.key)=\\(.value)"'\'')'
   echo "/var/app/current/bin/rails c"
-}
-ips:console:production() {
-  __ips:console:prep production_services
-  ips:ssh:production:worker
-}
-ips:console:ai_staging() {
-  __ips:console:prep staging_ai
-  ips:ai_staging_worker_ssh
-}
-ips:console:staging() {
-  __ips:console:prep staging_services
-  ips:staging_worker_ssh
 }
