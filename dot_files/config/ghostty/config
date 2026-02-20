@@ -55,3 +55,7 @@ font-family-bold-italic = "SauceCodePro NFM Bold Italic"
 
 font-size = 13
 keybind = shift+enter=text:\x1b\r
+
+clipboard-write = deny
+clipboard-read = deny
+copy-on-select = false
