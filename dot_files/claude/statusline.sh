@@ -134,12 +134,8 @@ fi
 
 output=""
 
-# Segment 1: Time (blue)
-output="${output}${fg_blue}${left_cap}${bg_blue}${fg}  ${current_time} "
-output="${output}${reset}${fg_blue}${bg_sapphire}${left_segment_end}${reset}"
-
-# Segment 2: Directory (sapphire)
-output="${output}${bg_sapphire}${fg}  ${dir} "
+# Segment 1: Directory (sapphire)
+output="${output}${fg_sapphire}${left_cap}${bg_sapphire}${fg}  ${dir} "
 output="${output}${reset}${fg_sapphire}${bg_sky}${left_segment_end}${reset}"
 
 # Segment 3: Git (sky) - only if in git repo
@@ -165,18 +161,21 @@ output="${output}${reset}${bg_yellow}${fg_peach}${right_segment_start}${reset}"
 
 # Segment 6: 5h rate limit (peach)
 if [ -n "$five_h_resets_display" ]; then
-    output="${output}${bg_peach}${fg} 󰎫 5h ${five_h_pct_display} →${five_h_resets_display} "
+    output="${output}${bg_peach}${fg} 󰎫 ${five_h_pct_display} →${five_h_resets_display} "
 else
-    output="${output}${bg_peach}${fg} 󰎫 5h ${five_h_pct_display} "
+    output="${output}${bg_peach}${fg} 󰎫 ${five_h_pct_display} "
 fi
 output="${output}${reset}${bg_peach}${fg_maroon}${right_segment_start}${reset}"
 
 # Segment 7: 7d rate limit (maroon)
-output="${output}${bg_maroon}${fg} 󰃭 7d ${seven_d_pct_display} "
+output="${output}${bg_maroon}${fg} 󰃭 ${seven_d_pct_display} "
 output="${output}${reset}${bg_maroon}${fg_red}${right_segment_start}${reset}"
 
 # Segment 8: Cost (red)
 output="${output}${bg_red}${fg}  ${cost_display} "
 output="${output}${reset}${fg_red}${right_cap}${reset}"
 
-printf "%s\n" "$output"
+# Time on second line (no background)
+time_line="${fg_blue}${current_time}${reset}"
+
+printf "%s\n%s\n" "$output" "$time_line"
