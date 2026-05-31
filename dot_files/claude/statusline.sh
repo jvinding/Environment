@@ -13,6 +13,7 @@ context_max=$(echo "$input" | jq -r '.context_window.context_window_size // 0')
 five_h_percentage=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // 0')
 five_h_resets=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // 0')
 seven_d_percentage=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // 0')
+seven_d_resets=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // 0')
 cost=$(echo "$input" | jq -r '.cost.total_cost_usd // 0')
 
 # =============================================================================
@@ -121,6 +122,26 @@ else
     seven_d_pct_display="--"
 fi
 
+seven_d_reset_display=""
+if [ "$seven_d_resets" != "0" ] && [ "$seven_d_resets" != "" ]; then
+    reset_date=$(date -r "$seven_d_resets" +"%Y-%m-%d")
+    today=$(date +"%Y-%m-%d")
+    if [ "$reset_date" = "$today" ]; then
+        seven_d_reset_display="→$(date -r "$seven_d_resets" +"%H:%M")"
+    else
+        day_num=$(date -r "$seven_d_resets" +"%u")
+        case "$day_num" in
+            1) seven_d_reset_display="M" ;;
+            2) seven_d_reset_display="T" ;;
+            3) seven_d_reset_display="W" ;;
+            4) seven_d_reset_display="R" ;;
+            5) seven_d_reset_display="F" ;;
+            6) seven_d_reset_display="S" ;;
+            7) seven_d_reset_display="" ;;
+        esac
+    fi
+fi
+
 # Cost
 if [ "$cost" != "0" ] && [ "$cost" != "null" ]; then
     cost_display=$(printf "$%.2f" "$cost")
@@ -168,7 +189,11 @@ fi
 output="${output}${reset}${bg_peach}${fg_maroon}${right_segment_start}${reset}"
 
 # Segment 7: 7d rate limit (maroon)
-output="${output}${bg_maroon}${fg} 󰃭 ${seven_d_pct_display} "
+if [ -n "$seven_d_reset_display" ]; then
+    output="${output}${bg_maroon}${fg} 󰃭 ${seven_d_pct_display} ${seven_d_reset_display} "
+else
+    output="${output}${bg_maroon}${fg} 󰃭 ${seven_d_pct_display} "
+fi
 output="${output}${reset}${bg_maroon}${fg_red}${right_segment_start}${reset}"
 
 # Segment 8: Cost (red)
