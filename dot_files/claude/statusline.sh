@@ -37,9 +37,6 @@ sep="${fg_dim} | ${reset}"
 # Data Processing
 # =============================================================================
 
-# Current time
-current_time=$(date +"%H:%M")
-
 # Git information
 git_branch_name=""
 git_status_str=""
@@ -154,9 +151,6 @@ output="${output}${sep}"
 
 # Cost
 output="${output}${fg_red}${cost_display}${reset}"
-output="${output}${sep}"
-
-# Time
-output="${output}${fg_blue}${current_time}${reset}"
+# output="${output}${sep}"
 
 printf '%s' "$output"
