@@ -1,0 +1,49 @@
+alias os="cd '$HOME/Documents/2_Areas/OneSource/onesource'"
+
+os:cwd_is_onesource_worktree() {
+    local is_worktree=$(git rev-parse --is-inside-work-tree 2>/dev/null) 
+    local repo=$(basename -s .git "$(git config --get remote.origin.url)")
+    if [ "$is_worktree" = "true" ] && [ "$repo" = "onesource" ]; then
+        return 0
+    else
+        echo "Not in onesource worktree, skipping command" >&2
+        return 1
+    fi
+}
+os:rebuild() {
+    os:cwd_is_onesource_worktree || return 1
+    ts:super_clean
+    echo "=== yarn install ===" \
+        && yarn install \
+        && echo "=== yarn buildTest ===" \
+        && yarn buildTest \
+        && echo "=== yarn generateSchemaTypes ===" \
+        && yarn generateSchemaTypes \
+        && echo "=== yarn generateJsonSchema ===" \
+        && yarn generateJsonSchema \
+        && echo "=== yarn prettier ===" \
+        && yarn prettier \
+        && echo "=== yarn eslint --fix ===" \
+        && yarn eslint --fix
+}
+
+os:build_checks() {
+    os:cwd_is_onesource_worktree || return 1
+
+    echo "=== yarn install ===" \
+        && yarn install \
+        && echo "=== yarn buildTest ===" \
+        && yarn buildTest \
+        && echo "=== yarn run eslint --max-warnings 0 . ===" \
+        && yarn run eslint --max-warnings 0 . \
+        && echo "=== yarn run tsc --incremental false --diagnostics ===" \
+        && yarn run tsc --incremental false --diagnostics \
+        && echo "=== yarn run prettier '**/*.{json,yml,css,md,ts,tsx}' --check ===" \
+        && yarn run prettier '**/*.{json,yml,css,md,ts,tsx}' --check
+}
+
+os:kill() {
+    os:cwd_is_onesource_worktree || return 1
+    yarn stop
+    yarn pm2 delete all
+}

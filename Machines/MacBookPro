@@ -1,0 +1,69 @@
+JJV_PLUGINS=(git git_worktree ssh nvm fzf aws carapace typescript)
+
+source ~/Environment/Secrets/inktavo_printavo_secrets
+source ~/Environment/Projects/inktavo_printavo_core
+
+source ~/Environment/Secrets/inktavo_product_service_secrets
+source ~/Environment/Projects/inktavo_product_service
+
+source ~/Environment/Secrets/inktavo_recommendations_validation_secrets
+source ~/Environment/Projects/inktavo_recommendations_validation
+
+source ~/Environment/Projects/inktavo_recommendation_service
+
+source ~/Environment/Secrets/omg_onesource
+source ~/Environment/Projects/omg_onesource
+
+alias asap='cd "/Users/jvinding/Documents/2_Areas/Asap/platform-asap"'
+alias sso='cd "/Users/jvinding/Documents/2_Areas/SSO/inktavo-admin-panel"'
+
+asap:token-staging() {
+    local lifespan=${1:-15}
+    local subject=${2:-"printavo:16333"}
+    asap
+
+    ./src/Inktavo.Asap.Console/bin/Debug/net8.0/Inktavo.Asap.Console \
+    create-token \
+    -k keys/KuEks6FNxlhTN3SgOgxPfIJz4mWdPtuFhAOgeQR0FL8_private.json \
+    -l $lifespan \
+    -e Staging \
+    -i pds_example \
+    -a product_service \
+    -s "$subject"
+}
+
+asap:query-staging() {
+    local query=${1:-G500}
+    asap
+
+    ./src/Inktavo.Asap.Console/bin/Debug/net8.0/Inktavo.Asap.Console \
+    query -p \
+    -t $(asap:token-staging) \
+    -e Staging \
+    -q "$query"
+}
+
+asap:token-production() {
+    local lifespan=${1:-15}
+    asap
+
+    ./src/Inktavo.Asap.Console/bin/Debug/net8.0/Inktavo.Asap.Console \
+    create-token \
+    -k keys/BKFy6BpsVlKpJnek7ZBCwvV54WQWeEkaa4Jh_4Zf2Vg_private.json \
+    -l $lifespan \
+    -e Production \
+    -i pds_test \
+    -a product_service \
+    -s printavo:39573
+}
+
+asap:query-production() {
+    local query=${1:-G500}
+    asap
+
+    ./src/Inktavo.Asap.Console/bin/Debug/net8.0/Inktavo.Asap.Console \
+    query -p \
+    -t $(asap:token-production) \
+    -e Production \
+    -q "$query"
+}
