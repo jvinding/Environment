@@ -21,6 +21,24 @@ aws:sso:login_if_needed() {
   fi
 }
 
+aws:ec2:instance_id() {
+  local profile=$1
+  local instance_name=$2
+  local instance_id=$(aws ec2 describe-instances \
+    --profile "$profile" \
+    --filters "Name=tag:Name,Values=$instance_name" \
+              "Name=instance-state-name,Values=running" \
+    --query "Reservations[0].Instances[0].InstanceId" \
+    --output text)
+
+  if [[ -z "$instance_id" || "$instance_id" == "None" ]]; then
+    echo "Could not find running bastion instance '$instance_name'" >&2
+    return 1
+  fi
+  
+  echo $instance_id
+}
+
 aws:eb:instance_id() {
   local profile=$1
   local env=$2
@@ -48,6 +66,7 @@ aws:eb:ssh() {
   if [ -n "$profile" ] && [ -n "$env" ]; then
     local instance_id=$(aws:eb:instance_id $profile $env)
     if [ -n "$instance_id" ]; then
+      echo "connecting to ${instance_id}"
       aws --profile=$profile ssm start-session --target "$instance_id"
     else
       echo "No instance found for environment: $profile/$env/$instance_id" >&2

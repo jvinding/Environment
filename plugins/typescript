@@ -1,0 +1,10 @@
+ts:super_clean() {
+    if ! [ -f package.json ]; then
+        echo "Not in node project root, skipping super clean" >&2
+        return 1
+    fi
+    if -d .yarn; then
+        rm -rf .yarn/cache .yarn/install-state.gz
+    fi
+    find . -type d \( -name node_modules -o -name dist \) -prune -print -exec rm -rf '{}' +
+}
